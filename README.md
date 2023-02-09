@@ -7,3 +7,6 @@
 1) Make sure you are in the compiler folder
 2) Run
 ```python main.py .. catfishing.p8 main.lua```
+
+## Resources
+- [Taxonomy of Fishing Minigames](https://www.gamedeveloper.com/disciplines/taxonomy-of-fishing-mini-games)
