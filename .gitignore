@@ -1,0 +1,3 @@
+/.vscode
+*.png
+/pico8_compiler/src/__pycache__
