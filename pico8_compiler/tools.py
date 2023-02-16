@@ -12,7 +12,14 @@ def main():
 
     if flag == "-j" and file.endswith(".json"):
         jsonSer = JSONSerializer(file)
+        print(f"Converting {file} to lua table string...")
         tableStr = jsonSer.Parse()
+        print("JSON finishing converting...")
+        tokensSaved = jsonSer.tokenCount - 1
+        print(f"You saved {tokensSaved} tokens")
+        charsUsed = len(tableStr) + 2
+        print(f"Lua Table String is {charsUsed} chars long including the quotes after pasting")
+
         if "pyperclip" not in installed:
             print("Missing PyperClip::printing output instead...")
             print(tableStr)

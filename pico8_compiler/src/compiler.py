@@ -30,6 +30,7 @@ class Compiler():
         with open(path, encoding="utf8") as f:
             lines: list[str] = f.readlines()
             for i, line in enumerate(lines):
+                if line.lstrip().startswith("--"): continue
                 if line.count("#include") > 0:
                     fileName = self._ParseFileName(line)
                     if fileName in self.includedFiles:
@@ -40,7 +41,7 @@ class Compiler():
                     if not compiledData[-1].endswith("\n"):
                         compiledData[-1] += "\n"
                     buffer.append(compiledData)
-                elif line.count("function") > 0 and line.count("local") == 0:
+                elif line.lstrip().startswith("function"):
                     functionName: str = self._GetFunctionName(line)
                     if functionName in self.functions:
                         raise Exception(f"Function {functionName} exist in {self.functions[functionName]} and in {FunctionData(file, i)}")
@@ -70,7 +71,10 @@ class Compiler():
 
     @staticmethod
     def _WinReverseSlashes(path: str) -> str:
-        return path.replace("/", "\\\\")
+        if os.name == 'nt' :
+            return path.replace("/", "\\\\")
+        else:
+            return path
 
     @staticmethod
     def _GetPathPrefix(path: str) -> str:
@@ -81,5 +85,8 @@ class Compiler():
     def _JoinPrefixes(prefixes: list[str]) -> str:
         result = ""
         for prefix in prefixes:
-            result += prefix + "\\\\"
+            if os.name == 'nt' :
+                result += prefix + "\\\\"
+            else:
+                result += prefix +'/'
         return result

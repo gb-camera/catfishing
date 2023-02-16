@@ -50,7 +50,7 @@ size=fish_size,
 ticks=bite_ticks,
 fight_max_ticks=fight_ticks,
 success_ceil=success_limit+fight_ticks,
-state="lure"
+state = "lure"
 }
 setmetatable(obj,self)
 self.__index=self
@@ -72,22 +72,22 @@ return (self.ticks) / self.success_ceil
 end
 function Fish:pull()
 if self.state == "lure" then 
-self.state="fight"
+self.state = "fight"
 self.ticks=self.fight_max_ticks
 elseif self.state == "fight" then 
 self.ticks+=2
 end
 end
 function _init()
-table_str="fishes={{foo,0,1,2,50,100,100}},progressBar={2,200,{5,5,50,5,8,6,2}},text={60,5,7,1}"
+table_str = "fishes={{foo,0,1,2,50,100,100}},progressBar={2,200,{5,5,50,5,8,6,2}},text={60,5,7,1}"
 table_data=unpack_table(table_str)
-debug_print_table(table_data,"")
-printh("------fish[1]--------")
-debug_print_table(table_data.fishes[1],"")
-printh("------progressbar--------")
-debug_print_table(table_data.progressBar,"")
+debug_print_table(table_data, "")
+printh("------fish[1] --------")
+debug_print_table(table_data.fishes[1], "")
+printh("------progress bar--------")
+debug_print_table(table_data.progressBar, "")
 printh("------text--------")
-debug_print_table(table_data.text,"")
+debug_print_table(table_data.text, "")
 bar=ProgressBar:new(unpack(table_data.progressBar))
 fish=Fish:new(unpack(table_data.fishes[1]))
 end
@@ -95,12 +95,12 @@ function _draw()
 cls()
 ProgressBar.draw(bar)
 if Fish.is_caught(fish) then 
-print_with_outline("caught",unpack(table_data.text))
+print_with_outline("caught", unpack(table_data.text))
 elseif Fish.is_lost(fish) then 
-print_with_outline("lost",unpack(table_data.text))
+print_with_outline("lost", unpack(table_data.text))
 end
-print_with_outline(Fish.progress(fish).."%",unpack(table_data.text))
-print_with_outline("state:"..fish.state,5,20,7,1)
+print_with_outline(Fish.progress(fish).."%", unpack(table_data.text))
+print_with_outline("state: "..fish.state, 5, 20, 7, 1)
 end
 function _update()
 Fish.update(fish)
@@ -206,7 +206,7 @@ return array, i + (pos and pos or 0)
 elseif str[i] == "," then 
 local val = tonum(buffer) and tonum(buffer) or buffer
 add(array,val)
-buffer=""
+buffer = ""
 else
 buffer..=str[i]
 end
@@ -217,11 +217,11 @@ end
 function debug_print_table(table, prefix)
 for k, v in pairs(table) do 
 if type(v) == "table" then 
-printh(prefix.."["..type(v).."]"..k.."={")
-debug_print_table(v,"__"..prefix)
+printh(prefix.."["..type(v).."]"..k.." = {")
+debug_print_table(v, "__"..prefix)
 printh(prefix.."}")
 else
-printh(prefix.."["..type(v).."]"..k.."="..v)
+printh(prefix.."["..type(v).."]"..k.." = "..v)
 end
 end
 end

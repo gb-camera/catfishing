@@ -6,7 +6,7 @@ class Stitcher():
         self.hazards = set({
             "function", "if", "for", "while", "return",
             "[[", "]]", "local", "pico-8 cartridge // http://www.pico-8.com", 
-            "version 39", '" "', "and", "or"
+            "version 39", '" "', "and", "or", '"', "goto"
         })
         pass
 
@@ -42,6 +42,7 @@ class Stitcher():
         with open(mainFilePath, encoding="utf8") as f:
             lines: list[str] = f.readlines()
             for i, line in enumerate(lines):
+                if line.lstrip().startswith("--"): continue
                 if line.count("#include") == 0:
                     functionName: str = Compiler._GetFunctionName(line)
                     if self.compiler.FunctionExist(functionName):
@@ -58,17 +59,22 @@ class Stitcher():
     def _ListToString(self, data: list[any]) -> str:
         buffer: list[str] = []
         result = ""
+        flag = False
         for dat in data:
             if type(dat) == list:
                 buffer += dat
             else:
                 buffer.append(dat)
         for line in buffer:
-            if line.count("#include") > 0: continue
-            if line == "\n": continue
-            if line.lstrip().startswith("--"): continue
+            if line.count("__gfx__") > 0:
+                flag = True
+                
+            if not flag:
+                if line.count("#include") > 0: continue
+                if line == "\n": continue
+                if line.lstrip().startswith("--"): continue
 
-            line = self._Sanitize(line)
+                line = self._Sanitize(line)
         
             result += line
         if not result.endswith("\n"):
