@@ -1,6 +1,3 @@
--- Classes
-#include borderRect.lua
-
 ProgressBar = {}
 function ProgressBar:new(fill_color, max_val, rect_data)
   obj = {

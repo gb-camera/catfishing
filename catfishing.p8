@@ -1,6 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
+global_data_str = "fishes={{placeholder name,0,1,2,50,100,100}},progressBar={fill_color=2,max_val=200,rect_data={5,5,50,5,8,6,2}},text={60,5,7,1}"
 BorderRect = {}
 function BorderRect:new(dx, dy, dw, dh, border_color, background_color, thickness_size)
 obj={
@@ -57,50 +58,48 @@ self.__index=self
 return obj
 end
 function Fish:update()
-if (Fish.is_lost(self) or Fish.is_caught(self)) return
+if (Fish.is_lost(self) or self.state == "caught") return
 self.ticks-=1
 end
 function Fish:is_lost()
 return self.ticks <= 0
 end
-function Fish:is_caught()
-return self.ticks >= self.success_ceil
-end
 function Fish:progress()
 if (self.state ~= "fight") return 0
-return (self.ticks) / self.success_ceil
+return flr(self.ticks / self.success_ceil * 100)
 end
 function Fish:pull()
 if self.state == "lure" then 
 self.state = "fight"
 self.ticks=self.fight_max_ticks
-elseif self.state == "fight" then 
+elseif self.state == "fight" and Fish.progress(self) <= 100 then 
 self.ticks+=2
+if self.ticks >= self.success_ceil then 
+self.state = "caught"
+end
 end
 end
 function _init()
-table_str = "fishes={{foo,0,1,2,50,100,100}},progressBar={2,200,{5,5,50,5,8,6,2}},text={60,5,7,1}"
-table_data=unpack_table(table_str)
-debug_print_table(table_data, "")
-printh("------fish[1] --------")
-debug_print_table(table_data.fishes[1], "")
-printh("------progress bar--------")
-debug_print_table(table_data.progressBar, "")
-printh("------text--------")
-debug_print_table(table_data.text, "")
-bar=ProgressBar:new(unpack(table_data.progressBar))
+table_data=unpack_table(global_data_str)
+bar=ProgressBar:new(
+table_data.progressBar.fill_color, 
+table_data.progressBar.max_val,
+table_data.progressBar.rect_data
+)
 fish=Fish:new(unpack(table_data.fishes[1]))
 end
 function _draw()
 cls()
 ProgressBar.draw(bar)
-if Fish.is_caught(fish) then 
+if fish.state == "caught" then 
 print_with_outline("caught", unpack(table_data.text))
 elseif Fish.is_lost(fish) then 
 print_with_outline("lost", unpack(table_data.text))
 end
+if fish.state ~= "caught" then
 print_with_outline(Fish.progress(fish).."%", unpack(table_data.text))
 print_with_outline("state: "..fish.state, 5, 20, 7, 1)
+end
 end
 function _update()
 Fish.update(fish)
@@ -137,17 +136,17 @@ stack+=1
 elseif str[i]=="}"then 
 stack-=1
 if(stack>0)goto unpack_table_continue
-insert_str_as_table_entry(sub(str,start,i),table)
+insert_key_val(sub(str,start,i),table)
 start=i+1
 if(i+2>#str)goto unpack_table_continue
 start+=1
 i+=1
 elseif stack==0 then
 if str[i]=="," then
-insert_str_as_table_entry(sub(str,start,i-1),table)
+insert_key_val(sub(str,start,i-1),table)
 start=i+1
 elseif i==#str then 
-insert_str_as_table_entry(sub(str,start),table)
+insert_key_val(sub(str,start),table)
 end
 end
 ::unpack_table_continue::
@@ -155,74 +154,45 @@ i+=1
 end
 return table
 end
-function insert_str_as_table_entry(str, table)
-local key,val
-for i=1,#str do
-if (str[i]~="=") goto insert_str_as_table_entry_continue
-key,val=sub(str,0,i-1),sub(str,i+1)
-if (val[1]~="{") goto insert_str_as_table_entry_continue 
-local sub_str=sub(val,2,#val-1)
-if not str_contains(val, "=") then 
-local internal_array = sub(val, 2, #val-1)
-if str_contains(internal_array, "{") then
-val,_=parse_nested_array(internal_array)
-else
-val=split(internal_array)
-end
-else
-val=unpack_table(sub_str)
-end
-break
-::insert_str_as_table_entry_continue::
-end
+function insert_key_val(str, table)
+local key, val = split_key_value_str(str)
 if key == nil then
 add(table,val)
-return
-end
-if val == "false" then 
-table[key]=false
-elseif val == "true" then 
-table[key]=true
 else
-table[key]=tonum(val) or val
-end
-end
-function str_contains(str, identifier)
-for i=1, #str do if (str[i] == identifier) return true end
-end
-function parse_nested_array(str, pos)
-local array = {}
-local buffer = ""
-local i = 1
-while i <= #str do 
-if str[i] == "{" then
-local data, index = parse_nested_array(sub(str, i+1), i)
-add(array,data)
-i=index
-elseif str[i] == "}" then 
-local val = tonum(buffer) and tonum(buffer) or buffer
-add(array,val)
-return array, i + (pos and pos or 0)
-elseif str[i] == "," then 
-local val = tonum(buffer) and tonum(buffer) or buffer
-add(array,val)
-buffer = ""
+local value
+if val[1] == "{" and val[-1] == "}" then 
+value=unpack_table(sub(val,2,#val-1))
+elseif val == "True" then 
+value=true
+elseif val == "False" then 
+value=false
 else
-buffer..=str[i]
+value = tonum(val) or val
 end
-i+=1
+table[key]=value
 end
-return array
 end
-function debug_print_table(table, prefix)
-for k, v in pairs(table) do 
-if type(v) == "table" then 
-printh(prefix.."["..type(v).."]"..k.." = {")
-debug_print_table(v, "__"..prefix)
-printh(prefix.."}")
-else
-printh(prefix.."["..type(v).."]"..k.." = "..v)
+function convert_to_array_or_table(str)
+local internal = sub(str, 2, #str-1)
+if (str_contains_char(internal, "{")) return unpack_table(internal) 
+if (not str_contains_char(internal, "=")) return split(internal, ",", true) 
+return unpack_table(internal)
 end
+function split_key_value_str(str)
+local parts = split(str, "=")
+local key = tonum(parts[1]) or parts[1]
+if str[1] == "{" and str[-1] == "}" then 
+return nil, convert_to_array_or_table(str)
+end
+local val = sub(str, #(tostr(key))+2)
+if val[1] == "{" and val[-1] == "}" then 
+return key, convert_to_array_or_table(val)
+end
+return key, val
+end
+function str_contains_char(str, char)
+for i=1, #str do
+if (str[i] == char) return true
 end
 end
 __gfx__
