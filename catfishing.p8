@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={goldfish,2,1,2},successIDs={11}},{gradient={8,9,10,11,11,11,10,9,8},stats={place holder,0,1,2},successIDs={11}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3}"
+global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={goldfish,2,1,2},successIDs={11},units={cm,g}},{gradient={8,9,10,11,11,11,10,9,8},stats={place holder,0,1,2},successIDs={11},units={m,kg}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   fishing_area = FishingArea:new(0)
@@ -99,7 +99,7 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fishID_, fish_name, spriteID, weight, fish_size)
+function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
   local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
   local box_position = Vec:new((128-box_size.x-6) \ 2, 90)
   obj = {
@@ -108,6 +108,7 @@ function Fish:new(fishID_, fish_name, spriteID, weight, fish_size)
     lb = weight,
     size = fish_size,
     fishID = fishID_,
+    units = units_,
     tension_slider = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
       Vec:new(global_data_table.gauge_data.size), 
@@ -129,7 +130,7 @@ end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
-  local text = "name: "..self.name.."\n\nweight: "..self.lb.."kg".."\nsize: "..self.size.."m"
+  local text = "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1]
   BorderRect.draw(self.description_box)
   print_with_outline(text, self.description_box.position.x + 5, 95, 7, 0)
 end
@@ -185,7 +186,7 @@ function FishingArea:update()
       size = generate_stat_with_bias(size, global_data_table.biases.size)
       weight *= size * 0.3 * global_data_table.biases.weight
       weight = round_to(weight, 2)
-      self.fish = Fish:new(fishID, name, spriteID, weight, size)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 

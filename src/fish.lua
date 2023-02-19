@@ -1,5 +1,5 @@
 Fish = {}
-function Fish:new(fishID_, fish_name, spriteID, weight, fish_size)
+function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
   local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
   local box_position = Vec:new((128-box_size.x-6) \ 2, 90)
   obj = {
@@ -8,6 +8,7 @@ function Fish:new(fishID_, fish_name, spriteID, weight, fish_size)
     lb = weight,
     size = fish_size,
     fishID = fishID_,
+    units = units_,
     -- Internal
     tension_slider = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
@@ -30,7 +31,7 @@ end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
-  local text = "name: "..self.name.."\n\nweight: "..self.lb.."kg".."\nsize: "..self.size.."m"
+  local text = "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1]
   BorderRect.draw(self.description_box)
   print_with_outline(text, self.description_box.position.x + 5, 95, 7, 0)
 end

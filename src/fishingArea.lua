@@ -40,7 +40,7 @@ function FishingArea:update()
       size = generate_stat_with_bias(size, global_data_table.biases.size)
       weight *= size * 0.3 * global_data_table.biases.weight
       weight = round_to(weight, 2)
-      self.fish = Fish:new(fishID, name, spriteID, weight, size)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 
