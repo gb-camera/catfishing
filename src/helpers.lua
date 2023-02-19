@@ -39,6 +39,13 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
   end
 end
 
+function round_to(value, places)
+  local places = 10 * places
+  local val = value * places
+  val = flr(val)
+  return val / places
+end
+
 function table_contains(table, val)
   for obj in all(table) do 
     if (obj == val) return true

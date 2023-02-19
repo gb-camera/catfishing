@@ -1,8 +1,7 @@
 FishingArea = {}
-function FishingArea:new(mapID_, position_)
+function FishingArea:new(mapID_)
   obj = {
     mapID = mapID_,
-    position = position_,
     -- internal
     power_gauge = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
@@ -37,7 +36,11 @@ function FishingArea:update()
     elseif self.state == "casting" then 
       local fishID = flr(rnd(#global_data_table.fishes))+1
       local fish = global_data_table.fishes[fishID]
-      self.fish = Fish:new(fishID, self.position, unpack(fish.stats))
+      local name, spriteID, weight, size = unpack(fish.stats)
+      size = generate_stat_with_bias(size, global_data_table.biases.size)
+      weight *= size * 0.3 * global_data_table.biases.weight
+      weight = round_to(weight, 2)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 
@@ -63,4 +66,9 @@ function FishingArea:update()
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
+end
+
+function generate_stat_with_bias(stat, bias)
+  local val = mid(stat + rnd(bias) - (bias/2), 0.1, stat + bias)
+  return round_to(val, 2)
 end

@@ -1,10 +1,10 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={catfish,0,1,2},successIDs={11}},{gradient={8,9,10,11,11,11,10,9,8},stats={triggerfish,0,1,2},successIDs={11}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3}"
+global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={goldfish,2,1,2},successIDs={11}},{gradient={8,9,10,11,11,11,10,9,8},stats={place holder,0,1,2},successIDs={11}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  fishing_area = FishingArea:new(0, Vec:new(8, 90))
+  fishing_area = FishingArea:new(0)
 end
 BorderRect = {}
 function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
@@ -99,21 +99,22 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fishID_, position_, fish_name, spriteID, weight, fish_size)
+function Fish:new(fishID_, fish_name, spriteID, weight, fish_size)
+  local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
+  local box_position = Vec:new((128-box_size.x-6) \ 2, 90)
   obj = {
     name=fish_name,
     sprite = spriteID,
     lb = weight,
     size = fish_size,
     fishID = fishID_,
-    position = position_,
     tension_slider = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.fishes[fishID_].gradient,
       unpack(global_data_table.gauge_data.settings)
     ),
-    description_box = BorderRect:new(position_, Vec:new(#("name: "..fish_name)*5, 30), 7, 1, 3),
+    description_box = BorderRect:new(box_position, box_size, 7, 1, 3),
   }
   setmetatable(obj, self)
   self.__index = self
@@ -126,9 +127,11 @@ function Fish:draw_tension()
   GradientSlider.draw(self.tension_slider)
 end
 function Fish:draw_details()
-  local text = "name: "..self.name.."\n\nweight: "..self.lb.."\nsize: "..self.size
+  line(62, 0, 62, 48, 7)
+  draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
+  local text = "name: "..self.name.."\n\nweight: "..self.lb.."kg".."\nsize: "..self.size.."m"
   BorderRect.draw(self.description_box)
-  print_with_outline(text, 20, 95, 7, 0)
+  print_with_outline(text, self.description_box.position.x + 5, 95, 7, 0)
 end
 function Fish:draw_lost()
   local name = "the fish got away"
@@ -142,10 +145,9 @@ function Fish:catch()
   )
 end
 FishingArea = {}
-function FishingArea:new(mapID_, position_)
+function FishingArea:new(mapID_)
   obj = {
     mapID = mapID_,
-    position = position_,
     power_gauge = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
       Vec:new(global_data_table.gauge_data.size), 
@@ -179,7 +181,11 @@ function FishingArea:update()
     elseif self.state == "casting" then 
       local fishID = flr(rnd(#global_data_table.fishes))+1
       local fish = global_data_table.fishes[fishID]
-      self.fish = Fish:new(fishID, self.position, unpack(fish.stats))
+      local name, spriteID, weight, size = unpack(fish.stats)
+      size = generate_stat_with_bias(size, global_data_table.biases.size)
+      weight *= size * 0.3 * global_data_table.biases.weight
+      weight = round_to(weight, 2)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 
@@ -204,6 +210,10 @@ function FishingArea:update()
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
+end
+function generate_stat_with_bias(stat, bias)
+  local val = mid(stat + rnd(bias) - (bias/2), 0.1, stat + bias)
+  return round_to(val, 2)
 end
 Vec = {}
 function Vec:new(dx, dy)
@@ -300,6 +310,12 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
     end
   end
 end
+function round_to(value, places)
+  local places = 10 * places
+  local val = value * places
+  val = flr(val)
+  return val / places
+end
 function table_contains(table, val)
   for obj in all(table) do 
     if (obj == val) return true
@@ -373,11 +389,19 @@ function str_contains_char(str, char)
   end
 end
 __gfx__
-11221122000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000004888000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211220000488880000048000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211220048889900004889000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+221122112211221108a8999990088990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122118a5a999999889900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+112211221122112288a9999999999000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211228899999999999900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+221122112211221109999999aa099990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+2211221122112211009999aaa00099aa000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+112211221122112200099aaa00000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
