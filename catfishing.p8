@@ -1,15 +1,21 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="fishes={{placeholder name,0,1,2,50,100,100}},progressBar={fill_color=2,max_val=200,rect_data={5,5,50,5,8,6,2}},text={60,5,7,1}"
+global_data_str="palettes={transparent_color_id=0},fishes={{placeholder name,0,1,2,50,100,100}},text={60,5,7,1},tension_bar={position={10,10},size={100,5},gradient={8,9,10,11,11,11,10,9,8},settings={4,7,2,3}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  bar = ProgressBar:new(
-    global_data_table.progressBar.fill_color, 
-    global_data_table.progressBar.max_val, 
-    global_data_table.progressBar.rect_data
+  gradient = GradientSlider:new(
+    Vec:new(global_data_table.tension_bar.position), 
+    Vec:new(global_data_table.tension_bar.size), 
+    global_data_table.tension_bar.gradient,
+    unpack(global_data_table.tension_bar.settings)
   )
-  fish = Fish:new(unpack(global_data_table.fishes[1]))
+  stages = {
+    [8] = "fail",
+    [9] = "almost",
+    [10] = "good",
+    [11] = "perfect"
+  }
 end
 BorderRect = {}
 function BorderRect:new(dx, dy, dw, dh, border_color, background_color, thickness_size)
@@ -28,25 +34,62 @@ function BorderRect:draw()
     self.w+self.thickness, self.h+self.thickness, self.border)
   rectfill(self.x, self.y, self.w, self.h, self.background)
 end
-ProgressBar = {}
-function ProgressBar:new(fill_color, max_val, rect_data)
+GradientSlider = {}
+function GradientSlider:new(
+  position_, size_, gradient_colors, handle_color, outline_color, thickness_, speed_)
   obj = {
-    val = 0,
-    max_value = max_val,
-    color = fill_color,
-    rect = BorderRect:new(unpack(rect_data))
+    position=position_, 
+    size=size_, 
+    colors=gradient_colors,
+    handle=handle_color,
+    outline=outline_color,
+    thickness=thickness_,
+    speed=speed_,
+    handle_size=Vec:new(3, size_.y+4),
+    pos=0,
+    dir=1
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
-function ProgressBar:draw()
-  BorderRect.draw(self.rect)
-  if (self.val == 0) return
-  rectfill(self.rect.x, self.rect.y, self.rect.x+self.val, self.rect.h, self.color)
+function GradientSlider:draw()
+  local rect_size = self.position + self.size
+  rectfill(
+    self.position.x-self.thickness, self.position.y-self.thickness, 
+    rect_size.x+self.thickness, rect_size.y+self.thickness, 
+    self.outline
+  )
+  for y=0, self.size.y do
+    for x=0, self.size.x do
+      local pixel_coord = Vec:new(x, y) + self.position 
+      pset(pixel_coord.x, pixel_coord.y, self.colors[GradientSlider.get_stage(self, x)])
+    end
+  end
+  local handle_pos = self.position + Vec:new(self.pos, -2)
+  local handle_size = handle_pos + self.handle_size
+  rectfill(
+    handle_pos.x-self.thickness, handle_pos.y-self.thickness,
+    handle_size.x+self.thickness, handle_size.y+self.thickness,
+    self.outline
+  )
+  rectfill(
+    handle_pos.x, handle_pos.y,
+    handle_size.x, handle_size.y,
+    self.handle
+  )
 end
-function ProgressBar:change_value(value)
-  self.val = mid(value / self.max_value, 0, 1) * (self.rect.w - self.rect.x)
+function GradientSlider:update()
+  self.pos += self.dir * self.speed
+  if self.pos >= self.size.x or self.pos <= 0 then 
+    self.dir *= -1
+  end
+end
+function GradientSlider:get_stage(x)
+  local p = x or self.pos
+  local rate = flr((p / self.size.x) * 100)
+  local range = self.size.x \ #self.colors
+  return mid(rate \ range + 1, 1, #self.colors)
 end
 Fish = {}
 function Fish:new(
@@ -88,27 +131,76 @@ function Fish:pull()
     end
   end
 end
+Vec = {}
+function Vec:new(dx, dy)
+  local obj = nil
+  if type(dx) == "table" then 
+    obj = {x=dx[1],y=dx[2]}
+  else
+    obj={x=dx,y=dy}
+  end
+  setmetatable(obj, self)
+  self.__index = self
+  self.__add = function(a, b)
+    return Vec:new(a.x+b.x,a.y+b.y)
+  end
+  self.__sub = function(a, b)
+    return Vec:new(a.x-b.x,a.y-b.y)
+  end
+  self.__mul = function(a, scalar)
+    return Vec:new(a.x*scalar,a.y*scalar)
+  end
+  self.__div = function(a, scalar)
+    return Vec:new(a.x/scalar,a.y/scalar)
+  end
+  self.__eq = function(a, b)
+    return (a.x==b.x and a.y==b.y)
+  end
+  self.__tostring = function(vec)
+    return "("..vec.x..", "..vec.y..")"
+  end
+  self.__concat = function(vec, other)
+    return (type(vec) == "table") and Vec.__tostring(vec)..other or vec..Vec.__tostring(other)
+  end
+  return obj
+end
+function Vec:unpack()
+  return self.x, self.y
+end
+function Vec:clamp(min, max)
+  self.x, self.y = mid(self.x, min, max), mid(self.y, min, max)
+end
+function normalize(val)
+  return (type(val) == "table") and Vec:new(normalize(val.x), normalize(val.y)) or flr(mid(val, -1, 1))
+end
+function lerp(start, last, rate)
+  if type(start) == "table" then 
+    return Vec:new(lerp(start.x, last.x, rate), lerp(start.y, last.y, rate))
+  else
+    return start + (last - start) * rate
+  end
+end
 function _init()
   reset()
+  tapped_stage = 0
 end
 function _draw()
   cls()
-  ProgressBar.draw(bar)
-  if fish.state == "caught" then 
-    print_with_outline("caught", unpack(global_data_table.text))
-  elseif Fish.is_lost(fish) then 
-    print_with_outline("lost", unpack(global_data_table.text))
+  GradientSlider.draw(gradient)
+  if tapped_stage > 0 then 
+    local color = gradient.colors[tapped_stage]
+    local text = stages[color]
+    rectfill(8, 20, #text*5+8, 30, 1)
+    print_with_outline(text, 12, 23, color, 1)
   end
-  if fish.state ~= "caught" then
-    print_with_outline(Fish.progress(fish).."%", unpack(global_data_table.text))
-    print_with_outline("state: "..fish.state, 5, 20, 7, 1)
+  for i, text in pairs(stages) do
+    print_with_outline(text, 12, 35 + (i*7), i, 1)
   end
 end
 function _update()
-  Fish.update(fish)
-  ProgressBar.change_value(bar, fish.ticks)
+  GradientSlider.update(gradient)
   if btn(❎) then
-    Fish.pull(fish)
+    tapped_stage = GradientSlider.get_stage(gradient)
   end
 end
 function print_with_outline(text, dx, dy, text_color, outline_color)
@@ -119,16 +211,29 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx,dy,text_color
 end
 function controls()
-  if btnp(⬆️) then
-    return 0, -1
-  elseif btnp(⬇️) then
-    return 0, 1
-  elseif btnp(⬅️) then
-    return -1, 0
-  elseif btnp(➡️) then
-    return 1, 0
-  else
-    return 0, 0
+  if btnp(⬆️) then return 0, -1
+  elseif btnp(⬇️) then return 0, 1
+  elseif btnp(⬅️) then return -1, 0
+  elseif btnp(➡️) then return 1, 0
+  end
+  return 0, 0
+end
+function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
+  local sx, sy = (sprite_id % 16) * 8, (sprite_id \ 16) * 8 
+  local sine, cosine = sin(theta / 360), cos(theta / 360)
+  local shift = size\2 - 0.5
+  for mx=0, size-1 do 
+    for my=0, size-1 do 
+      local dx, dy = mx-shift, my-shift
+      local xx = flr(dx*cosine-dy*sine+shift)
+      local yy = flr(dx*sine+dy*cosine+shift)
+      if xx >= 0 and xx < size and yy >= 0 and yy <= size then
+        local id = sget(sx+xx, sy+yy)
+        if id ~= global_data_table.palettes.transparent_color_id or is_opaque then 
+          pset(position.x+mx, position.y+my, id)
+        end
+      end
+    end
   end
 end
 function unpack_table(str)

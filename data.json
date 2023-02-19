@@ -1,23 +1,13 @@
 {
-    "fishes": [
-        [
-            "placeholder name",
-            0,
-            1,
-            2,
-            50,
-            100,
-            100 
-        ]
-    ],
-    "progressBar" : {
-        "fill_color" : 2,
-        "max_val": 200,
-        "rect_data" : [
-            5, 5, 50, 5, 8, 6, 2
-        ]
-    },
-    "text": [
-        60, 5, 7, 1
-    ]
+  "palettes": {
+    "transparent_color_id": 0
+  },
+  "fishes": [["placeholder name", 0, 1, 2, 50, 100, 100]],
+  "text": [60, 5, 7, 1],
+  "tension_bar": {
+    "position": [10, 10],
+    "size": [100, 5],
+    "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+    "settings": [4, 7, 2, 3]
+  }
 }

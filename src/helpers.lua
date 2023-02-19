@@ -7,15 +7,30 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
 end
 
 function controls()
-  if btnp(⬆️) then
-    return 0, -1
-  elseif btnp(⬇️) then
-    return 0, 1
-  elseif btnp(⬅️) then
-    return -1, 0
-  elseif btnp(➡️) then
-    return 1, 0
-  else
-    return 0, 0
+  if btnp(⬆️) then return 0, -1
+  elseif btnp(⬇️) then return 0, 1
+  elseif btnp(⬅️) then return -1, 0
+  elseif btnp(➡️) then return 1, 0
+  end
+  return 0, 0
+end
+
+-- https://www.lexaloffle.com/bbs/?pid=52525 [modified for this game]
+function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
+  local sx, sy = (sprite_id % 16) * 8, (sprite_id \ 16) * 8 
+  local sine, cosine = sin(theta / 360), cos(theta / 360)
+  local shift = size\2 - 0.5
+  for mx=0, size-1 do 
+    for my=0, size-1 do 
+      local dx, dy = mx-shift, my-shift
+      local xx = flr(dx*cosine-dy*sine+shift)
+      local yy = flr(dx*sine+dy*cosine+shift)
+      if xx >= 0 and xx < size and yy >= 0 and yy <= size then
+        local id = sget(sx+xx, sy+yy)
+        if id ~= global_data_table.palettes.transparent_color_id or is_opaque then 
+          pset(position.x+mx, position.y+my, id)
+        end
+      end
+    end
   end
 end

@@ -3,33 +3,33 @@
 #include src/data.lua
 -- Classes
 #include src/borderRect.lua
-#include src/progressBar.lua
+#include src/gradientSlider.lua
 #include src/fishing.lua
+#include src/vec.lua
 
 function _init()
   reset()
+  tapped_stage = 0
 end
 
 function _draw()
   cls()
-  ProgressBar.draw(bar)
-  if fish.state == "caught" then 
-    print_with_outline("caught", unpack(global_data_table.text))
-  elseif Fish.is_lost(fish) then 
-    print_with_outline("lost", unpack(global_data_table.text))
+  GradientSlider.draw(gradient)
+  if tapped_stage > 0 then 
+    local color = gradient.colors[tapped_stage]
+    local text = stages[color]
+    rectfill(8, 20, #text*5+8, 30, 1)
+    print_with_outline(text, 12, 23, color, 1)
   end
-  if fish.state ~= "caught" then
-    print_with_outline(Fish.progress(fish).."%", unpack(global_data_table.text))
-    print_with_outline("state: "..fish.state, 5, 20, 7, 1)
+  for i, text in pairs(stages) do
+    print_with_outline(text, 12, 35 + (i*7), i, 1)
   end
 end
 
 function _update()
-  Fish.update(fish)
-  ProgressBar.change_value(bar, fish.ticks)
-
+  GradientSlider.update(gradient)
   if btn(❎) then
-    Fish.pull(fish)
+    tapped_stage = GradientSlider.get_stage(gradient)
   end
 end
 
