@@ -37,10 +37,8 @@ function FishingArea:update()
       local fishID = flr(rnd(#global_data_table.fishes))+1
       local fish = global_data_table.fishes[fishID]
       local name, spriteID, weight, size = unpack(fish.stats)
-      size = generate_stat_with_bias(size, global_data_table.biases.size)
-      weight *= size * 0.3 * global_data_table.biases.weight
-      weight = round_to(weight, 2)
-      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units)
+      size, weight = generate_weight_size_with_bias(weight, size)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units, fish.gradient)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 
@@ -60,15 +58,18 @@ function FishingArea:update()
     end
   end
   
-  if self.state == "none" then 
-  elseif self.state == "casting" then 
+  if self.state == "casting" then 
     GradientSlider.update(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
 end
 
-function generate_stat_with_bias(stat, bias)
-  local val = mid(stat + rnd(bias) - (bias/2), 0.1, stat + bias)
-  return round_to(val, 2)
+-- formula in desmos [https://www.desmos.com/calculator/glmnwyjhkl]
+-- size influences weight but not the other way around
+function generate_weight_size_with_bias(weight, size)
+  local bias = global_data_table.biases.size
+  local new_size = round_to(mid(size + rnd(bias) - (bias/2), 0.1, size + bias), 2)
+  local new_weight = round_to(weight * new_size * 0.3 * global_data_table.biases.weight, 2)
+  return new_size, new_weight
 end

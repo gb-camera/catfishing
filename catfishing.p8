@@ -99,9 +99,9 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
+function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_, gradient)
   local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
-  local box_position = Vec:new((128-box_size.x-6) \ 2, 90)
+  local gauge_data = global_data_table.gauge_data
   obj = {
     name=fish_name,
     sprite = spriteID,
@@ -110,12 +110,13 @@ function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
     fishID = fishID_,
     units = units_,
     tension_slider = GradientSlider:new(
-      Vec:new(global_data_table.gauge_data.position), 
-      Vec:new(global_data_table.gauge_data.size), 
-      global_data_table.fishes[fishID_].gradient,
-      unpack(global_data_table.gauge_data.settings)
+      Vec:new(gauge_data.position), Vec:new(gauge_data.size), 
+      gradient, unpack(gauge_data.settings)
     ),
-    description_box = BorderRect:new(box_position, box_size, 7, 1, 3),
+    description_box = BorderRect:new(
+      Vec:new((128-box_size.x-6) \ 2, 90), box_size, 
+      7, 1, 3
+    )
   }
   setmetatable(obj, self)
   self.__index = self
@@ -183,10 +184,8 @@ function FishingArea:update()
       local fishID = flr(rnd(#global_data_table.fishes))+1
       local fish = global_data_table.fishes[fishID]
       local name, spriteID, weight, size = unpack(fish.stats)
-      size = generate_stat_with_bias(size, global_data_table.biases.size)
-      weight *= size * 0.3 * global_data_table.biases.weight
-      weight = round_to(weight, 2)
-      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units)
+      size, weight = generate_weight_size_with_bias(weight, size)
+      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units, fish.gradient)
       GradientSlider.reset(self.power_gauge)
       self.state = "fishing"
     elseif self.state == "fishing" then 
@@ -205,16 +204,17 @@ function FishingArea:update()
     end
   end
   
-  if self.state == "none" then 
-  elseif self.state == "casting" then 
+  if self.state == "casting" then 
     GradientSlider.update(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
 end
-function generate_stat_with_bias(stat, bias)
-  local val = mid(stat + rnd(bias) - (bias/2), 0.1, stat + bias)
-  return round_to(val, 2)
+function generate_weight_size_with_bias(weight, size)
+  local bias = global_data_table.biases.size
+  local new_size = round_to(mid(size + rnd(bias) - (bias/2), 0.1, size + bias), 2)
+  local new_weight = round_to(weight * new_size * 0.3 * global_data_table.biases.weight, 2)
+  return new_size, new_weight
 end
 Vec = {}
 function Vec:new(dx, dy)

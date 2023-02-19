@@ -1,7 +1,7 @@
 Fish = {}
-function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
+function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_, gradient)
   local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
-  local box_position = Vec:new((128-box_size.x-6) \ 2, 90)
+  local gauge_data = global_data_table.gauge_data
   obj = {
     name=fish_name,
     sprite = spriteID,
@@ -11,12 +11,13 @@ function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_)
     units = units_,
     -- Internal
     tension_slider = GradientSlider:new(
-      Vec:new(global_data_table.gauge_data.position), 
-      Vec:new(global_data_table.gauge_data.size), 
-      global_data_table.fishes[fishID_].gradient,
-      unpack(global_data_table.gauge_data.settings)
+      Vec:new(gauge_data.position), Vec:new(gauge_data.size), 
+      gradient, unpack(gauge_data.settings)
     ),
-    description_box = BorderRect:new(box_position, box_size, 7, 1, 3),
+    description_box = BorderRect:new(
+      Vec:new((128-box_size.x-6) \ 2, 90), box_size, 
+      7, 1, 3
+    )
   }
   setmetatable(obj, self)
   self.__index = self
