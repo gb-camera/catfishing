@@ -39,6 +39,14 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
   end
 end
 
+function longest_string(strings)
+  local len = 0
+  for string in all(strings) do 
+    len = max(len, #string)
+  end
+  return len
+end
+
 function round_to(value, places)
   local places = 10 * places
   local val = value * places

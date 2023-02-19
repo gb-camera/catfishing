@@ -1,6 +1,11 @@
 Fish = {}
 function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_, gradient)
-  local box_size = Vec:new(#("name: "..fish_name)*5-5, 32)
+  local string_len = longest_string({
+    "name: "..fish_name,
+    "weight: "..weight..units_[2],
+    "size: "..fish_size..units_[1]
+  })*5-5
+  local box_size = Vec:new(string_len, 32)
   local gauge_data = global_data_table.gauge_data
   obj = {
     name=fish_name,
