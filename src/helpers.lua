@@ -6,6 +6,10 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx,dy,text_color
 end
 
+function print_text_center(text, dy, text_color, outline_color)
+  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
+end
+
 function controls()
   if btnp(⬆️) then return 0, -1
   elseif btnp(⬇️) then return 0, 1
@@ -32,5 +36,11 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
         end
       end
     end
+  end
+end
+
+function table_contains(table, val)
+  for obj in all(table) do 
+    if (obj == val) return true
   end
 end

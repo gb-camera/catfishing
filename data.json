@@ -2,12 +2,23 @@
   "palettes": {
     "transparent_color_id": 0
   },
-  "fishes": [["placeholder name", 0, 1, 2, 50, 100, 100]],
+  "fishes": [
+    {
+      "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+      "stats": ["catfish", 0, 1, 2],
+      "successIDs": [11]
+    },
+    {
+      "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+      "stats": ["triggerfish", 0, 1, 2],
+      "successIDs": [11]
+    }
+  ],
   "text": [60, 5, 7, 1],
-  "tension_bar": {
+  "gauge_data": {
     "position": [10, 10],
     "size": [100, 5],
-    "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
     "settings": [4, 7, 2, 3]
-  }
+  },
+  "power_gauge_colors": [8, 9, 10, 11, 3]
 }

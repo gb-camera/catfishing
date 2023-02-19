@@ -56,3 +56,7 @@ function GradientSlider:get_stage(x)
   local range = self.size.x \ #self.colors
   return mid(rate \ range + 1, 1, #self.colors)
 end
+function GradientSlider:reset()
+  self.pos = 0
+  self.dir = 1
+end

@@ -1,27 +1,18 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="palettes={transparent_color_id=0},fishes={{placeholder name,0,1,2,50,100,100}},text={60,5,7,1},tension_bar={position={10,10},size={100,5},gradient={8,9,10,11,11,11,10,9,8},settings={4,7,2,3}}"
+global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={catfish,0,1,2},successIDs={11}},{gradient={8,9,10,11,11,11,10,9,8},stats={triggerfish,0,1,2},successIDs={11}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  gradient = GradientSlider:new(
-    Vec:new(global_data_table.tension_bar.position), 
-    Vec:new(global_data_table.tension_bar.size), 
-    global_data_table.tension_bar.gradient,
-    unpack(global_data_table.tension_bar.settings)
-  )
-  stages = {
-    [8] = "fail",
-    [9] = "almost",
-    [10] = "good",
-    [11] = "perfect"
-  }
+  fishing_area = FishingArea:new(0, Vec:new(8, 90))
 end
 BorderRect = {}
-function BorderRect:new(dx, dy, dw, dh, border_color, background_color, thickness_size)
+function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
   obj = {
-    x = dx, y = dy, w = dx + dw, h = dy + dh,
-    border = border_color, background = background_color,
+    position = position_, 
+    size = position_ + size_,
+    border = border_color, 
+    base = base_color,
     thickness = thickness_size
   }
   setmetatable(obj, self)
@@ -30,9 +21,21 @@ function BorderRect:new(dx, dy, dw, dh, border_color, background_color, thicknes
 end
 function BorderRect:draw()
   rectfill(
-    self.x-self.thickness, self.y-self.thickness, 
-    self.w+self.thickness, self.h+self.thickness, self.border)
-  rectfill(self.x, self.y, self.w, self.h, self.background)
+    self.position.x-self.thickness, self.position.y-self.thickness, 
+    self.size.x+self.thickness, self.size.y+self.thickness, 
+    self.border
+  )
+  rectfill(self.position.x, self.position.y, self.size.x, self.size.y, self.base)
+end
+function BorderRect:resize(position_, size_)
+  if (self.position ~= position_) self.position = position_
+  if (self.size ~= size_ + position_) self.size = size_ + position_ 
+end
+function BorderRect:reposition(position_)
+  if (self.position == position_) return
+  local size = self.size - self.position
+  self.position = position_
+  self.size = self.position + size
 end
 GradientSlider = {}
 function GradientSlider:new(
@@ -91,44 +94,115 @@ function GradientSlider:get_stage(x)
   local range = self.size.x \ #self.colors
   return mid(rate \ range + 1, 1, #self.colors)
 end
+function GradientSlider:reset()
+  self.pos = 0
+  self.dir = 1
+end
 Fish = {}
-function Fish:new(
-  fish_name, spriteID, weight, fish_size,
-  bite_ticks, fight_ticks, success_limit)
+function Fish:new(fishID_, position_, fish_name, spriteID, weight, fish_size)
   obj = {
-    fish_name,
+    name=fish_name,
     sprite = spriteID,
     lb = weight,
     size = fish_size,
-    ticks = bite_ticks,
-    fight_max_ticks = fight_ticks,
-    success_ceil = success_limit + fight_ticks,
-    state = "lure"
+    fishID = fishID_,
+    position = position_,
+    tension_slider = GradientSlider:new(
+      Vec:new(global_data_table.gauge_data.position), 
+      Vec:new(global_data_table.gauge_data.size), 
+      global_data_table.fishes[fishID_].gradient,
+      unpack(global_data_table.gauge_data.settings)
+    ),
+    description_box = BorderRect:new(position_, Vec:new(#("name: "..fish_name)*5, 30), 7, 1, 3),
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
 function Fish:update()
-  if (Fish.is_lost(self) or self.state == "caught") return
-  self.ticks -= 1
+  GradientSlider.update(self.tension_slider)
 end
-function Fish:is_lost()
-  return self.ticks <= 0
+function Fish:draw_tension()
+  GradientSlider.draw(self.tension_slider)
 end
-function Fish:progress()
-  if (self.state ~= "fight") return 0
-  return flr(self.ticks / self.success_ceil * 100)
+function Fish:draw_details()
+  local text = "name: "..self.name.."\n\nweight: "..self.lb.."\nsize: "..self.size
+  BorderRect.draw(self.description_box)
+  print_with_outline(text, 20, 95, 7, 0)
 end
-function Fish:pull()
-  if self.state == "lure" then 
-    self.state = "fight"
-    self.ticks = self.fight_max_ticks
-  elseif self.state == "fight" and Fish.progress(self) <= 100 then 
-    self.ticks += 2
-    if self.ticks >= self.success_ceil then 
-      self.state = "caught"
+function Fish:draw_lost()
+  local name = "the fish got away"
+  BorderRect.draw(self.description_box)
+  print_with_outline(name, 20, 95, 7, 0)
+end
+function Fish:catch()
+  return table_contains(
+    global_data_table.fishes[self.fishID].successIDs, 
+    self.tension_slider.colors[GradientSlider.get_stage(self.tension_slider)]
+  )
+end
+FishingArea = {}
+function FishingArea:new(mapID_, position_)
+  obj = {
+    mapID = mapID_,
+    position = position_,
+    power_gauge = GradientSlider:new(
+      Vec:new(global_data_table.gauge_data.position), 
+      Vec:new(global_data_table.gauge_data.size), 
+      global_data_table.power_gauge_colors,
+      unpack(global_data_table.gauge_data.settings)
+    ),
+    state = "none",
+    fish = nil
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+function FishingArea:draw()
+  if self.state == "none" then 
+    print_text_center("press ❎ to cast line", 60, 7, 1)
+  elseif self.state == "casting" then 
+    GradientSlider.draw(self.power_gauge)
+  elseif self.state == "fishing" then 
+    Fish.draw_tension(self.fish)
+  elseif self.state == "detail" then 
+    Fish.draw_details(self.fish)
+  elseif self.state == "lost" then 
+    Fish.draw_lost(self.fish)
+  end
+end
+function FishingArea:update()
+  if btnp(❎) then
+    if self.state == "none" then 
+      self.state = "casting"
+    elseif self.state == "casting" then 
+      local fishID = flr(rnd(#global_data_table.fishes))+1
+      local fish = global_data_table.fishes[fishID]
+      self.fish = Fish:new(fishID, self.position, unpack(fish.stats))
+      GradientSlider.reset(self.power_gauge)
+      self.state = "fishing"
+    elseif self.state == "fishing" then 
+      if Fish.catch(self.fish) then 
+        self.state = "detail"
+      else
+        self.state = "lost"
+      end
+      GradientSlider.reset(self.fish.tension_slider)
+    elseif self.state == "detail" then 
+      self.fish = nil
+      self.state = "none"
+    elseif self.state == "lost" then 
+      self.fish = nil
+      self.state = "none"
     end
+  end
+  
+  if self.state == "none" then 
+  elseif self.state == "casting" then 
+    GradientSlider.update(self.power_gauge)
+  elseif self.state == "fishing" then 
+    Fish.update(self.fish)
   end
 end
 Vec = {}
@@ -182,28 +256,13 @@ function lerp(start, last, rate)
 end
 function _init()
   reset()
-  tapped_stage = 0
 end
 function _draw()
   cls()
-  GradientSlider.draw(gradient)
-  local text = "tension"
-  if tapped_stage > 0 then 
-    local color = gradient.colors[tapped_stage]
-    local stage_text = text..": "..stages[color]
-    print_with_outline(stage_text, 12, 20, color, 1)
-  else
-    print_with_outline(text, 12, 20, 7, 1)
-  end
-  for i, text in pairs(stages) do
-    print_with_outline(text, 12, 35 + (i*7), i, 1)
-  end
+  FishingArea.draw(fishing_area)
 end
 function _update()
-  GradientSlider.update(gradient)
-  if btn(❎) then
-    tapped_stage = GradientSlider.get_stage(gradient)
-  end
+  FishingArea.update(fishing_area)
 end
 function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx-1,dy,outline_color
@@ -211,6 +270,9 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx,dy-1
   ?text,dx,dy+1
   ?text,dx,dy,text_color
+end
+function print_text_center(text, dy, text_color, outline_color)
+  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
 end
 function controls()
   if btnp(⬆️) then return 0, -1
@@ -236,6 +298,11 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
         end
       end
     end
+  end
+end
+function table_contains(table, val)
+  for obj in all(table) do 
+    if (obj == val) return true
   end
 end
 function unpack_table(str)
