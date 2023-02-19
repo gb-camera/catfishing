@@ -15,11 +15,13 @@ end
 function _draw()
   cls()
   GradientSlider.draw(gradient)
+  local text = "tension"
   if tapped_stage > 0 then 
     local color = gradient.colors[tapped_stage]
-    local text = stages[color]
-    rectfill(8, 20, #text*5+8, 30, 1)
-    print_with_outline(text, 12, 23, color, 1)
+    local stage_text = text..": "..stages[color]
+    print_with_outline(stage_text, 12, 20, color, 1)
+  else
+    print_with_outline(text, 12, 20, 7, 1)
   end
   for i, text in pairs(stages) do
     print_with_outline(text, 12, 35 + (i*7), i, 1)
