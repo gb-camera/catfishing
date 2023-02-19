@@ -7,25 +7,19 @@
 #include src/fishing.lua
 
 function _init()
-  table_data = unpack_table(global_data_str)
-  bar = ProgressBar:new(
-    table_data.progressBar.fill_color, 
-    table_data.progressBar.max_val, 
-    table_data.progressBar.rect_data
-  )
-  fish = Fish:new(unpack(table_data.fishes[1]))
+  reset()
 end
 
 function _draw()
   cls()
   ProgressBar.draw(bar)
   if fish.state == "caught" then 
-    print_with_outline("caught", unpack(table_data.text))
+    print_with_outline("caught", unpack(global_data_table.text))
   elseif Fish.is_lost(fish) then 
-    print_with_outline("lost", unpack(table_data.text))
+    print_with_outline("lost", unpack(global_data_table.text))
   end
   if fish.state ~= "caught" then
-    print_with_outline(Fish.progress(fish).."%", unpack(table_data.text))
+    print_with_outline(Fish.progress(fish).."%", unpack(global_data_table.text))
     print_with_outline("state: "..fish.state, 5, 20, 7, 1)
   end
 end

@@ -1,4 +1,5 @@
 import os
+from src.jsonToCustomLuaTable import JSONSerializer
 
 class FunctionData():
     def __init__(self, file_name:str, line:int) -> None:
@@ -15,7 +16,7 @@ class Compiler():
         self.srcDirectory = srcDirectory
         pass
 
-    def Compile(self, file: str, path_prefix:str = "") -> list[str]:
+    def Compile(self, file: str, pathPrefix:str = "") -> list[str]:
         buffer: list[str] = []
         if not file.endswith(".lua"):
             raise Exception("Invalid lua file: " + file)
@@ -25,12 +26,12 @@ class Compiler():
             return []
 
         self.includedFiles.add(fileName)
-        preprocess = os.path.join(self.srcDirectory, path_prefix)
+        preprocess = os.path.join(self.srcDirectory, pathPrefix)
         path = os.path.join(preprocess, self._WinReverseSlashes(file))
         with open(path, encoding="utf8") as f:
             lines: list[str] = f.readlines()
             for i, line in enumerate(lines):
-                if line.lstrip().startswith("--"): continue
+                if line.count("--[[remove]]") > 0: continue
                 if line.count("#include") > 0:
                     fileName = self._ParseFileName(line)
                     if fileName in self.includedFiles:
@@ -46,6 +47,14 @@ class Compiler():
                     if functionName in self.functions:
                         raise Exception(f"Function {functionName} exist in {self.functions[functionName]} and in {FunctionData(file, i)}")
                     self.functions[functionName] = FunctionData(file, i)
+                elif line.lstrip().startswith("--"):
+                    # Stringify JSON File
+                    if line.startswith("--[[json"):
+                        args: list[str] = line.split(" ")
+                        if len(args) != 3: continue
+                        replacementLine:str = Compiler.JsonStringify(args[1], args[2])
+                        buffer.append(replacementLine)
+                    continue
                 buffer.append(line)
         return buffer
 
@@ -54,6 +63,16 @@ class Compiler():
 
     def GetFunctionData(self, functionName: str) -> FunctionData:
         return self.functions[functionName]
+
+    @staticmethod
+    def JsonStringify(variableName: str, filepath: str) -> str:
+        filepath = filepath.replace("]]\n", "")
+        if os.path.exists(filepath):
+            jsonSerializer = JSONSerializer(filepath)
+            tableStr: str = jsonSerializer.Parse()
+            return variableName + '="' + tableStr + '"\n'
+        else: 
+            raise Exception(f"Can't locate JSON file with path: {filepath}")
 
     @staticmethod
     def _ParseFileName(line: str) -> str:
