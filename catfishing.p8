@@ -1,10 +1,10 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="palettes={transparent_color_id=0},fishes={{gradient={8,9,10,11,11,11,10,9,8},stats={goldfish,2,2.7,12.5},successIDs={11},units={cm,g}},{gradient={8,9,10,11,11,11,10,9,8},stats={tuna,4,32,2.25},successIDs={11},units={m,kg}}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3}"
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  fishing_area = FishingArea:new(0)
+  fishing_area = FishingArea:new(global_data_table.areas[1])
 end
 BorderRect = {}
 function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
@@ -99,11 +99,12 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_, gradient)
+function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, successIDs)
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
-    "size: "..fish_size..units_[1]
+    "size: "..fish_size..units_[1],
+    "the fish got away"
   })*5-5
   local box_size = Vec:new(string_len, 32)
   local gauge_data = global_data_table.gauge_data
@@ -112,8 +113,8 @@ function Fish:new(fishID_, fish_name, spriteID, weight, fish_size, units_, gradi
     sprite = spriteID,
     lb = weight,
     size = fish_size,
-    fishID = fishID_,
     units = units_,
+    success_stage_ids = successIDs,
     tension_slider = GradientSlider:new(
       Vec:new(gauge_data.position), Vec:new(gauge_data.size), 
       gradient, unpack(gauge_data.settings)
@@ -136,30 +137,33 @@ end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
-  local text = "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1]
   BorderRect.draw(self.description_box)
-  print_with_outline(text, self.description_box.position.x + 5, 95, 7, 0)
-end
-function Fish:draw_lost()
-  local name = "the fish got away"
-  BorderRect.draw(self.description_box)
-  print_with_outline(name, 20, 95, 7, 0)
+  print_with_outline(
+    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1], 
+    self.description_box.position.x + 5, 95, 7, 0
+  )
 end
 function Fish:catch()
   return table_contains(
-    global_data_table.fishes[self.fishID].successIDs, 
+    self.success_stage_ids, 
     self.tension_slider.colors[GradientSlider.get_stage(self.tension_slider)]
   )
 end
 FishingArea = {}
-function FishingArea:new(mapID_)
+function FishingArea:new(area_data_)
+  local lost_text_len = #"the fish got away"*5-5
   obj = {
-    mapID = mapID_,
+    area_data = area_data_,
     power_gauge = GradientSlider:new(
       Vec:new(global_data_table.gauge_data.position), 
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.power_gauge_colors,
       unpack(global_data_table.gauge_data.settings)
+    ),
+    lost_box = BorderRect:new(
+      Vec:new((128-lost_text_len-6)\2, 48),
+      Vec:new(lost_text_len, 16),
+      7, 1, 3
     ),
     state = "none",
     fish = nil
@@ -170,7 +174,7 @@ function FishingArea:new(mapID_)
 end
 function FishingArea:draw()
   if self.state == "none" then 
-    print_text_center("press ❎ to cast line", 60, 7, 1)
+    print_with_outline("press ❎ to cast line", 2, 120, 7, 1)
   elseif self.state == "casting" then 
     GradientSlider.draw(self.power_gauge)
   elseif self.state == "fishing" then 
@@ -178,21 +182,28 @@ function FishingArea:draw()
   elseif self.state == "detail" then 
     Fish.draw_details(self.fish)
   elseif self.state == "lost" then 
-    Fish.draw_lost(self.fish)
+    FishingArea.draw_lost(self)
   end
+end
+function FishingArea:draw_lost()
+  BorderRect.draw(self.lost_box)
+  print_with_outline(
+    "the fish got away", 
+    self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
+  )
 end
 function FishingArea:update()
   if btnp(❎) then
     if self.state == "none" then 
       self.state = "casting"
     elseif self.state == "casting" then 
-      local fishID = flr(rnd(#global_data_table.fishes))+1
-      local fish = global_data_table.fishes[fishID]
-      local name, spriteID, weight, size = unpack(fish.stats)
-      size, weight = generate_weight_size_with_bias(weight, size)
-      self.fish = Fish:new(fishID, name, spriteID, weight, size, fish.units, fish.gradient)
+      self.fish = generate_fish(self.area_data, GradientSlider.get_stage(self.power_gauge))
       GradientSlider.reset(self.power_gauge)
-      self.state = "fishing"
+      if self.fish == nil then 
+        self.state = "lost"
+      else
+        self.state = "fishing"
+      end
     elseif self.state == "fishing" then 
       if Fish.catch(self.fish) then 
         self.state = "detail"
@@ -214,6 +225,23 @@ function FishingArea:update()
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
+end
+function generate_fish(area, stage)
+  local possible_fishes = {}
+  local stage_gauge = stage -- + bait bonus
+  for fish in all(area.fishes) do
+    printh(fish.max_gauge_requirement)
+    if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
+      add(possible_fishes, fish)
+    end
+  end
+  if (#possible_fishes == 0) return nil
+  local fish =possible_fishes[flr(rnd(#possible_fishes))+1]
+  local name, spriteID, weight, size = unpack(fish.stats)
+  size, weight = generate_weight_size_with_bias(weight, size)
+  return Fish:new(
+    name, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+  )
 end
 function generate_weight_size_with_bias(weight, size)
   local bias = global_data_table.biases.size
@@ -288,7 +316,7 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx,dy,text_color
 end
 function print_text_center(text, dy, text_color, outline_color)
-  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
+  print_with_outline(text, (128-(#text*5-5)-6)\2, dy, text_color, outline_color)
 end
 function controls()
   if btnp(⬆️) then return 0, -1
@@ -374,6 +402,9 @@ function insert_key_val(str, table)
       value = false 
     else
       value = tonum(val) or val
+    end
+    if value == "inf" then 
+      value = 32767
     end
     table[key] = value
   end

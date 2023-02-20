@@ -7,7 +7,7 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
 end
 
 function print_text_center(text, dy, text_color, outline_color)
-  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
+  print_with_outline(text, (128-(#text*5-5)-6)\2, dy, text_color, outline_color)
 end
 
 function controls()

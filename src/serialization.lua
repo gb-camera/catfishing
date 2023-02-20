@@ -40,6 +40,9 @@ function insert_key_val(str, table)
     else
       value = tonum(val) or val
     end
+    if value == "inf" then 
+      value = 32767
+    end
     table[key] = value
   end
 end

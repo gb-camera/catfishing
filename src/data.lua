@@ -3,5 +3,6 @@ local global_data_str --[[remove]]
 
 function reset()
   global_data_table = unpack_table(global_data_str)
-  fishing_area = FishingArea:new(0)
+  -- debug_printh_table(global_data_table, "")
+  fishing_area = FishingArea:new(global_data_table.areas[1])
 end
