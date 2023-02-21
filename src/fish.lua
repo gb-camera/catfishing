@@ -23,13 +23,18 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     description_box = BorderRect:new(
       Vec:new((128-box_size.x-6) \ 2, 80), box_size, 
       7, 1, 3
-    )
+    ),
+    ticks = 0
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
 function Fish:update()
+  if Fish.catch(self) then 
+    self.ticks += 1
+  end
+  if self.ticks > 10 then return end
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
