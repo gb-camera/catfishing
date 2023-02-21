@@ -45,10 +45,10 @@ function GradientSlider:draw()
   )
 end
 function GradientSlider:update()
-  self.pos += self.dir * self.speed
-  if self.pos >= self.size.x or self.pos <= 0 then 
-    self.dir *= -1
-  end
+  self.pos = mid(self.pos + self.speed, 0, self.size.x)
+end
+function GradientSlider:reduce()
+  self.pos = mid(self.pos - self.speed, 0, self.size.x)
 end
 function GradientSlider:get_stage(x)
   local p = x or self.pos
