@@ -20,7 +20,8 @@ function reset()
           text="fishing", color={7, 0}, 
           callback=function()
             get_active_menu().enable = false
-            loaded_area = 1
+            loaded_area = 1 --temp
+            FishingArea.reset(fishing_areas[loaded_area])
           end
         }
       },

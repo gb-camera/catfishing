@@ -6,7 +6,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     "size: "..fish_size..units_[1],
     "the fish got away"
   })*5-5
-  local box_size = Vec:new(string_len, 32)
+  local box_size = Vec:new(string_len, 40)
   local gauge_data = global_data_table.gauge_data
   obj = {
     name=fish_name,
@@ -21,7 +21,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
       gradient, unpack(gauge_data.settings)
     ),
     description_box = BorderRect:new(
-      Vec:new((128-box_size.x-6) \ 2, 90), box_size, 
+      Vec:new((128-box_size.x-6) \ 2, 80), box_size, 
       7, 1, 3
     )
   }
@@ -40,8 +40,8 @@ function Fish:draw_details()
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
   BorderRect.draw(self.description_box)
   print_with_outline(
-    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1], 
-    self.description_box.position.x + 5, 95, 7, 0
+    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
+    self.description_box.position.x + 5, self.description_box.position.y + 4, 7, 0
   )
 end
 function Fish:catch()

@@ -50,7 +50,8 @@ function reset()
           text="fishing", color={7, 0}, 
           callback=function()
             get_active_menu().enable = false
-            loaded_area = 1
+            loaded_area = 1 --temp
+            FishingArea.reset(fishing_areas[loaded_area])
           end
         }
       },
@@ -204,7 +205,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     "size: "..fish_size..units_[1],
     "the fish got away"
   })*5-5
-  local box_size = Vec:new(string_len, 32)
+  local box_size = Vec:new(string_len, 40)
   local gauge_data = global_data_table.gauge_data
   obj = {
     name=fish_name,
@@ -218,7 +219,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
       gradient, unpack(gauge_data.settings)
     ),
     description_box = BorderRect:new(
-      Vec:new((128-box_size.x-6) \ 2, 90), box_size, 
+      Vec:new((128-box_size.x-6) \ 2, 80), box_size, 
       7, 1, 3
     )
   }
@@ -237,8 +238,8 @@ function Fish:draw_details()
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
   BorderRect.draw(self.description_box)
   print_with_outline(
-    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1], 
-    self.description_box.position.x + 5, 95, 7, 0
+    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
+    self.description_box.position.x + 5, self.description_box.position.y + 4, 7, 0
   )
 end
 function Fish:catch()
@@ -260,7 +261,7 @@ function FishingArea:new(area_data_)
     ),
     lost_box = BorderRect:new(
       Vec:new((128-lost_text_len-6)\2, 48),
-      Vec:new(lost_text_len, 16),
+      Vec:new(lost_text_len, 24),
       7, 1, 3
     ),
     state = "none",
@@ -284,7 +285,7 @@ end
 function FishingArea:draw_lost()
   BorderRect.draw(self.lost_box)
   print_with_outline(
-    "the fish got away", 
+    "the fish got away\n\npress ❎ to close", 
     self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
   )
 end
@@ -322,6 +323,13 @@ function FishingArea:update()
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
+end
+function FishingArea:is_box_open()
+  return self.state == "lost" or self.state == "detail"
+end
+function FishingArea:reset()
+  self.fish = nil 
+  self.state = "none"
 end
 function generate_fish(area, stage)
   local possible_fishes = {}
@@ -723,6 +731,7 @@ function fish_loop()
     FishingArea.update(fishing_areas[loaded_area])
   end
   if btnp(🅾️) then
+    if (FishingArea.is_box_open(fishing_areas[loaded_area])) return
     if get_active_menu() == nil then 
       get_menu("fishing").enable = true
     else
@@ -747,9 +756,10 @@ end
 function draw_fishing()
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
-  else
+  elseif not FishingArea.is_box_open(fishing_areas[loaded_area]) then
     print_with_outline("press ❎ to fish", 1, 114, 7, 1)
     print_with_outline("press 🅾️ to open option menu", 1, 120, 7, 1)
+    print_with_outline("wip: imagine cat here", 5, 40, 7, 1)
   end
   FishingArea.draw(fishing_areas[loaded_area])
 end

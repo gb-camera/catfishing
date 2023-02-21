@@ -12,7 +12,7 @@ function FishingArea:new(area_data_)
     ),
     lost_box = BorderRect:new(
       Vec:new((128-lost_text_len-6)\2, 48),
-      Vec:new(lost_text_len, 16),
+      Vec:new(lost_text_len, 24),
       7, 1, 3
     ),
     state = "none",
@@ -36,7 +36,7 @@ end
 function FishingArea:draw_lost()
   BorderRect.draw(self.lost_box)
   print_with_outline(
-    "the fish got away", 
+    "the fish got away\n\npress ❎ to close", 
     self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
   )
 end
@@ -74,6 +74,13 @@ function FishingArea:update()
   elseif self.state == "fishing" then 
     Fish.update(self.fish)
   end
+end
+function FishingArea:is_box_open()
+  return self.state == "lost" or self.state == "detail"
+end
+function FishingArea:reset()
+  self.fish = nil 
+  self.state = "none"
 end
 
 function generate_fish(area, stage)
