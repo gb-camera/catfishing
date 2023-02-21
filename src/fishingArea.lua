@@ -23,7 +23,7 @@ function FishingArea:new(area_data_)
   return obj
 end
 function FishingArea:draw()
-  if self.state == "startcasting" then 
+  if self.state == "casting" then 
     GradientSlider.draw(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.draw_tension(self.fish)
@@ -45,13 +45,13 @@ function FishingArea:update()
     self.flag = true
     return 
   end
-  
-  if btnp(❎) and self.state ~= "startcasting" then
+
+  if btnp(❎) and self.state ~= "casting" then
     if self.state == "none" then 
       self.started = true
       self.fish = generate_fish(self.area_data, GradientSlider.get_stage(self.power_gauge))
       GradientSlider.reset(self.power_gauge)
-      self.state = "startcasting"
+      self.state = "casting"
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
     end
@@ -63,7 +63,7 @@ function FishingArea:update()
   end
 
   if btn(❎) then 
-    if self.state == "startcasting" and self.started then
+    if self.state == "casting" and self.started then
       GradientSlider.update(self.power_gauge)
     elseif self.state == "fishing" then 
       Fish.update(self.fish)
@@ -72,13 +72,13 @@ function FishingArea:update()
   else
     if self.state == "fishing" and self.started then
       GradientSlider.reduce(self.fish.tension_slider)
-    elseif self.state == "startcasting" then 
+    elseif self.state == "casting" then 
       self.state = "fishing"
       self.started = false
     end
   end
 
-  if self.state == "fishing" and self.fish.ticks > 10 then 
+  if self.state == "fishing" and self.fish.ticks > 20 then 
     if Fish.catch(self.fish) then 
       self.state = "detail"
     else

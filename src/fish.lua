@@ -34,11 +34,16 @@ function Fish:update()
   if Fish.catch(self) then 
     self.ticks += 1
   end
-  if self.ticks > 10 then return end
+  if self.ticks > 20 then return end
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
   GradientSlider.draw(self.tension_slider)
+  local thickness = self.tension_slider.thickness
+  local pos = self.tension_slider.position-Vec:new(thickness, 0)
+  local size = self.tension_slider.size
+  local y = pos.y+size.y+thickness
+  line(pos.x, y, pos.x + (self.ticks/20)*size.x+thickness, y, 11)
 end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
