@@ -31,10 +31,8 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
   return obj
 end
 function Fish:update()
-  if Fish.catch(self) then 
-    self.ticks += 1
-  end
-  if self.ticks > 20 then return end
+  if (self.ticks >= global_data_table.gauge_data.req_tension_ticks) return
+  if (Fish.catch(self)) self.ticks += 1
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
@@ -43,7 +41,7 @@ function Fish:draw_tension()
   local pos = self.tension_slider.position-Vec:new(thickness, 0)
   local size = self.tension_slider.size
   local y = pos.y+size.y+thickness
-  line(pos.x, y, pos.x + (self.ticks/20)*size.x+thickness, y, 11)
+  line(pos.x, y, pos.x + (self.ticks/global_data_table.gauge_data.req_tension_ticks)*size.x+thickness, y, 11)
 end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)

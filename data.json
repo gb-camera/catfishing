@@ -6,7 +6,8 @@
   "gauge_data": {
     "position": [10, 10],
     "size": [100, 5],
-    "settings": [4, 7, 2, 3]
+    "settings": [4, 7, 2, 3],
+    "req_tension_ticks": 20
   },
   "power_gauge_colors": [8, 9, 10, 11, 3],
   "biases": {

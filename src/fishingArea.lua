@@ -1,6 +1,5 @@
 FishingArea = {}
 function FishingArea:new(area_data_)
-  local lost_text_len = #"the fish got away"*5-5
   obj = {
     area_data = area_data_,
     -- internal
@@ -9,11 +8,6 @@ function FishingArea:new(area_data_)
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.power_gauge_colors,
       unpack(global_data_table.gauge_data.settings)
-    ),
-    lost_box = BorderRect:new(
-      Vec:new((128-lost_text_len-6)\2, 48),
-      Vec:new(lost_text_len, 24),
-      7, 1, 3
     ),
     state = "none",
     fish = nil
@@ -29,16 +23,7 @@ function FishingArea:draw()
     Fish.draw_tension(self.fish)
   elseif self.state == "detail" then 
     Fish.draw_details(self.fish)
-  elseif self.state == "lost" then 
-    FishingArea.draw_lost(self)
   end
-end
-function FishingArea:draw_lost()
-  BorderRect.draw(self.lost_box)
-  print_with_outline(
-    "the fish got away\n\npress ❎ to close", 
-    self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
-  )
 end
 function FishingArea:update()
   if not self.flag then 
@@ -49,16 +34,15 @@ function FishingArea:update()
   if btnp(❎) and self.state ~= "casting" then
     if self.state == "none" then 
       self.started = true
-      self.fish = generate_fish(self.area_data, GradientSlider.get_stage(self.power_gauge))
+      self.fish = generate_fish(
+        self.area_data, 
+        GradientSlider.get_stage(self.power_gauge)
+      )
       GradientSlider.reset(self.power_gauge)
       self.state = "casting"
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
-    end
-    if self.state == "detail" or self.state == "lost" then 
-      self.started = false
-      self.fish = nil 
-      self.state = "none"
+      FishingArea.reset(self)
     end
   end
 
@@ -78,26 +62,23 @@ function FishingArea:update()
     end
   end
 
-  if self.state == "fishing" and self.fish.ticks > 20 then 
-    if Fish.catch(self.fish) then 
-      self.state = "detail"
-    else
-      self.state = "lost"
-    end
+  if self.state == "fishing" and self.fish.ticks >= global_data_table.gauge_data.req_tension_ticks then 
+    self.state = "detail" 
     GradientSlider.reset(self.fish.tension_slider)
   end
 end
 function FishingArea:is_box_open()
-  return self.state == "lost" or self.state == "detail"
+  return self.state == "detail"
 end
 function FishingArea:reset()
+  self.started = false
   self.fish = nil 
   self.state = "none"
 end
 
 function generate_fish(area, stage)
   local possible_fishes = {}
-  local stage_gauge = stage -- + bait bonus
+  local stage_gauge = stage -- + rod bonus
   for fish in all(area.fishes) do
     if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
       add(possible_fishes, fish)

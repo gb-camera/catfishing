@@ -33,7 +33,7 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}},fish_book={{name=goldfish,description=}}"
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}},fish_book={{name=goldfish,description=}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   menu_data = {
@@ -231,10 +231,8 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
   return obj
 end
 function Fish:update()
-  if Fish.catch(self) then 
-    self.ticks += 1
-  end
-  if self.ticks > 20 then return end
+  if (self.ticks >= global_data_table.gauge_data.req_tension_ticks) return
+  if (Fish.catch(self)) self.ticks += 1
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
@@ -243,7 +241,7 @@ function Fish:draw_tension()
   local pos = self.tension_slider.position-Vec:new(thickness, 0)
   local size = self.tension_slider.size
   local y = pos.y+size.y+thickness
-  line(pos.x, y, pos.x + (self.ticks/20)*size.x+thickness, y, 11)
+  line(pos.x, y, pos.x + (self.ticks/global_data_table.gauge_data.req_tension_ticks)*size.x+thickness, y, 11)
 end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
@@ -262,7 +260,6 @@ function Fish:catch()
 end
 FishingArea = {}
 function FishingArea:new(area_data_)
-  local lost_text_len = #"the fish got away"*5-5
   obj = {
     area_data = area_data_,
     power_gauge = GradientSlider:new(
@@ -270,11 +267,6 @@ function FishingArea:new(area_data_)
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.power_gauge_colors,
       unpack(global_data_table.gauge_data.settings)
-    ),
-    lost_box = BorderRect:new(
-      Vec:new((128-lost_text_len-6)\2, 48),
-      Vec:new(lost_text_len, 24),
-      7, 1, 3
     ),
     state = "none",
     fish = nil
@@ -290,16 +282,7 @@ function FishingArea:draw()
     Fish.draw_tension(self.fish)
   elseif self.state == "detail" then 
     Fish.draw_details(self.fish)
-  elseif self.state == "lost" then 
-    FishingArea.draw_lost(self)
   end
-end
-function FishingArea:draw_lost()
-  BorderRect.draw(self.lost_box)
-  print_with_outline(
-    "the fish got away\n\npress ❎ to close", 
-    self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
-  )
 end
 function FishingArea:update()
   if not self.flag then 
@@ -309,16 +292,15 @@ function FishingArea:update()
   if btnp(❎) and self.state ~= "casting" then
     if self.state == "none" then 
       self.started = true
-      self.fish = generate_fish(self.area_data, GradientSlider.get_stage(self.power_gauge))
+      self.fish = generate_fish(
+        self.area_data, 
+        GradientSlider.get_stage(self.power_gauge)
+      )
       GradientSlider.reset(self.power_gauge)
       self.state = "casting"
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
-    end
-    if self.state == "detail" or self.state == "lost" then 
-      self.started = false
-      self.fish = nil 
-      self.state = "none"
+      FishingArea.reset(self)
     end
   end
   if btn(❎) then 
@@ -336,25 +318,22 @@ function FishingArea:update()
       self.started = false
     end
   end
-  if self.state == "fishing" and self.fish.ticks > 20 then 
-    if Fish.catch(self.fish) then 
-      self.state = "detail"
-    else
-      self.state = "lost"
-    end
+  if self.state == "fishing" and self.fish.ticks >= global_data_table.gauge_data.req_tension_ticks then 
+    self.state = "detail" 
     GradientSlider.reset(self.fish.tension_slider)
   end
 end
 function FishingArea:is_box_open()
-  return self.state == "lost" or self.state == "detail"
+  return self.state == "detail"
 end
 function FishingArea:reset()
+  self.started = false
   self.fish = nil 
   self.state = "none"
 end
 function generate_fish(area, stage)
   local possible_fishes = {}
-  local stage_gauge = stage -- + bait bonus
+  local stage_gauge = stage -- + rod bonus
   for fish in all(area.fishes) do
     if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
       add(possible_fishes, fish)
