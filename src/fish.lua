@@ -1,5 +1,5 @@
 Fish = {}
-function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, successIDs)
+function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, gradient, successIDs)
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
@@ -14,6 +14,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     lb = weight,
     size = fish_size,
     units = units_,
+    description=description_,
     success_stage_ids = successIDs,
     -- Internal
     tension_slider = GradientSlider:new(

@@ -42,6 +42,19 @@ function FishingArea:update()
       self.state = "casting"
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
+      local entry = get_array_entry(compendium, self.fish.name)
+      if entry == nil then 
+        add(compendium, {
+          name=self.fish.name,
+          description=self.fish.description,
+          sprite=self.fish.sprite,
+          weight=self.fish.lb,
+          size=self.fish.size
+        })
+      else 
+        entry.lb = max(entry.lb, self.fish.lb)
+        entry.size = max(entry.size, self.fish.size)
+      end
       FishingArea.reset(self)
     end
   end
@@ -89,7 +102,7 @@ function generate_fish(area, stage)
   local name, spriteID, weight, size = unpack(fish.stats)
   size, weight = generate_weight_size_with_bias(weight, size)
   return Fish:new(
-    name, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+    name, fish.description, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
   )
 end
 

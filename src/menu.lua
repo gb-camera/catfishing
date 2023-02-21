@@ -103,6 +103,14 @@ function Menu:invoke()
     cont.callback()
   end
 end
+function Menu:update_content(content)
+  self.content = content 
+  BorderRect.resize(
+    self.rect,
+    self.rect.position, 
+    Vec:new(10+5*longest_menu_str(content), 38)
+  )
+end
 
 function menu_scroll(dx1, dx2, dy, dir, rate, position)
   local dy1, dy3 = dy-10, dy+10

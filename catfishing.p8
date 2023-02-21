@@ -12,8 +12,8 @@ function get_menu(name)
   end
 end
 function swap_menu_context(name)
-  get_active_menu().enable = false
   if (name == nil) return
+  get_active_menu().enable = false
   get_menu(name).enable = true
 end
 function longest_menu_str(data)
@@ -33,7 +33,21 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}},fish_book={{name=goldfish,description=}}"
+function display_all_fish()
+  local fishes = {}
+  for fish in all(compendium) do 
+    add(fishes, {
+      text=fish.name, color={7, 0},
+      callback=function()
+        get_active_menu().enable = false
+        loaded_area = -2
+        opened_fish_page = fish.name
+      end
+    }) 
+  end
+  return fishes
+end
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   menu_data = {
@@ -55,10 +69,23 @@ function reset()
             loaded_area = 1 --temp
             FishingArea.reset(fishing_areas[loaded_area])
           end
+        },
+        {
+          text="compendium", color={7, 0},
+          callback=function()
+            if #compendium > 0 then 
+              Menu.update_content(get_menu("compendium"), display_all_fish())
+              swap_menu_context("compendium")
+            end
+          end
         }
       },
       nil,
       4, 7, 7, 3
+    },
+    {
+      "compendium", "main",
+      5, 70, {}, nil, 4, 7, 7, 3
     },
     {
       "fishing", nil,
@@ -103,9 +130,16 @@ function reset()
   for area in all(global_data_table.areas) do
     add(fishing_areas, FishingArea:new(area))
   end
-  inventory = {}
+  inventory, compendium = {}, {}
+  compendium_rect = BorderRect:new(
+    Vec:new(8, 8), Vec:new(111, 111),
+    7, 5, 3
+  )
+  
+  opened_fish_page = nil
   cash = 0
   loaded_area = -1
+  get_menu("main").enable = true
 end
 BorderRect = {}
 function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
@@ -200,7 +234,7 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, successIDs)
+function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, gradient, successIDs)
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
@@ -215,6 +249,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     lb = weight,
     size = fish_size,
     units = units_,
+    description=description_,
     success_stage_ids = successIDs,
     tension_slider = GradientSlider:new(
       Vec:new(gauge_data.position), Vec:new(gauge_data.size), 
@@ -300,6 +335,19 @@ function FishingArea:update()
       self.state = "casting"
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
+      local entry = get_array_entry(compendium, self.fish.name)
+      if entry == nil then 
+        add(compendium, {
+          name=self.fish.name,
+          description=self.fish.description,
+          sprite=self.fish.sprite,
+          weight=self.fish.lb,
+          size=self.fish.size
+        })
+      else 
+        entry.lb = max(entry.lb, self.fish.lb)
+        entry.size = max(entry.size, self.fish.size)
+      end
       FishingArea.reset(self)
     end
   end
@@ -344,7 +392,7 @@ function generate_fish(area, stage)
   local name, spriteID, weight, size = unpack(fish.stats)
   size, weight = generate_weight_size_with_bias(weight, size)
   return Fish:new(
-    name, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+    name, fish.description, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
   )
 end
 function generate_weight_size_with_bias(weight, size)
@@ -499,6 +547,14 @@ function Menu:invoke()
     cont.callback()
   end
 end
+function Menu:update_content(content)
+  self.content = content 
+  BorderRect.resize(
+    self.rect,
+    self.rect.position, 
+    Vec:new(10+5*longest_menu_str(content), 38)
+  )
+end
 function menu_scroll(dx1, dx2, dy, dir, rate, position)
   local dy1, dy3 = dy-10, dy+10
   local lx = lerp(position.x+dx1, position.x+dx2, rate)
@@ -557,11 +613,12 @@ function Animator:reset()
 end
 function _init()
   reset()
-  menus[1].enable = true
 end
 function _draw()
   cls()
-  if loaded_area == -1 then 
+  if loaded_area == -2 then 
+    draw_compendium(opened_fish_page)
+  elseif loaded_area == -1 then 
     draw_map()
   elseif loaded_area == 0 then 
     draw_shop()
@@ -576,9 +633,16 @@ function _update()
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end
+  if btnp(🅾️) then
+    if get_active_menu() and get_active_menu().name == "compendium" then 
+      swap_menu_context(get_active_menu().prev)
+    end
+  end
   
   if loaded_area == 0 then 
     shop_loop()
+  elseif loaded_area == -2 then 
+    compendium_loop()
   elseif loaded_area > 0 then
     fish_loop()
   end
@@ -635,6 +699,11 @@ end
 function table_contains(table, val)
   for obj in all(table) do 
     if (obj == val) return true
+  end
+end
+function get_array_entry(table, name)
+  for entry in all(table) do 
+    if (entry.name == name) return entry
   end
 end
 function combine_and_unpack(data1, data2)
@@ -740,6 +809,13 @@ function fish_loop()
     FishingArea.update(fishing_areas[loaded_area])
   end
 end
+function compendium_loop()
+  if btnp(🅾️) then
+    get_menu("compendium").enable = true
+    loaded_area = -1
+    opened_fish_page = nil
+  end
+end
 function draw_map()
   print_with_outline("placeholder :D", 5, 40, 7, 1)
   print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
@@ -763,6 +839,17 @@ function draw_fishing()
     print_with_outline("wip: imagine cat here", 5, 40, 7, 1)
   end
   FishingArea.draw(fishing_areas[loaded_area])
+end
+function draw_compendium(name)
+  BorderRect.draw(compendium_rect)
+  local fish_entry = get_array_entry(compendium, name)
+  spr(
+    fish_entry.sprite, 
+    combine_and_unpack(
+      {Vec.unpack(compendium_rect.position + Vec:new(5, 5))},
+      {2, 2}
+    )
+  )
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

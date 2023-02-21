@@ -60,6 +60,12 @@ function table_contains(table, val)
   end
 end
 
+function get_array_entry(table, name)
+  for entry in all(table) do 
+    if (entry.name == name) return entry
+  end
+end
+
 function combine_and_unpack(data1, data2)
   local data = {}
   for dat in all(data1) do

@@ -61,7 +61,8 @@
           "min_gauge_requirement": 1,
           "max_gauge_requirement": 3,
           "stats": ["goldfish", 2, 2.7, 12.5],
-          "units": ["cm", "g"]
+          "units": ["cm", "g"],
+          "description": ""
         },
         {
           "gradient": [8, 9, 10, 11, 10, 9, 8],
@@ -69,15 +70,10 @@
           "min_gauge_requirement": 4,
           "max_gauge_requirement": "inf",
           "stats": ["yellow fin tuna", 4, 32, 2.25],
-          "units": ["m", "kg"]
+          "units": ["m", "kg"],
+          "description": ""
         }
       ]
-    }
-  ],
-  "fish_book": [
-    {
-      "name": "goldfish",
-      "description": ""
     }
   ]
 }

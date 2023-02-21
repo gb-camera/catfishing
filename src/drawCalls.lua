@@ -24,3 +24,15 @@ function draw_fishing()
   end
   FishingArea.draw(fishing_areas[loaded_area])
 end
+
+function draw_compendium(name)
+  BorderRect.draw(compendium_rect)
+  local fish_entry = get_array_entry(compendium, name)
+  spr(
+    fish_entry.sprite, 
+    combine_and_unpack(
+      {Vec.unpack(compendium_rect.position + Vec:new(5, 5))},
+      {2, 2}
+    )
+  )
+end
