@@ -25,9 +25,11 @@ function longest_menu_str(data)
 end
 function sell_all_fish()
   for fish in all(inventory) do 
+    local weight, size = unpack(fish)
+    printh(weight.." | "..size)
     cash += 
-      flr(fish.weight) * global_data_table.sell_weights.per_weight_unit + 
-      flr(fish.size) * global_data_table.sell_weights.per_size_unit
+      flr(weight) * global_data_table.sell_weights.per_weight_unit + 
+      flr(size) * global_data_table.sell_weights.per_size_unit
     del(inventory, fish)
   end
 end
@@ -182,10 +184,10 @@ function GradientSlider:draw()
   )
 end
 function GradientSlider:update()
-  self.pos += self.dir * self.speed
-  if self.pos >= self.size.x or self.pos <= 0 then 
-    self.dir *= -1
-  end
+  self.pos = mid(self.pos + self.speed, 0, self.size.x)
+end
+function GradientSlider:reduce()
+  self.pos = mid(self.pos - self.speed, 0, self.size.x)
 end
 function GradientSlider:get_stage(x)
   local p = x or self.pos
@@ -221,13 +223,18 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     description_box = BorderRect:new(
       Vec:new((128-box_size.x-6) \ 2, 80), box_size, 
       7, 1, 3
-    )
+    ),
+    ticks = 0
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
 function Fish:update()
+  if Fish.catch(self) then 
+    self.ticks += 1
+  end
+  if self.ticks > 10 then return end
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
@@ -265,14 +272,15 @@ function FishingArea:new(area_data_)
       7, 1, 3
     ),
     state = "none",
-    fish = nil
+    fish = nil,
+    enable = false
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
 function FishingArea:draw()
-  if self.state == "casting" then 
+  if self.state == "startcasting" then 
     GradientSlider.draw(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.draw_tension(self.fish)
@@ -290,38 +298,46 @@ function FishingArea:draw_lost()
   )
 end
 function FishingArea:update()
-  if btnp(❎) then
+  if (self.enable == false) return
+  if btnp(❎) and self.state ~= "startcasting" then
     if self.state == "none" then 
-      self.state = "casting"
-    elseif self.state == "casting" then 
+      self.started = true
       self.fish = generate_fish(self.area_data, GradientSlider.get_stage(self.power_gauge))
       GradientSlider.reset(self.power_gauge)
-      if self.fish == nil then 
-        self.state = "lost"
-      else
-        self.state = "fishing"
-      end
-    elseif self.state == "fishing" then 
-      if Fish.catch(self.fish) then 
-        self.state = "detail"
-      else
-        self.state = "lost"
-      end
-      GradientSlider.reset(self.fish.tension_slider)
+      self.state = "startcasting"
     elseif self.state == "detail" then 
-      add(inventory, self.fish)
-      self.fish = nil
+      self.started = false
+      add(inventory, {self.fish.lb, self.fish.size})
+      self.fish = nil 
       self.state = "none"
-    elseif self.state == "lost" then 
-      self.fish = nil
+    elseif self.state == "lost" then
+      self.started = false
+      self.fish = nil 
       self.state = "none"
     end
   end
-  
-  if self.state == "casting" then 
-    GradientSlider.update(self.power_gauge)
-  elseif self.state == "fishing" then 
-    Fish.update(self.fish)
+  if btn(❎) then 
+    if self.state == "startcasting" and self.started then
+      GradientSlider.update(self.power_gauge)
+    elseif self.state == "fishing" then 
+      Fish.update(self.fish)
+      self.started = true
+    end
+  else
+    if self.state == "fishing" and self.started then
+      GradientSlider.reduce(self.fish.tension_slider)
+    elseif self.state == "startcasting" then 
+      self.state = "fishing"
+      self.started = false
+    end
+  end
+  if self.state == "fishing" and self.fish.ticks > 10 then 
+    if Fish.catch(self.fish) then 
+      self.state = "detail"
+    else
+      self.state = "lost"
+    end
+    GradientSlider.reset(self.fish.tension_slider)
   end
 end
 function FishingArea:is_box_open()
@@ -728,6 +744,9 @@ function shop_loop()
 end
 function fish_loop()
   if get_active_menu() == nil then
+    if fishing_areas[loaded_area].enable == false then
+      fishing_areas[loaded_area].enable = true
+    end
     FishingArea.update(fishing_areas[loaded_area])
   end
   if btnp(🅾️) then

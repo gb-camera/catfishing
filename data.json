@@ -72,5 +72,11 @@
         }
       ]
     }
+  ],
+  "fish_book": [
+    {
+      "name": "goldfish",
+      "description": ""
+    }
   ]
 }

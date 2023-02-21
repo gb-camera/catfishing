@@ -10,6 +10,9 @@ end
 
 function fish_loop()
   if get_active_menu() == nil then
+    if fishing_areas[loaded_area].enable == false then
+      fishing_areas[loaded_area].enable = true
+    end
     FishingArea.update(fishing_areas[loaded_area])
   end
 
