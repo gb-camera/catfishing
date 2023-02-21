@@ -16,8 +16,7 @@ function FishingArea:new(area_data_)
       7, 1, 3
     ),
     state = "none",
-    fish = nil,
-    enable = false
+    fish = nil
   }
   setmetatable(obj, self)
   self.__index = self
@@ -42,7 +41,11 @@ function FishingArea:draw_lost()
   )
 end
 function FishingArea:update()
-  if (self.enable == false) return
+  if not self.flag then 
+    self.flag = true
+    return 
+  end
+  
   if btnp(❎) and self.state ~= "startcasting" then
     if self.state == "none" then 
       self.started = true
@@ -50,11 +53,9 @@ function FishingArea:update()
       GradientSlider.reset(self.power_gauge)
       self.state = "startcasting"
     elseif self.state == "detail" then 
-      self.started = false
       add(inventory, {self.fish.lb, self.fish.size})
-      self.fish = nil 
-      self.state = "none"
-    elseif self.state == "lost" then
+    end
+    if self.state == "detail" or self.state == "lost" then 
       self.started = false
       self.fish = nil 
       self.state = "none"
@@ -76,6 +77,7 @@ function FishingArea:update()
       self.started = false
     end
   end
+
   if self.state == "fishing" and self.fish.ticks > 10 then 
     if Fish.catch(self.fish) then 
       self.state = "detail"

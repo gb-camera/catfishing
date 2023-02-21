@@ -9,13 +9,6 @@ function shop_loop()
 end
 
 function fish_loop()
-  if get_active_menu() == nil then
-    if fishing_areas[loaded_area].enable == false then
-      fishing_areas[loaded_area].enable = true
-    end
-    FishingArea.update(fishing_areas[loaded_area])
-  end
-
   if btnp(🅾️) then
     if (FishingArea.is_box_open(fishing_areas[loaded_area])) return
     if get_active_menu() == nil then 
@@ -23,5 +16,9 @@ function fish_loop()
     else
       swap_menu_context(get_active_menu().prev)
     end
+  end
+  
+  if get_active_menu() == nil then
+    FishingArea.update(fishing_areas[loaded_area])
   end
 end
