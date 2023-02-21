@@ -1,4 +1,5 @@
 -- [[Method Only Scripts At Bottom | Debugger Script At Bottom]]
+#include src/forwardDeclares.lua
 -- Data
 #include src/data.lua
 -- Classes
@@ -7,20 +8,45 @@
 #include src/fish.lua
 #include src/fishingArea.lua
 #include src/vec.lua
+#include src/menu.lua
+#include src/animator.lua
 
 function _init()
   reset()
+  menus[1].enable = true
 end
 
 function _draw()
   cls()
-  FishingArea.draw(fishing_area)
+
+  if loaded_area == -1 then 
+    draw_map()
+  elseif loaded_area == 0 then 
+    draw_shop()
+  elseif loaded_area > 0 then
+    draw_fishing()
+  end
+  foreach(menus, Menu.draw)
 end
 
 function _update()
-  FishingArea.update(fishing_area)
+  foreach(menus, Menu.update)
+  foreach(menus, Menu.move)
+
+  if btnp(❎) then
+    Menu.invoke(get_active_menu())
+  end
+
+  
+  if loaded_area == 0 then 
+    shop_loop()
+  elseif loaded_area > 0 then
+    fish_loop()
+  end
 end
 
 #include src/helpers.lua
 #include src/serialization.lua
+#include src/updateCalls.lua
+#include src/drawCalls.lua
 -- #include src/debug.lua

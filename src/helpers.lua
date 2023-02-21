@@ -7,7 +7,7 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
 end
 
 function print_text_center(text, dy, text_color, outline_color)
-  print_with_outline(text, (128-(#text*5-5)-6)\2, dy, text_color, outline_color)
+  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
 end
 
 function controls()
@@ -58,4 +58,15 @@ function table_contains(table, val)
   for obj in all(table) do 
     if (obj == val) return true
   end
+end
+
+function combine_and_unpack(data1, data2)
+  local data = {}
+  for dat in all(data1) do
+    add(data, dat)
+  end
+  for dat in all(data2) do
+    add(data, dat)
+  end
+  return unpack(data)
 end

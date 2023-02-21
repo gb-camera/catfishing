@@ -23,9 +23,7 @@ function FishingArea:new(area_data_)
   return obj
 end
 function FishingArea:draw()
-  if self.state == "none" then 
-    print_with_outline("press ❎ to cast line", 2, 120, 7, 1)
-  elseif self.state == "casting" then 
+  if self.state == "casting" then 
     GradientSlider.draw(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.draw_tension(self.fish)
@@ -82,7 +80,6 @@ function generate_fish(area, stage)
   local possible_fishes = {}
   local stage_gauge = stage -- + bait bonus
   for fish in all(area.fishes) do
-    printh(fish.max_gauge_requirement)
     if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
       add(possible_fishes, fish)
     end

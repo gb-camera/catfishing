@@ -1,10 +1,94 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}}"
+function get_active_menu()
+  for menu in all(menus) do
+    if (menu.enable) return menu
+  end
+end
+function get_menu(name)
+  for menu in all(menus) do
+    if (menu.name == name) return menu
+  end
+end
+function swap_menu_context(name)
+  get_active_menu().enable = false
+  if (name == nil) return
+  get_menu(name).enable = true
+end
+function longest_menu_str(data)
+  local len = 0
+  for str in all(data) do
+    len = max(len, #str.text)
+  end
+  return len
+end
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  fishing_area = FishingArea:new(global_data_table.areas[1])
+  menu_data = {
+    {
+      "main", nil,
+      5, 70,
+      {
+        {
+          text="shop", color={7, 0},
+          callback=function()
+            get_active_menu().enable = false
+            loaded_area = 0
+          end
+        },
+        { 
+          text="fishing", color={7, 0}, 
+          callback=function()
+            get_active_menu().enable = false
+            loaded_area = 1
+          end
+        }
+      },
+      nil,
+      4, 7, 7, 3
+    },
+    {
+      "fishing", nil,
+      5, 70,
+      {
+        {
+          text="return to map", color={7, 0},
+          callback=function()
+            swap_menu_context("main")
+            loaded_area = -1
+          end
+        }
+      },
+      nil,
+      4, 7, 7, 3
+    },
+    {
+      "shop", nil,
+      5, 70,
+      {
+        {
+          text="return to map", color={7, 0},
+          callback=function()
+            swap_menu_context("main")
+            loaded_area = -1
+          end
+        }
+      },
+      nil,
+      4, 7, 7, 3
+    }
+  }
+  menus = {}
+  for data in all(menu_data) do 
+    add(menus, Menu:new(unpack(data)))
+  end
+  fishing_areas = {}
+  for area in all(global_data_table.areas) do
+    add(fishing_areas, FishingArea:new(area))
+  end
+  loaded_area = -1
 end
 BorderRect = {}
 function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
@@ -173,9 +257,7 @@ function FishingArea:new(area_data_)
   return obj
 end
 function FishingArea:draw()
-  if self.state == "none" then 
-    print_with_outline("press ❎ to cast line", 2, 120, 7, 1)
-  elseif self.state == "casting" then 
+  if self.state == "casting" then 
     GradientSlider.draw(self.power_gauge)
   elseif self.state == "fishing" then 
     Fish.draw_tension(self.fish)
@@ -230,7 +312,6 @@ function generate_fish(area, stage)
   local possible_fishes = {}
   local stage_gauge = stage -- + bait bonus
   for fish in all(area.fishes) do
-    printh(fish.max_gauge_requirement)
     if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
       add(possible_fishes, fish)
     end
@@ -298,15 +379,186 @@ function lerp(start, last, rate)
     return start + (last - start) * rate
   end
 end
+Menu = {}
+function Menu:new(
+  menu_name, previous_menu, dx, dy, 
+  menu_content, menu_info_draw_call, 
+  base_color, border_color, text_color, menu_thickness)
+  obj = {
+    name = menu_name,
+    prev = previous_menu,
+    position = Vec:new(dx, dy),
+    selector = Animator:new(global_data_table.animation_data.menu_selector, true),
+    up_arrow = Animator:new(global_data_table.animation_data.up_arrow, true),
+    down_arrow = Animator:new(global_data_table.animation_data.down_arrow, true),
+    content = menu_content,
+    content_draw = menu_info_draw_call,
+    rect = BorderRect:new(
+      Vec:new(dx, dy), 
+      Vec:new(10 + 5*longest_menu_str(menu_content), 38),
+      border_color,
+      base_color,
+      menu_thickness
+    ),
+    text = text_color,
+    pos = 1,
+    enable = false,
+    ticks = 5,
+    max_ticks = 5,
+    dir = 0
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+function Menu:draw()
+  if (not self.enable) return
+  local top, bottom = self.pos-1, self.pos+1
+  if (top < 1) top = #self.content 
+  if (bottom > #self.content) bottom = 1
+  if (self.content_draw) self.content_draw(self.pos, self.position, self.content[self.pos].color)
+  BorderRect.draw(self.rect)
+  Animator.draw(self.selector, Vec.unpack(self.position + Vec:new(2, 15)))
+  Animator.draw(self.up_arrow, self.rect.size.x/2, self.position.y-self.rect.thickness)
+  Animator.draw(self.down_arrow, self.rect.size.x/2, self.rect.size.y-self.rect.thickness)
+  local base_pos_x = self.position.x+10
+  local menu_scroll_data = {self.dir, self.ticks / self.max_ticks, self.position}
+  if self.ticks < self.max_ticks then 
+    if self.dir > 0 then 
+      print_with_outline(
+        self.content[top].text, 
+        combine_and_unpack(menu_scroll(12, 10, 7, unpack(menu_scroll_data)), 
+        self.content[top].color)
+      )
+    elseif self.dir < 0 then 
+      print_with_outline(
+        self.content[bottom].text, 
+        combine_and_unpack(menu_scroll(12, 10, 27, unpack(menu_scroll_data)), 
+        self.content[bottom].color)
+      )
+    end 
+  else
+    print_with_outline(self.content[top].text, base_pos_x, self.position.y+7, unpack(self.content[top].color))
+    print_with_outline(self.content[bottom].text, base_pos_x, self.position.y+27, unpack(self.content[bottom].color))
+  end
+  print_with_outline(
+    self.content[self.pos].text, 
+    combine_and_unpack(menu_scroll(10, 12, 17, unpack(menu_scroll_data)), 
+    self.content[self.pos].color)
+  )
+end
+function Menu:update()
+  if (not self.enable) return
+  Animator.update(self.selector)
+  Animator.update(self.up_arrow)
+  Animator.update(self.down_arrow)
+  if (self.ticks >= self.max_ticks) return
+  self.ticks += 1
+end
+function Menu:move()
+  if (not self.enable) return
+  if (self.ticks < self.max_ticks) return
+  local _, dy = controls()
+  if (dy == 0) return
+  self.pos += dy 
+  self.dir = dy
+  if (self.pos < 1) self.pos = #self.content 
+  if (self.pos > #self.content) self.pos = 1
+  self.ticks = 0
+end
+function Menu:invoke()
+  if (self == nil) return
+  local cont = self.content[self.pos]
+  if (cont.callback == nil) return
+  if cont.args then
+    cont.callback(unpack(cont.args))
+  else
+    cont.callback()
+  end
+end
+function menu_scroll(dx1, dx2, dy, dir, rate, position)
+  local dy1, dy3 = dy-10, dy+10
+  local lx = lerp(position.x+dx1, position.x+dx2, rate)
+  local ly = position.y + dy
+  if dir < 0 then 
+    ly = lerp(position.y + dy1, ly, rate)
+  elseif dir > 0 then 
+    ly = lerp(position.y + dy3, ly, rate)
+  end
+  return {lx, ly}
+end
+Animator = {} -- updated from tower_defence
+function Animator:new(animation_data, continuous_)
+  obj = {
+    data = animation_data.data,
+    sprite_size = animation_data.size or 8,
+    spin_enable = animation_data.rotation,
+    theta = 0,
+    animation_frame = 1,
+    frame_duration = animation_data.ticks_per_frame,
+    tick = 0,
+    continuous = continuous_
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+function Animator:update()
+  self.tick = (self.tick + 1) % self.frame_duration
+  self.theta = (self.theta + 5) % 360
+  if (self.tick ~= 0) return false
+  if Animator.finished(self) then 
+    if (self.continuous) Animator.reset(self)
+    return true
+  end
+  self.animation_frame += 1
+  return false
+end
+function Animator:finished()
+  return self.animation_frame >= #self.data
+end
+function Animator:draw(dx, dy)
+  local position,frame = Vec:new(dx, dy),self.data[self.animation_frame]
+  if (frame.offset) position += Vec:new(frame.offset)
+  if self.spin_enable then 
+    draw_sprite_rotated(frame.sprite, position, self.sprite_size, self.theta)
+  else
+    spr(Animator.get_sprite(self),Vec.unpack(position))
+  end
+end
+function Animator:get_sprite()
+  return self.data[self.animation_frame].sprite
+end
+function Animator:reset()
+  self.animation_frame = 1
+end
 function _init()
   reset()
+  menus[1].enable = true
 end
 function _draw()
   cls()
-  FishingArea.draw(fishing_area)
+  if loaded_area == -1 then 
+    draw_map()
+  elseif loaded_area == 0 then 
+    draw_shop()
+  elseif loaded_area > 0 then
+    draw_fishing()
+  end
+  foreach(menus, Menu.draw)
 end
 function _update()
-  FishingArea.update(fishing_area)
+  foreach(menus, Menu.update)
+  foreach(menus, Menu.move)
+  if btnp(❎) then
+    Menu.invoke(get_active_menu())
+  end
+  
+  if loaded_area == 0 then 
+    shop_loop()
+  elseif loaded_area > 0 then
+    fish_loop()
+  end
 end
 function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx-1,dy,outline_color
@@ -316,7 +568,7 @@ function print_with_outline(text, dx, dy, text_color, outline_color)
   ?text,dx,dy,text_color
 end
 function print_text_center(text, dy, text_color, outline_color)
-  print_with_outline(text, (128-(#text*5-5)-6)\2, dy, text_color, outline_color)
+  print_with_outline(text, 64-(#text*5)\2, dy, text_color, outline_color)
 end
 function controls()
   if btnp(⬆️) then return 0, -1
@@ -361,6 +613,16 @@ function table_contains(table, val)
   for obj in all(table) do 
     if (obj == val) return true
   end
+end
+function combine_and_unpack(data1, data2)
+  local data = {}
+  for dat in all(data1) do
+    add(data, dat)
+  end
+  for dat in all(data2) do
+    add(data, dat)
+  end
+  return unpack(data)
 end
 function unpack_table(str)
   local table,start,stack,i={},1,0,1
@@ -432,6 +694,49 @@ function str_contains_char(str, char)
     if (str[i] == char) return true
   end
 end
+function shop_loop()
+  if btnp(🅾️) then
+    if get_active_menu() == nil then 
+      get_menu("fishing").enable = true
+    else
+      swap_menu_context(get_active_menu().prev)
+    end
+  end
+end
+function fish_loop()
+  if get_active_menu() == nil then
+    FishingArea.update(fishing_areas[loaded_area])
+  end
+  if btnp(🅾️) then
+    if get_active_menu() == nil then 
+      get_menu("fishing").enable = true
+    else
+      swap_menu_context(get_active_menu().prev)
+    end
+  end
+end
+function draw_map()
+  print_text_center("not implemented :D", 40, 7, 1)
+  print_text_center("area select [shop | fishing area]", 50, 7, 1)
+  print_with_outline("press ❎ to select", 1, 114, 7, 1)
+end
+function draw_shop()
+  print_text_center("not implemented :D", 40, 7, 1)
+  print_with_outline("buy bait, sell fish, profit?", 5, 50, 7, 1)
+  if get_active_menu() ~= nil then 
+    print_with_outline("press ❎ to select", 1, 114, 7, 1)
+  end
+  print_with_outline("press 🅾️ to open option menu", 1, 120, 7, 1)
+end
+function draw_fishing()
+  if get_active_menu() ~= nil then 
+    print_with_outline("press ❎ to select", 1, 114, 7, 1)
+  else
+    print_with_outline("press ❎ to fish", 1, 114, 7, 1)
+    print_with_outline("press 🅾️ to open option menu", 1, 120, 7, 1)
+  end
+  FishingArea.draw(fishing_areas[loaded_area])
+end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -449,3 +754,18 @@ __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+74447700000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07444470007447000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00744447074444700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00744447744444470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07444470744774470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+74447700077007700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000077007700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000744774470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000744444470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000074444700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000007447000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
