@@ -60,9 +60,9 @@ function FishingArea:update()
       end
       GradientSlider.reset(self.fish.tension_slider)
     elseif self.state == "detail" then 
+      add(inventory, self.fish)
       self.fish = nil
       self.state = "none"
-      -- reward
     elseif self.state == "lost" then 
       self.fish = nil
       self.state = "none"

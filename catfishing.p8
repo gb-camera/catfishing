@@ -23,7 +23,15 @@ function longest_menu_str(data)
   end
   return len
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}}"
+function sell_all_fish()
+  for fish in all(inventory) do 
+    cash += 
+      flr(fish.weight) * global_data_table.sell_weights.per_weight_unit + 
+      flr(fish.size) * global_data_table.sell_weights.per_size_unit
+    del(inventory, fish)
+  end
+end
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3}},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   menu_data = {
@@ -74,6 +82,10 @@ function reset()
             swap_menu_context("main")
             loaded_area = -1
           end
+        },
+        {
+          text="sell all fish", color={7, 0},
+          callback=sell_all_fish
         }
       },
       nil,
@@ -88,6 +100,8 @@ function reset()
   for area in all(global_data_table.areas) do
     add(fishing_areas, FishingArea:new(area))
   end
+  inventory = {}
+  cash = 0
   loaded_area = -1
 end
 BorderRect = {}
@@ -294,6 +308,7 @@ function FishingArea:update()
       end
       GradientSlider.reset(self.fish.tension_slider)
     elseif self.state == "detail" then 
+      add(inventory, self.fish)
       self.fish = nil
       self.state = "none"
     elseif self.state == "lost" then 
@@ -697,7 +712,7 @@ end
 function shop_loop()
   if btnp(🅾️) then
     if get_active_menu() == nil then 
-      get_menu("fishing").enable = true
+      get_menu("shop").enable = true
     else
       swap_menu_context(get_active_menu().prev)
     end
@@ -716,13 +731,14 @@ function fish_loop()
   end
 end
 function draw_map()
-  print_text_center("not implemented :D", 40, 7, 1)
-  print_text_center("area select [shop | fishing area]", 50, 7, 1)
+  print_with_outline("placeholder :D", 5, 40, 7, 1)
+  print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
   print_with_outline("press ❎ to select", 1, 114, 7, 1)
 end
 function draw_shop()
-  print_text_center("not implemented :D", 40, 7, 1)
-  print_with_outline("buy bait, sell fish, profit?", 5, 50, 7, 1)
+  print_with_outline("cash: "..cash, 1, 1, 7, 1)
+  print_with_outline("not fully implemented :D", 5, 40, 7, 1)
+  print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
   end

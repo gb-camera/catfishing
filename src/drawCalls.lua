@@ -1,12 +1,13 @@
 function draw_map()
-  print_text_center("not implemented :D", 40, 7, 1)
-  print_text_center("area select [shop | fishing area]", 50, 7, 1)
+  print_with_outline("placeholder :D", 5, 40, 7, 1)
+  print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
   print_with_outline("press ❎ to select", 1, 114, 7, 1)
 end
 
 function draw_shop()
-  print_text_center("not implemented :D", 40, 7, 1)
-  print_with_outline("buy bait, sell fish, profit?", 5, 50, 7, 1)
+  print_with_outline("cash: "..cash, 1, 1, 7, 1)
+  print_with_outline("not fully implemented :D", 5, 40, 7, 1)
+  print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
   end

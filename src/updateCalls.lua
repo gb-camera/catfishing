@@ -1,7 +1,7 @@
 function shop_loop()
   if btnp(🅾️) then
     if get_active_menu() == nil then 
-      get_menu("fishing").enable = true
+      get_menu("shop").enable = true
     else
       swap_menu_context(get_active_menu().prev)
     end

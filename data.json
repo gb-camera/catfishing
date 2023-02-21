@@ -13,6 +13,10 @@
     "weight": 8,
     "size": 3
   },
+  "sell_weights": {
+    "per_weight_unit": 3,
+    "per_size_unit": 2
+  },
   "animation_data": {
     "menu_selector": {
       "data": [

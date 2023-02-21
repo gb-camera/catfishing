@@ -52,6 +52,10 @@ function reset()
             swap_menu_context("main")
             loaded_area = -1
           end
+        },
+        {
+          text="sell all fish", color={7, 0},
+          callback=sell_all_fish
         }
       },
       nil,
@@ -67,5 +71,7 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
 
+  inventory = {}
+  cash = 0
   loaded_area = -1
 end
