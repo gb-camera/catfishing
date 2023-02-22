@@ -4,6 +4,7 @@ local global_data_str --[[remove]]
 function reset()
   global_data_table = unpack_table(global_data_str)
   -- debug_printh_table(global_data_table, "")
+  local menu_palette = global_data_table.palettes.menu
   menu_data = {
     {
       "main", nil,
@@ -21,7 +22,7 @@ function reset()
           callback=function()
             get_active_menu().enable = false
             loaded_area = 1 --temp
-            FishingArea.reset(fishing_areas[loaded_area])
+            FishingArea.reset(global_data_table.fishing_areas[loaded_area])
           end
         },
         {
@@ -35,11 +36,11 @@ function reset()
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     },
     {
       "compendium", "main",
-      5, 70, {}, nil, 4, 7, 7, 3
+      5, 70, {}, nil, unpack(menu_palette)
     },
     {
       "fishing", nil,
@@ -55,7 +56,7 @@ function reset()
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     },
     {
       "shop", nil,
@@ -74,7 +75,7 @@ function reset()
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     }
   }
   menus = {}

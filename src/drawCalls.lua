@@ -53,11 +53,10 @@ function draw_compendium(name)
     detail_pos, compendium_sprite_rect.position.y + 19,
     7, 0
   )
-  local formatted_text = pretty_print(
+  local lines = split(pretty_print(
     fish_entry.description,
     compendium_rect.size.x - 8 
-  )
-  local lines = split(formatted_text, "\n")
+  ), "\n")
   local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
   for i, line in pairs(lines) do 
     print_with_outline(

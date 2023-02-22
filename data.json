@@ -1,6 +1,7 @@
 {
   "palettes": {
-    "transparent_color_id": 0
+    "transparent_color_id": 0,
+    "menu": [4, 7, 7, 3]
   },
   "text": [60, 5, 7, 1],
   "gauge_data": {

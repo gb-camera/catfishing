@@ -47,9 +47,10 @@ function display_all_fish()
   end
   return fishes
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
+  local menu_palette = global_data_table.palettes.menu
   menu_data = {
     {
       "main", nil,
@@ -81,11 +82,11 @@ function reset()
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     },
     {
       "compendium", "main",
-      5, 70, {}, nil, 4, 7, 7, 3
+      5, 70, {}, nil, unpack(menu_palette)
     },
     {
       "fishing", nil,
@@ -95,13 +96,13 @@ function reset()
           text="return to map", color={7, 0},
           callback=function()
             swap_menu_context("main")
-            global_data_table.fishing_areas[loaded_area].flag = false
+            FishingArea.reset(global_data_table.fishing_areas[loaded_area])      
             loaded_area = -1
           end
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     },
     {
       "shop", nil,
@@ -120,7 +121,7 @@ function reset()
         }
       },
       nil,
-      4, 7, 7, 3
+      unpack(menu_palette)
     }
   }
   menus = {}
@@ -411,7 +412,6 @@ function generate_fish(area, stage)
   local possible_fishes = {}
   local stage_gauge = stage -- + rod bonus
   for fish in all(area.fishes) do
-    printh(stage_gauge)
     if stage_gauge >= fish.min_gauge_requirement and stage_gauge < fish.max_gauge_requirement then 
       add(possible_fishes, fish)
     end
@@ -925,11 +925,10 @@ function draw_compendium(name)
     detail_pos, compendium_sprite_rect.position.y + 19,
     7, 0
   )
-  local formatted_text = pretty_print(
+  local lines = split(pretty_print(
     fish_entry.description,
     compendium_rect.size.x - 8 
-  )
-  local lines = split(formatted_text, "\n")
+  ), "\n")
   local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
   for i, line in pairs(lines) do 
     print_with_outline(
