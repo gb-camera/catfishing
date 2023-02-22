@@ -3,8 +3,7 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
-    "size: "..fish_size..units_[1],
-    "the fish got away"
+    "size: "..fish_size..units_[1]
   })*5-5
   local box_size = Vec:new(string_len, 40)
   local gauge_data = global_data_table.gauge_data

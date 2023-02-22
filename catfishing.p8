@@ -68,7 +68,7 @@ function reset()
           callback=function()
             get_active_menu().enable = false
             loaded_area = 1 --temp
-            FishingArea.reset(fishing_areas[loaded_area])
+            FishingArea.reset(global_data_table.fishing_areas[loaded_area])
           end
         },
         {
@@ -245,8 +245,7 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
-    "size: "..fish_size..units_[1],
-    "the fish got away"
+    "size: "..fish_size..units_[1]
   })*5-5
   local box_size = Vec:new(string_len, 40)
   local gauge_data = global_data_table.gauge_data
@@ -388,9 +387,7 @@ function FishingArea:update()
         self.area_data, 
         GradientSlider.get_stage(self.power_gauge)
       )
-      if self.fish == nil then 
-        self.state = "lost"
-      end
+      if (self.fish == nil) self.state = "lost" 
       GradientSlider.reset(self.power_gauge)
     end
   end
@@ -398,9 +395,6 @@ function FishingArea:update()
     self.state = "detail" 
     GradientSlider.reset(self.fish.tension_slider)
   end
-end
-function FishingArea:is_box_open()
-  return self.state == "detail"
 end
 function FishingArea:reset()
   self.started = false
@@ -426,7 +420,7 @@ function generate_fish(area, stage)
 end
 function generate_weight_size_with_bias(weight, size)
   local bias = global_data_table.biases.size
-  local new_size = round_to(mid(size + rnd(bias) - (bias/2), 0.1, size + bias), 2)
+  local new_size = round_to(mid(size + rnd(bias) - bias/2, 0.1, size + bias), 2)
   local new_weight = round_to(weight * new_size * 0.3 * global_data_table.biases.weight, 2)
   return new_size, new_weight
 end
@@ -854,7 +848,7 @@ function shop_loop()
 end
 function fish_loop()
   if btnp(🅾️) then
-    if (FishingArea.is_box_open(fishing_areas[loaded_area])) return
+    if (fishing_areas[loaded_area].state == "detail") return
     if get_active_menu() == nil then 
       get_menu("fishing").enable = true
     else
@@ -890,7 +884,7 @@ end
 function draw_fishing()
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
-  elseif not FishingArea.is_box_open(fishing_areas[loaded_area]) then
+  elseif (fishing_areas[loaded_area].state ~= "detail") then
     print_with_outline("press ❎ to fish", 1, 114, 7, 1)
     print_with_outline("press 🅾️ to open option menu", 1, 120, 7, 1)
     print_with_outline("wip: imagine cat here", 5, 40, 7, 1)

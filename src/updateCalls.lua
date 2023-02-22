@@ -10,7 +10,7 @@ end
 
 function fish_loop()
   if btnp(🅾️) then
-    if (FishingArea.is_box_open(fishing_areas[loaded_area])) return
+    if (fishing_areas[loaded_area].state == "detail") return
     if get_active_menu() == nil then 
       get_menu("fishing").enable = true
     else

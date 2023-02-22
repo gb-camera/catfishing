@@ -17,7 +17,7 @@ end
 function draw_fishing()
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
-  elseif not FishingArea.is_box_open(fishing_areas[loaded_area]) then
+  elseif (fishing_areas[loaded_area].state ~= "detail") then
     print_with_outline("press ❎ to fish", 1, 114, 7, 1)
     print_with_outline("press 🅾️ to open option menu", 1, 120, 7, 1)
     print_with_outline("wip: imagine cat here", 5, 40, 7, 1)

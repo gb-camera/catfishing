@@ -89,9 +89,7 @@ function FishingArea:update()
         self.area_data, 
         GradientSlider.get_stage(self.power_gauge)
       )
-      if self.fish == nil then 
-        self.state = "lost"
-      end
+      if (self.fish == nil) self.state = "lost" 
       GradientSlider.reset(self.power_gauge)
     end
   end
@@ -100,9 +98,6 @@ function FishingArea:update()
     self.state = "detail" 
     GradientSlider.reset(self.fish.tension_slider)
   end
-end
-function FishingArea:is_box_open()
-  return self.state == "detail"
 end
 function FishingArea:reset()
   self.started = false
@@ -132,7 +127,7 @@ end
 -- size influences weight but not the other way around
 function generate_weight_size_with_bias(weight, size)
   local bias = global_data_table.biases.size
-  local new_size = round_to(mid(size + rnd(bias) - (bias/2), 0.1, size + bias), 2)
+  local new_size = round_to(mid(size + rnd(bias) - bias/2, 0.1, size + bias), 2)
   local new_weight = round_to(weight * new_size * 0.3 * global_data_table.biases.weight, 2)
   return new_size, new_weight
 end
