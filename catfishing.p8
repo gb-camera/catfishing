@@ -25,8 +25,7 @@ function longest_menu_str(data)
 end
 function sell_all_fish()
   for fish in all(inventory) do 
-    local weight, size = unpack(fish)
-    printh(weight.." | "..size)
+    local weight, size, units = unpack(fish)
     cash += 
       flr(weight) * global_data_table.sell_weights.per_weight_unit + 
       flr(size) * global_data_table.sell_weights.per_size_unit
@@ -47,9 +46,20 @@ function display_all_fish()
   end
   return fishes
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
+  inventory, compendium = {}, {}
+  compendium_rect = BorderRect:new(
+    Vec:new(8, 8), Vec:new(111, 111),
+    7, 5, 3
+  )
+  compendium_sprite_rect = BorderRect:new(
+    compendium_rect.position + Vec:new(5, 5),
+    Vec:new(24, 24), 
+    7, 0, 2
+  )
+  opened_fish_page = nil
   local menu_palette = global_data_table.palettes.menu
   menu_data = {
     {
@@ -68,13 +78,13 @@ function reset()
           callback=function()
             get_active_menu().enable = false
             loaded_area = 1 --temp
-            FishingArea.reset(global_data_table.fishing_areas[loaded_area])
+            FishingArea.reset(global_data_table.areas[loaded_area])
           end
         },
         {
           text="compendium", color={7, 0},
           callback=function()
-            if #compendium > 0 then 
+            if #compendium > 0 then
               Menu.update_content(get_menu("compendium"), display_all_fish())
               swap_menu_context("compendium")
             end
@@ -96,7 +106,7 @@ function reset()
           text="return to map", color={7, 0},
           callback=function()
             swap_menu_context("main")
-            FishingArea.reset(global_data_table.fishing_areas[loaded_area])      
+            FishingArea.reset(global_data_table.areas[loaded_area])      
             loaded_area = -1
           end
         }
@@ -115,10 +125,7 @@ function reset()
             loaded_area = -1
           end
         },
-        {
-          text="sell all fish", color={7, 0},
-          callback=sell_all_fish
-        }
+        { text="sell all fish", color={7, 0}, callback=sell_all_fish }
       },
       nil,
       unpack(menu_palette)
@@ -132,17 +139,6 @@ function reset()
   for area in all(global_data_table.areas) do
     add(fishing_areas, FishingArea:new(area))
   end
-  inventory, compendium = {}, {}
-  compendium_rect = BorderRect:new(
-    Vec:new(8, 8), Vec:new(111, 111),
-    7, 5, 3
-  )
-  compendium_sprite_rect = BorderRect:new(
-    compendium_rect.position + Vec:new(5, 5),
-    Vec:new(24, 24), 
-    7, 0, 2
-  )
-  opened_fish_page = nil
   
   cash = 0
   loaded_area = -1
@@ -245,7 +241,8 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
-    "size: "..fish_size..units_[1]
+    "size: "..fish_size..units_[1],
+    "press ❎ to close"
   })*5-5
   local box_size = Vec:new(string_len, 40)
   local gauge_data = global_data_table.gauge_data
@@ -265,7 +262,8 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
       Vec:new((128-box_size.x-6) \ 2, 80), box_size, 
       7, 1, 3
     ),
-    ticks = 0
+    ticks = 0,
+    timer = global_data_table.gauge_data.tension_timer
   }
   setmetatable(obj, self)
   self.__index = self
@@ -273,16 +271,22 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
 end
 function Fish:update()
   if (self.ticks >= global_data_table.gauge_data.req_tension_ticks) return
-  if (Fish.catch(self)) self.ticks += 1
+  if Fish.catch(self) then
+    self.ticks += 1
+    self.timer = min(self.timer+1, global_data_table.gauge_data.tension_timer)
+  else
+    self.timer = max(self.timer-1, 0)
+  end
   GradientSlider.update(self.tension_slider)
 end
 function Fish:draw_tension()
-  GradientSlider.draw(self.tension_slider)
   local thickness = self.tension_slider.thickness
   local pos = self.tension_slider.position-Vec:new(thickness, 0)
   local size = self.tension_slider.size
-  local y = pos.y+size.y+thickness
+  local y = pos.y+size.y+thickness+1
   line(pos.x, y, pos.x + (self.ticks/global_data_table.gauge_data.req_tension_ticks)*size.x+thickness, y, 11)
+  line(pos.x, y+1, pos.x + (self.timer/global_data_table.gauge_data.tension_timer)*size.x+thickness, y+1, 8)
+  GradientSlider.draw(self.tension_slider)
 end
 function Fish:draw_details()
   line(62, 0, 62, 48, 7)
@@ -353,7 +357,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size})
+      add(inventory, {self.fish.lb, self.fish.size, self.fish.units})
       local entry = get_array_entry(compendium, self.fish.name)
       if entry == nil then 
         add(compendium, {
@@ -374,8 +378,11 @@ function FishingArea:update()
     if self.state == "casting" and self.started then
       GradientSlider.update(self.power_gauge)
     elseif self.state == "fishing" then 
-      Fish.update(self.fish)
       self.started = true
+      Fish.update(self.fish)
+      if self.fish.timer <= 0 then 
+        self.state = "lost"
+      end
     end
   else
     if self.state == "fishing" and self.started then
@@ -935,19 +942,19 @@ function draw_compendium(name)
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211221122110000004888000000000000999000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122112211220000488880000048000099900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122112211220048889900004889000555555000009900000000000000000000000000000000000000000000000000000000000000000000000000000000
-221122112211221108a8999990088990005555995550097000000000000000000000000000000000000000000000000000000000000000000000000000000000
-22112211221122118a5a999999889900550999999995970000000000000000000000000000000000000000000000000000000000000000000000000000000000
-112211221122112288a9999999999000999777777777700000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122112211228899999999999900067777777600970000000000000000000000000000000000000000000000000000000000000000000000000000000000
-221122112211221109999999aa099990000666799000097000000000000000000000000000000000000000000000000000000000000000000000000000000000
-2211221122112211009999aaa00099aa000099009990009900000000000000000000000000000000000000000000000000000000000000000000000000000000
-112211221122112200099aaa00000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+112211221122112200000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000000000000000000000000000000000000a440a0000000000000000000000000000000000000000000000000000000000000000000000
+22112211221122110000004888000000000000999000000000a444a44400a0000000000111000000000000000000000000000000000000000000000000000000
+112211221122112200004888800000480000999000000000004a444a444a000000000091f0000000000000000000000000000000000000000000000000000000
+11221122112211220048889900004889000555555000009904144a44dd440004000019ffff100010000000000000000000000000000000000000000000000000
+221122112211221108a899999008899000555599555009704114444d554a4014006711fff1110611000000000000000000000000000000000000000000000000
+22112211221122118a5a9999998899005509999999959700444a44d55444a1441111111111111771000000000000000000000000000000000000000000000000
+112211221122112288a9999999999000999777777777700044a44455544444441115555551171171000000000000000000000000000000000000000000000000
+112211221122112288999999999999000677777776009700a944a445554a4094dd76666661711771000000000000000000000000000000000000000000000000
+221122112211221109999999aa0999900006667990000970099994a45544a00900ddd71667dd0711000000000000000000000000000000000000000000000000
+2211221122112211009999aaa00099aa0000990099900099a0f999999a9000000000dd766d000010000000000000000000000000000000000000000000000000
+112211221122112200099aaa00000099000000000000000000affaff99a00000000000dd70000000000000000000000000000000000000000000000000000000
+1122112211221122000000000000000000000000000000000000ffaf0a0000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 07770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -965,3 +972,16 @@ __gfx__
 00000000074444700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000007447000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000cccccccc0000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000cccccccccc000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00cccccccccccc00cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000cccccccccc0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

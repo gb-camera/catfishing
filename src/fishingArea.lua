@@ -76,8 +76,11 @@ function FishingArea:update()
     if self.state == "casting" and self.started then
       GradientSlider.update(self.power_gauge)
     elseif self.state == "fishing" then 
-      Fish.update(self.fish)
       self.started = true
+      Fish.update(self.fish)
+      if self.fish.timer <= 0 then 
+        self.state = "lost"
+      end
     end
   else
     if self.state == "fishing" and self.started then

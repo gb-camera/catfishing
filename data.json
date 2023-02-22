@@ -8,7 +8,8 @@
     "position": [10, 10],
     "size": [100, 5],
     "settings": [4, 7, 2, 3],
-    "req_tension_ticks": 20
+    "req_tension_ticks": 20,
+    "tension_timer": 30
   },
   "power_gauge_colors": [8, 9, 10, 11, 3],
   "biases": {
@@ -63,7 +64,7 @@
           "max_gauge_requirement": 3,
           "stats": ["goldfish", 2, 2.7, 12.5],
           "units": ["cm", "g"],
-          "description": "this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here."
+          "description": "now what's a goldfish doing here"
         },
         {
           "gradient": [8, 9, 10, 11, 10, 9, 8],
@@ -72,7 +73,25 @@
           "max_gauge_requirement": "inf",
           "stats": ["yellow fin tuna", 4, 32, 2.25],
           "units": ["m", "kg"],
-          "description": ""
+          "description": "yummy"
+        },
+        {
+          "gradient": [8, 9, 10, 10, 10, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 3,
+          "max_gauge_requirement": 5,
+          "stats": ["pufferfish", 6, 0.08, 60],
+          "units": ["cm", "kg"],
+          "description": "doesn't it look so cuddley? you should hug it!"
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 11, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["triggerfish", 8, 0.04, 71],
+          "units": ["cm", "kg"],
+          "description": "hol up is that a gun?!?!"
         }
       ]
     }
