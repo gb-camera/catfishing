@@ -22,3 +22,11 @@ function fish_loop()
     FishingArea.update(fishing_areas[loaded_area])
   end
 end
+
+function compendium_loop()
+  if btnp(🅾️) then
+    get_menu("compendium").enable = true
+    loaded_area = -1
+    opened_fish_page = nil
+  end
+end

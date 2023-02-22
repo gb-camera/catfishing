@@ -23,10 +23,23 @@ function reset()
             loaded_area = 1 --temp
             FishingArea.reset(fishing_areas[loaded_area])
           end
+        },
+        {
+          text="compendium", color={7, 0},
+          callback=function()
+            if #compendium > 0 then 
+              Menu.update_content(get_menu("compendium"), display_all_fish())
+              swap_menu_context("compendium")
+            end
+          end
         }
       },
       nil,
       4, 7, 7, 3
+    },
+    {
+      "compendium", "main",
+      5, 70, {}, nil, 4, 7, 7, 3
     },
     {
       "fishing", nil,
@@ -36,6 +49,7 @@ function reset()
           text="return to map", color={7, 0},
           callback=function()
             swap_menu_context("main")
+            global_data_table.fishing_areas[loaded_area].flag = false
             loaded_area = -1
           end
         }
@@ -72,7 +86,19 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
 
-  inventory = {}
+  inventory, compendium = {}, {}
+  compendium_rect = BorderRect:new(
+    Vec:new(8, 8), Vec:new(111, 111),
+    7, 5, 3
+  )
+  compendium_sprite_rect = BorderRect:new(
+    compendium_rect.position + Vec:new(5, 5),
+    Vec:new(24, 24), 
+    7, 0, 2
+  )
+  opened_fish_page = nil
+  
   cash = 0
   loaded_area = -1
+  get_menu("main").enable = true
 end

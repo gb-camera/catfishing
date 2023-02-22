@@ -13,13 +13,14 @@
 
 function _init()
   reset()
-  menus[1].enable = true
 end
 
 function _draw()
   cls()
 
-  if loaded_area == -1 then 
+  if loaded_area == -2 then 
+    draw_compendium(opened_fish_page)
+  elseif loaded_area == -1 then 
     draw_map()
   elseif loaded_area == 0 then 
     draw_shop()
@@ -37,9 +38,17 @@ function _update()
     Menu.invoke(get_active_menu())
   end
 
+  if btnp(🅾️) then
+    if get_active_menu() and get_active_menu().name == "compendium" then 
+      swap_menu_context(get_active_menu().prev)
+    end
+  end
+
   
   if loaded_area == 0 then 
     shop_loop()
+  elseif loaded_area == -2 then 
+    compendium_loop()
   elseif loaded_area > 0 then
     fish_loop()
   end

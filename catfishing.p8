@@ -12,8 +12,8 @@ function get_menu(name)
   end
 end
 function swap_menu_context(name)
-  get_active_menu().enable = false
   if (name == nil) return
+  get_active_menu().enable = false
   get_menu(name).enable = true
 end
 function longest_menu_str(data)
@@ -33,7 +33,21 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g}},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg}}}}},fish_book={{name=goldfish,description=}}"
+function display_all_fish()
+  local fishes = {}
+  for fish in all(compendium) do 
+    add(fishes, {
+      text=fish.name, color={7, 0},
+      callback=function()
+        get_active_menu().enable = false
+        loaded_area = -2
+        opened_fish_page = fish.name
+      end
+    }) 
+  end
+  return fishes
+end
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   menu_data = {
@@ -55,10 +69,23 @@ function reset()
             loaded_area = 1 --temp
             FishingArea.reset(fishing_areas[loaded_area])
           end
+        },
+        {
+          text="compendium", color={7, 0},
+          callback=function()
+            if #compendium > 0 then 
+              Menu.update_content(get_menu("compendium"), display_all_fish())
+              swap_menu_context("compendium")
+            end
+          end
         }
       },
       nil,
       4, 7, 7, 3
+    },
+    {
+      "compendium", "main",
+      5, 70, {}, nil, 4, 7, 7, 3
     },
     {
       "fishing", nil,
@@ -68,6 +95,7 @@ function reset()
           text="return to map", color={7, 0},
           callback=function()
             swap_menu_context("main")
+            global_data_table.fishing_areas[loaded_area].flag = false
             loaded_area = -1
           end
         }
@@ -103,9 +131,21 @@ function reset()
   for area in all(global_data_table.areas) do
     add(fishing_areas, FishingArea:new(area))
   end
-  inventory = {}
+  inventory, compendium = {}, {}
+  compendium_rect = BorderRect:new(
+    Vec:new(8, 8), Vec:new(111, 111),
+    7, 5, 3
+  )
+  compendium_sprite_rect = BorderRect:new(
+    compendium_rect.position + Vec:new(5, 5),
+    Vec:new(24, 24), 
+    7, 0, 2
+  )
+  opened_fish_page = nil
+  
   cash = 0
   loaded_area = -1
+  get_menu("main").enable = true
 end
 BorderRect = {}
 function BorderRect:new(position_, size_, border_color, base_color, thickness_size)
@@ -200,7 +240,7 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, successIDs)
+function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, gradient, successIDs)
   local string_len = longest_string({
     "name: "..fish_name,
     "weight: "..weight..units_[2],
@@ -215,6 +255,7 @@ function Fish:new(fish_name, spriteID, weight, fish_size, units_, gradient, succ
     lb = weight,
     size = fish_size,
     units = units_,
+    description=description_,
     success_stage_ids = successIDs,
     tension_slider = GradientSlider:new(
       Vec:new(gauge_data.position), Vec:new(gauge_data.size), 
@@ -260,6 +301,7 @@ function Fish:catch()
 end
 FishingArea = {}
 function FishingArea:new(area_data_)
+  local lost_text_len = #"the fish got away"*5-5
   obj = {
     area_data = area_data_,
     power_gauge = GradientSlider:new(
@@ -267,6 +309,11 @@ function FishingArea:new(area_data_)
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.power_gauge_colors,
       unpack(global_data_table.gauge_data.settings)
+    ),
+    lost_box = BorderRect:new(
+      Vec:new((128-lost_text_len-6)\2, 48),
+      Vec:new(lost_text_len, 24),
+      7, 1, 3
     ),
     state = "none",
     fish = nil
@@ -282,24 +329,44 @@ function FishingArea:draw()
     Fish.draw_tension(self.fish)
   elseif self.state == "detail" then 
     Fish.draw_details(self.fish)
+  elseif self.state == "lost" then 
+    FishingArea.draw_lost(self)
   end
+end
+function FishingArea:draw_lost()
+  BorderRect.draw(self.lost_box)
+  print_with_outline(
+    "the fish got away\n\npress ❎ to close", 
+    self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
+  )
 end
 function FishingArea:update()
   if not self.flag then 
     self.flag = true
+    self.started = false
     return 
   end
   if btnp(❎) and self.state ~= "casting" then
     if self.state == "none" then 
       self.started = true
-      self.fish = generate_fish(
-        self.area_data, 
-        GradientSlider.get_stage(self.power_gauge)
-      )
-      GradientSlider.reset(self.power_gauge)
       self.state = "casting"
+    elseif self.state == "lost" then 
+      FishingArea.reset(self)
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
+      local entry = get_array_entry(compendium, self.fish.name)
+      if entry == nil then 
+        add(compendium, {
+          name=self.fish.name,
+          description=self.fish.description,
+          sprite=self.fish.sprite,
+          weight=self.fish.lb,
+          size=self.fish.size,
+          units=self.fish.units
+        })
+      else 
+        update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
+      end
       FishingArea.reset(self)
     end
   end
@@ -316,6 +383,14 @@ function FishingArea:update()
     elseif self.state == "casting" then 
       self.state = "fishing"
       self.started = false
+      self.fish = generate_fish(
+        self.area_data, 
+        GradientSlider.get_stage(self.power_gauge)
+      )
+      if self.fish == nil then 
+        self.state = "lost"
+      end
+      GradientSlider.reset(self.power_gauge)
     end
   end
   if self.state == "fishing" and self.fish.ticks >= global_data_table.gauge_data.req_tension_ticks then 
@@ -330,12 +405,14 @@ function FishingArea:reset()
   self.started = false
   self.fish = nil 
   self.state = "none"
+  self.flag = false
 end
 function generate_fish(area, stage)
   local possible_fishes = {}
   local stage_gauge = stage -- + rod bonus
   for fish in all(area.fishes) do
-    if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
+    printh(stage_gauge)
+    if stage_gauge >= fish.min_gauge_requirement and stage_gauge < fish.max_gauge_requirement then 
       add(possible_fishes, fish)
     end
   end
@@ -344,7 +421,7 @@ function generate_fish(area, stage)
   local name, spriteID, weight, size = unpack(fish.stats)
   size, weight = generate_weight_size_with_bias(weight, size)
   return Fish:new(
-    name, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+    name, fish.description, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
   )
 end
 function generate_weight_size_with_bias(weight, size)
@@ -499,6 +576,14 @@ function Menu:invoke()
     cont.callback()
   end
 end
+function Menu:update_content(content)
+  self.content = content 
+  BorderRect.resize(
+    self.rect,
+    self.rect.position, 
+    Vec:new(10+5*longest_menu_str(content), 38)
+  )
+end
 function menu_scroll(dx1, dx2, dy, dir, rate, position)
   local dy1, dy3 = dy-10, dy+10
   local lx = lerp(position.x+dx1, position.x+dx2, rate)
@@ -557,11 +642,12 @@ function Animator:reset()
 end
 function _init()
   reset()
-  menus[1].enable = true
 end
 function _draw()
   cls()
-  if loaded_area == -1 then 
+  if loaded_area == -2 then 
+    draw_compendium(opened_fish_page)
+  elseif loaded_area == -1 then 
     draw_map()
   elseif loaded_area == 0 then 
     draw_shop()
@@ -576,9 +662,16 @@ function _update()
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end
+  if btnp(🅾️) then
+    if get_active_menu() and get_active_menu().name == "compendium" then 
+      swap_menu_context(get_active_menu().prev)
+    end
+  end
   
   if loaded_area == 0 then 
     shop_loop()
+  elseif loaded_area == -2 then 
+    compendium_loop()
   elseif loaded_area > 0 then
     fish_loop()
   end
@@ -637,6 +730,22 @@ function table_contains(table, val)
     if (obj == val) return true
   end
 end
+function get_array_entry(table, name)
+  for entry in all(table) do 
+    if (entry.name == name) return entry
+  end
+end
+function update_compendium_entry(name, weight, size)
+  local index
+  for i, entry in pairs(compendium) do
+    if entry.name == name then 
+      index = i 
+      break
+    end
+  end
+  compendium[index].weight = max(compendium[index].weight, weight)
+  compendium[index].size = max(compendium[index].size, size)
+end
 function combine_and_unpack(data1, data2)
   local data = {}
   for dat in all(data1) do
@@ -646,6 +755,23 @@ function combine_and_unpack(data1, data2)
     add(data, dat)
   end
   return unpack(data)
+end
+function pretty_print(text_data, width)
+  local max_len= flr(width/5)
+  local counter, buffer = max_len, ""
+  for _, word in pairs(split(text_data, " ")) do
+    if #word + 1 <= counter then 
+      buffer ..= word.." "
+      counter -= #word + 1
+    elseif #word <= counter then 
+      buffer ..= word
+      counter -= #word 
+    else
+      buffer ..= "\n"..word.." "
+      counter = max_len - #word + 1 
+    end
+  end
+  return buffer
 end
 function unpack_table(str)
   local table,start,stack,i={},1,0,1
@@ -740,6 +866,13 @@ function fish_loop()
     FishingArea.update(fishing_areas[loaded_area])
   end
 end
+function compendium_loop()
+  if btnp(🅾️) then
+    get_menu("compendium").enable = true
+    loaded_area = -1
+    opened_fish_page = nil
+  end
+end
 function draw_map()
   print_with_outline("placeholder :D", 5, 40, 7, 1)
   print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
@@ -763,6 +896,49 @@ function draw_fishing()
     print_with_outline("wip: imagine cat here", 5, 40, 7, 1)
   end
   FishingArea.draw(fishing_areas[loaded_area])
+end
+function draw_compendium(name)
+  BorderRect.draw(compendium_rect)
+  BorderRect.draw(compendium_sprite_rect)
+  local fish_entry = get_array_entry(compendium, name)
+  local sprite_pos = compendium_sprite_rect.position + Vec:new(4, 4)
+  spr(
+    fish_entry.sprite, 
+    combine_and_unpack(
+      {Vec.unpack(sprite_pos)},
+      {2, 2}
+    )
+  )
+  local detail_pos = compendium_sprite_rect.position.x + compendium_sprite_rect.size.x + 2
+  print_with_outline(
+    fish_entry.name, 
+    detail_pos, compendium_sprite_rect.position.y,
+    7, 0
+  )
+  print_with_outline(
+    "weight: "..fish_entry.weight..fish_entry.units[2], 
+    detail_pos, compendium_sprite_rect.position.y + 12,
+    7, 0
+  )
+  print_with_outline(
+    "size: "..fish_entry.size..fish_entry.units[1], 
+    detail_pos, compendium_sprite_rect.position.y + 19,
+    7, 0
+  )
+  local formatted_text = pretty_print(
+    fish_entry.description,
+    compendium_rect.size.x - 8 
+  )
+  local lines = split(formatted_text, "\n")
+  local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
+  for i, line in pairs(lines) do 
+    print_with_outline(
+      line, 
+      compendium_rect.position.x + 4,
+      y_offset + (i-1) * 7,
+      7, 0
+    )
+  end
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
