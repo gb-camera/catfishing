@@ -47,7 +47,7 @@ function display_all_fish()
   end
   return fishes
 end
-global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
+global_data_str="palettes={transparent_color_id=0},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   menu_data = {
@@ -135,8 +135,13 @@ function reset()
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
   )
-  
+  compendium_sprite_rect = BorderRect:new(
+    compendium_rect.position + Vec:new(5, 5),
+    Vec:new(24, 24), 
+    7, 0, 2
+  )
   opened_fish_page = nil
+  
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true
@@ -342,11 +347,11 @@ function FishingArea:update()
           description=self.fish.description,
           sprite=self.fish.sprite,
           weight=self.fish.lb,
-          size=self.fish.size
+          size=self.fish.size,
+          units=self.fish.units
         })
       else 
-        entry.lb = max(entry.lb, self.fish.lb)
-        entry.size = max(entry.size, self.fish.size)
+        update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
       end
       FishingArea.reset(self)
     end
@@ -706,6 +711,17 @@ function get_array_entry(table, name)
     if (entry.name == name) return entry
   end
 end
+function update_compendium_entry(name, weight, size)
+  local index
+  for i, entry in pairs(compendium) do
+    if entry.name == name then 
+      index = i 
+      break
+    end
+  end
+  compendium[index].weight = max(compendium[index].weight, weight)
+  compendium[index].size = max(compendium[index].size, size)
+end
 function combine_and_unpack(data1, data2)
   local data = {}
   for dat in all(data1) do
@@ -715,6 +731,23 @@ function combine_and_unpack(data1, data2)
     add(data, dat)
   end
   return unpack(data)
+end
+function pretty_print(text_data, width)
+  local max_len= flr(width/5)
+  local counter, buffer = max_len, ""
+  for _, word in pairs(split(text_data, " ")) do
+    if #word + 1 <= counter then 
+      buffer ..= word.." "
+      counter -= #word + 1
+    elseif #word <= counter then 
+      buffer ..= word
+      counter -= #word 
+    else
+      buffer ..= "\n"..word.." "
+      counter = max_len - #word + 1 
+    end
+  end
+  return buffer
 end
 function unpack_table(str)
   local table,start,stack,i={},1,0,1
@@ -842,14 +875,46 @@ function draw_fishing()
 end
 function draw_compendium(name)
   BorderRect.draw(compendium_rect)
+  BorderRect.draw(compendium_sprite_rect)
   local fish_entry = get_array_entry(compendium, name)
+  local sprite_pos = compendium_sprite_rect.position + Vec:new(4, 4)
   spr(
     fish_entry.sprite, 
     combine_and_unpack(
-      {Vec.unpack(compendium_rect.position + Vec:new(5, 5))},
+      {Vec.unpack(sprite_pos)},
       {2, 2}
     )
   )
+  local detail_pos = compendium_sprite_rect.position.x + compendium_sprite_rect.size.x + 2
+  print_with_outline(
+    fish_entry.name, 
+    detail_pos, compendium_sprite_rect.position.y,
+    7, 0
+  )
+  print_with_outline(
+    "weight: "..fish_entry.weight..fish_entry.units[2], 
+    detail_pos, compendium_sprite_rect.position.y + 12,
+    7, 0
+  )
+  print_with_outline(
+    "size: "..fish_entry.size..fish_entry.units[1], 
+    detail_pos, compendium_sprite_rect.position.y + 19,
+    7, 0
+  )
+  local formatted_text = pretty_print(
+    fish_entry.description,
+    compendium_rect.size.x - 8 
+  )
+  local lines = split(formatted_text, "\n")
+  local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
+  for i, line in pairs(lines) do 
+    print_with_outline(
+      line, 
+      compendium_rect.position.x + 4,
+      y_offset + (i-1) * 7,
+      7, 0
+    )
+  end
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

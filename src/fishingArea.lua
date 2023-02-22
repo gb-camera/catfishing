@@ -49,11 +49,11 @@ function FishingArea:update()
           description=self.fish.description,
           sprite=self.fish.sprite,
           weight=self.fish.lb,
-          size=self.fish.size
+          size=self.fish.size,
+          units=self.fish.units
         })
       else 
-        entry.lb = max(entry.lb, self.fish.lb)
-        entry.size = max(entry.size, self.fish.size)
+        update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
       end
       FishingArea.reset(self)
     end

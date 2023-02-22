@@ -66,6 +66,18 @@ function get_array_entry(table, name)
   end
 end
 
+function update_compendium_entry(name, weight, size)
+  local index
+  for i, entry in pairs(compendium) do
+    if entry.name == name then 
+      index = i 
+      break
+    end
+  end
+  compendium[index].weight = max(compendium[index].weight, weight)
+  compendium[index].size = max(compendium[index].size, size)
+end
+
 function combine_and_unpack(data1, data2)
   local data = {}
   for dat in all(data1) do
@@ -75,4 +87,22 @@ function combine_and_unpack(data1, data2)
     add(data, dat)
   end
   return unpack(data)
+end
+
+function pretty_print(text_data, width)
+  local max_len= flr(width/5)
+  local counter, buffer = max_len, ""
+  for _, word in pairs(split(text_data, " ")) do
+    if #word + 1 <= counter then 
+      buffer ..= word.." "
+      counter -= #word + 1
+    elseif #word <= counter then 
+      buffer ..= word
+      counter -= #word 
+    else
+      buffer ..= "\n"..word.." "
+      counter = max_len - #word + 1 
+    end
+  end
+  return buffer
 end

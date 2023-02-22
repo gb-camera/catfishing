@@ -90,8 +90,13 @@ function reset()
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
   )
-  
+  compendium_sprite_rect = BorderRect:new(
+    compendium_rect.position + Vec:new(5, 5),
+    Vec:new(24, 24), 
+    7, 0, 2
+  )
   opened_fish_page = nil
+  
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true

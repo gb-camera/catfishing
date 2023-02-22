@@ -62,7 +62,7 @@
           "max_gauge_requirement": 3,
           "stats": ["goldfish", 2, 2.7, 12.5],
           "units": ["cm", "g"],
-          "description": ""
+          "description": "this is some filler text to see if this can fit and format correctly into the box that is required to contain it. it will contain puns or whatever we want to place in here."
         },
         {
           "gradient": [8, 9, 10, 11, 10, 9, 8],
