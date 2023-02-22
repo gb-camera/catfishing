@@ -1,5 +1,6 @@
 FishingArea = {}
 function FishingArea:new(area_data_)
+  local lost_text_len = #"the fish got away"*5-5
   obj = {
     area_data = area_data_,
     -- internal
@@ -8,6 +9,11 @@ function FishingArea:new(area_data_)
       Vec:new(global_data_table.gauge_data.size), 
       global_data_table.power_gauge_colors,
       unpack(global_data_table.gauge_data.settings)
+    ),
+    lost_box = BorderRect:new(
+      Vec:new((128-lost_text_len-6)\2, 48),
+      Vec:new(lost_text_len, 24),
+      7, 1, 3
     ),
     state = "none",
     fish = nil
@@ -23,23 +29,30 @@ function FishingArea:draw()
     Fish.draw_tension(self.fish)
   elseif self.state == "detail" then 
     Fish.draw_details(self.fish)
+  elseif self.state == "lost" then 
+    FishingArea.draw_lost(self)
   end
+end
+function FishingArea:draw_lost()
+  BorderRect.draw(self.lost_box)
+  print_with_outline(
+    "the fish got away\n\npress ❎ to close", 
+    self.lost_box.position.x + 5, self.lost_box.position.y+6, 7, 0
+  )
 end
 function FishingArea:update()
   if not self.flag then 
     self.flag = true
+    self.started = false
     return 
   end
 
   if btnp(❎) and self.state ~= "casting" then
     if self.state == "none" then 
       self.started = true
-      self.fish = generate_fish(
-        self.area_data, 
-        GradientSlider.get_stage(self.power_gauge)
-      )
-      GradientSlider.reset(self.power_gauge)
       self.state = "casting"
+    elseif self.state == "lost" then 
+      FishingArea.reset(self)
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size})
       local entry = get_array_entry(compendium, self.fish.name)
@@ -72,6 +85,14 @@ function FishingArea:update()
     elseif self.state == "casting" then 
       self.state = "fishing"
       self.started = false
+      self.fish = generate_fish(
+        self.area_data, 
+        GradientSlider.get_stage(self.power_gauge)
+      )
+      if self.fish == nil then 
+        self.state = "lost"
+      end
+      GradientSlider.reset(self.power_gauge)
     end
   end
 
@@ -87,13 +108,14 @@ function FishingArea:reset()
   self.started = false
   self.fish = nil 
   self.state = "none"
+  self.flag = false
 end
 
 function generate_fish(area, stage)
   local possible_fishes = {}
   local stage_gauge = stage -- + rod bonus
   for fish in all(area.fishes) do
-    if stage_gauge <= fish.max_gauge_requirement and stage_gauge >= fish.min_gauge_requirement then 
+    if stage_gauge >= fish.min_gauge_requirement and stage_gauge < fish.max_gauge_requirement then 
       add(possible_fishes, fish)
     end
   end

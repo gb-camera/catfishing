@@ -49,6 +49,7 @@ function reset()
           text="return to map", color={7, 0},
           callback=function()
             swap_menu_context("main")
+            global_data_table.fishing_areas[loaded_area].flag = false
             loaded_area = -1
           end
         }
