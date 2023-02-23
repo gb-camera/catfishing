@@ -25,7 +25,7 @@ function longest_menu_str(data)
 end
 function sell_all_fish()
   for fish in all(inventory) do 
-    local weight, size, units = unpack(fish)
+    local weight, size = unpack(fish)
     cash += 
       flr(weight) * global_data_table.sell_weights.per_weight_unit + 
       flr(size) * global_data_table.sell_weights.per_size_unit
@@ -357,7 +357,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size, self.fish.units})
+      add(inventory, {self.fish.lb, self.fish.size})
       local entry = get_array_entry(compendium, self.fish.name)
       if entry == nil then 
         add(compendium, {
