@@ -238,12 +238,9 @@ function GradientSlider:reset()
 end
 Fish = {}
 function Fish:new(fish_name, description_, spriteID, weight, fish_size, fish_rarity, units_, gradient, successIDs)
-  local star_string = " "
-  for i = 0, fish_rarity do
-    star_string ..= "★"
-  end
+  local star_string = fish_rarity .. "★"
   local string_len = longest_string({
-    "name: "..fish_name..star_string,
+    "name: "..fish_name.." "..star_string,
     "weight: "..weight..units_[2],
     "size: "..fish_size..units_[1],
     "press ❎ to close"
@@ -297,12 +294,9 @@ function Fish:draw_details()
   line(62, 0, 62, 48, 7)
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
   BorderRect.draw(self.description_box)
-  local star_string = " "
-  for i = 0, self.rarity do
-    star_string ..= "★"
-  end
+  local star_string = self.rarity .. "★"
   print_with_outline(
-    "name: "..self.name..star_string.."\n\nrweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
+    "name: "..self.name.." "..star_string.."\n\nrweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
     self.description_box.position.x + 5, self.description_box.position.y + 4, 7, 0
   )
 end
