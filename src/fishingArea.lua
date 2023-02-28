@@ -54,7 +54,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size})
+      add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
       local entry = get_array_entry(compendium, self.fish.name)
       if entry == nil then 
         add(compendium, {
@@ -118,11 +118,11 @@ function generate_fish(area, stage)
     end
   end
   if (#possible_fishes == 0) return nil
-  local fish =possible_fishes[flr(rnd(#possible_fishes))+1]
-  local name, spriteID, weight, size = unpack(fish.stats)
+  local fish = possible_fishes[flr(rnd(#possible_fishes))+1]
+  local name, spriteID, weight, size, rarity = unpack(fish.stats)
   size, weight = generate_weight_size_with_bias(weight, size)
   return Fish:new(
-    name, fish.description, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+    name, fish.description, spriteID, weight, size, rarity, fish.units, fish.gradient, fish.successIDs
   )
 end
 

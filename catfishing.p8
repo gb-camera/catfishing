@@ -25,10 +25,10 @@ function longest_menu_str(data)
 end
 function sell_all_fish()
   for fish in all(inventory) do 
-    local weight, size, units = unpack(fish)
+    local weight, size, rarity = unpack(fish)
     cash += 
-      flr(weight) * global_data_table.sell_weights.per_weight_unit + 
-      flr(size) * global_data_table.sell_weights.per_size_unit
+      flr((weight * global_data_table.sell_weights.per_weight_unit + 
+      size * global_data_table.sell_weights.per_size_unit) * rarity)
     del(inventory, fish)
   end
 end
@@ -46,7 +46,7 @@ function display_all_fish()
   end
   return fishes
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71},units={cm,kg},description=hol up is that a gun?!?!}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   inventory, compendium = {}, {}
@@ -237,9 +237,13 @@ function GradientSlider:reset()
   self.dir = 1
 end
 Fish = {}
-function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, gradient, successIDs)
+function Fish:new(fish_name, description_, spriteID, weight, fish_size, fish_rarity, units_, gradient, successIDs)
+  local star_string = " "
+  for i = 0, fish_rarity do
+    star_string ..= "★"
+  end
   local string_len = longest_string({
-    "name: "..fish_name,
+    "name: "..fish_name..star_string,
     "weight: "..weight..units_[2],
     "size: "..fish_size..units_[1],
     "press ❎ to close"
@@ -251,6 +255,7 @@ function Fish:new(fish_name, description_, spriteID, weight, fish_size, units_, 
     sprite = spriteID,
     lb = weight,
     size = fish_size,
+    rarity = fish_rarity,
     units = units_,
     description=description_,
     success_stage_ids = successIDs,
@@ -292,8 +297,12 @@ function Fish:draw_details()
   line(62, 0, 62, 48, 7)
   draw_sprite_rotated(self.sprite, Vec:new(55, 48), 16, 90)
   BorderRect.draw(self.description_box)
+  local star_string = " "
+  for i = 0, self.rarity do
+    star_string ..= "★"
+  end
   print_with_outline(
-    "name: "..self.name.."\n\nweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
+    "name: "..self.name..star_string.."\n\nrweight: "..self.lb..self.units[2].."\nsize: "..self.size..self.units[1].."\n\npress ❎ to close", 
     self.description_box.position.x + 5, self.description_box.position.y + 4, 7, 0
   )
 end
@@ -357,7 +366,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size, self.fish.units})
+      add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
       local entry = get_array_entry(compendium, self.fish.name)
       if entry == nil then 
         add(compendium, {
@@ -418,11 +427,11 @@ function generate_fish(area, stage)
     end
   end
   if (#possible_fishes == 0) return nil
-  local fish =possible_fishes[flr(rnd(#possible_fishes))+1]
-  local name, spriteID, weight, size = unpack(fish.stats)
+  local fish = possible_fishes[flr(rnd(#possible_fishes))+1]
+  local name, spriteID, weight, size, rarity = unpack(fish.stats)
   size, weight = generate_weight_size_with_bias(weight, size)
   return Fish:new(
-    name, fish.description, spriteID, weight, size, fish.units, fish.gradient, fish.successIDs
+    name, fish.description, spriteID, weight, size, rarity, fish.units, fish.gradient, fish.successIDs
   )
 end
 function generate_weight_size_with_bias(weight, size)

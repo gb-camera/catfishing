@@ -62,7 +62,7 @@
           "successIDs": [11],
           "min_gauge_requirement": 1,
           "max_gauge_requirement": 3,
-          "stats": ["goldfish", 2, 2.7, 12.5],
+          "stats": ["goldfish", 2, 2.7, 12.5, 1],
           "units": ["cm", "g"],
           "description": "now what's a goldfish doing here"
         },
@@ -71,7 +71,7 @@
           "successIDs": [11],
           "min_gauge_requirement": 4,
           "max_gauge_requirement": "inf",
-          "stats": ["yellow fin tuna", 4, 32, 2.25],
+          "stats": ["yellow fin tuna", 4, 32, 2.25, 4],
           "units": ["m", "kg"],
           "description": "yummy"
         },
@@ -80,7 +80,7 @@
           "successIDs": [11],
           "min_gauge_requirement": 3,
           "max_gauge_requirement": 5,
-          "stats": ["pufferfish", 6, 0.08, 60],
+          "stats": ["pufferfish", 6, 0.08, 60, 3],
           "units": ["cm", "kg"],
           "description": "doesn't it look so cuddley? you should hug it!"
         },
@@ -89,7 +89,7 @@
           "successIDs": [11],
           "min_gauge_requirement": 2,
           "max_gauge_requirement": 4,
-          "stats": ["triggerfish", 8, 0.04, 71],
+          "stats": ["triggerfish", 8, 0.04, 71, 2],
           "units": ["cm", "kg"],
           "description": "hol up is that a gun?!?!"
         }
