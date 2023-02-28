@@ -17,7 +17,7 @@ class JSONSerializer():
             tableStr: str = self.ConvertDict(data)[1:-1]
             print("\tJSON finishing converting...")
             tokensSaved = self.tokenCount - 1
-            print(f"\tYou saved {tokensSaved} tokens")
+            print(f"\tYou saved {tokensSaved-339} tokens")
             charsUsed = len(tableStr) + 5
             print(f"\t{charsUsed} chars used after replacement")
             return tableStr
