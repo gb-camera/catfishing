@@ -80,9 +80,18 @@ function reset()
             loaded_area = -1
           end
         },
-        { text="sell all fish", color={7, 0}, callback=sell_all_fish }
+        { text="sell all fish", color={7, 0}, callback=sell_all_fish },
+        {
+          text="buy rods", color={7, 0},
+          callback=swap_menu_context, 
+          args={"rods"}
+        }
       },
       nil,
+      unpack(menu_palette)
+    },
+    {
+      "rods", "shop", 5, 70, buy_rods_menu(), rod_description,
       unpack(menu_palette)
     }
   }

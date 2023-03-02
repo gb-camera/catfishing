@@ -32,6 +32,33 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
+function buy_rods_menu()
+  local menu_list = {}
+  for rod in all(global_data_table.rods) do
+    local name = rod.name
+    local power = rod.power
+    local description = rod.description
+    local cost = rod.cost
+    local spriteID = rod.spriteID
+    add(menu_list, {
+      text = name,
+      color = {7,0}
+    })
+  end
+  return menu_list
+end
+function rod_description(pos, menu_pos)
+  local rod = global_data_table.rods[pos]
+  local description_box_height = 9*5
+  local description_pos = menu_pos - Vec:new(0, description_box_height)
+  local asdf = BorderRect:new(
+    description_pos,
+    Vec:new(100, 38),
+    7, 8, 2)
+  BorderRect.draw(asdf)
+  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  description_pos.x + 2, description_pos.y + 2, 7, 0)
+end
 function display_all_fish()
   local fishes = {}
   for fish in all(compendium) do 
@@ -46,7 +73,8 @@ function display_all_fish()
   end
   return fishes
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=flimsy rod,power=1,description=a stick with a string.
+the most basic of fishing rods,cost=10,spriteID=68},{name=amateur's rod,power=3,description=worth it's price,cost=50,spriteID=70},{name=stick of poseidon,power=8,description=even though it looks unappealin. for some reason fish are really attracted to it,cost=100,spriteID=72},{name=champion's rod,power=10,description=legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet,cost=500,spriteID=74}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   inventory, compendium = {}, {}
@@ -125,9 +153,18 @@ function reset()
             loaded_area = -1
           end
         },
-        { text="sell all fish", color={7, 0}, callback=sell_all_fish }
+        { text="sell all fish", color={7, 0}, callback=sell_all_fish },
+        {
+          text="buy rods", color={7, 0},
+          callback=swap_menu_context, 
+          args={"rods"}
+        }
       },
       nil,
+      unpack(menu_palette)
+    },
+    {
+      "rods", "shop", 5, 70, buy_rods_menu(), rod_description,
       unpack(menu_palette)
     }
   }
@@ -977,14 +1014,18 @@ __gfx__
 00000000000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000cccccccc0000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000cccccccccc000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00cccccccccccc00cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00cccccccccccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000cccccccccc0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000044400000000000000055000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc000000000000000004444000000000000005440000000000a0000000000000000000000000000000000000000000000000000000
+0000000000000000cccccccc00000000000000000444600000000000005446000000000aaa000000200020222202000200000000000000000000000000000000
+0000000000000000cccccccc0000000000000000444060000000000005440600000000aaaaa00000200020200202000200000000000000000000000000000000
+0000cccccccc0000cccccccc000000000000000444406000000000005445060000000aaa99aa0000200020200202000200000000000000000000000000000000
+000cccccccccc000cccccccc00000000000000444400600000000005445006000000aaa9aa9aa000202020200202020200000000000000000000000000000000
+00cccccccccccc00cccccccc0000000000000044400060000000005445000600000aaaaaaa9aaa00202020200202020200000000000000000000000000000000
+00cccccccccccc0000000000000000000000044400000600000005445000060000aaaaaa99aaaa00222220200202222200000000000000000000000000000000
+00cccccccccccc000000000000000000000044440000060000005445000006000aaaaaaa9aaaa000220220222202202200000000000000000000000000000000
+00cccccccccccc000000000000000000000044400000060000054d500000060000aaaaaaaaaa0000000000000000000000000000000000000000000000000000
+000cccccccccc000000000000000000000044400000006000054d6d000000600000a9a9a9aa00000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000004444000000006005445d60000006000000aaaaaa000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000044400000000060044500000000060000000aaaa0000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000004440000000000600000000000000000000000aa00000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000044400000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000

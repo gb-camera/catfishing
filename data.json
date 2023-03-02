@@ -51,6 +51,36 @@
       "ticks_per_frame": 3
     }
   },
+  "rods": [
+    {
+      "name": "flimsy rod",
+      "power": 1,
+      "description": "a stick with a string.the most basic of fishing rods",
+      "cost": 10,
+      "spriteID": 68
+    },
+    {
+      "name": "amateur's rod",
+      "power": 3,
+      "description": "worth it's price",
+      "cost": 50,
+      "spriteID": 70
+    },
+    {
+      "name": "stick of poseidon",
+      "power": 8,
+      "description": "even though it looks unappealin. for some reason fish are really attracted to it",
+      "cost": 100,
+      "spriteID": 72
+    },
+    {
+      "name": "champion's rod",
+      "power": 10,
+      "description": "legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet",
+      "cost": 500,
+      "spriteID": 74
+    }
+  ],
   "areas": [
     {
       "name": "home",

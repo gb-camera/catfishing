@@ -36,6 +36,36 @@ function sell_all_fish()
   end
 end
 
+function buy_rods_menu()
+  local menu_list = {}
+  for rod in all(global_data_table.rods) do
+    local name = rod.name
+    local power = rod.power
+    local description = rod.description
+    local cost = rod.cost
+    local spriteID = rod.spriteID
+
+    add(menu_list, {
+      text = name,
+      color = {7,0}
+    })
+  end
+  return menu_list
+end
+
+function rod_description(pos, menu_pos)
+  local rod = global_data_table.rods[pos]
+  local description_box_height = 9*5
+  local description_pos = menu_pos - Vec:new(0, description_box_height)
+  local asdf = BorderRect:new(
+    description_pos,
+    Vec:new(100, 38),
+    7, 8, 2)
+  BorderRect.draw(asdf)
+  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  description_pos.x + 2, description_pos.y + 2, 7, 0)
+end
+
 function display_all_fish()
   local fishes = {}
   for fish in all(compendium) do 
