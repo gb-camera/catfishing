@@ -25,7 +25,7 @@ function Inventory:draw()
       local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) - Vec:new(4, 4)
       local index = self.min_pos + (x-1) + (y-1)*self.size.x
       local sprite = self.data[index]
-      if sprite == nil then 
+      if sprite == nil or sprite.is_hidden then 
         sprite = self.unknown_id
       else
         sprite = sprite.sprite_id
@@ -63,8 +63,16 @@ function Inventory:update()
     self.max_pos = mid(self.max_pos, self.grid_size, self.entry_amount)
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
-  -- printh("Pos: "..self.pos.." | min: "..self.min_pos.." | max: "..self.max_pos)
 end
-function Inventory:update_entry(index, sprite, name_, extra_data)
-  self.data[index] = {sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data)
+  self.data[index] = {is_hidden=true, sprite_id = sprite, name = name_, data = extra_data}
+end
+function Inventory:get_entry(name)
+  for data in all(self.data) do 
+    if (data.name == name) return data
+  end
+end
+function Inventory:check_if_hidden()
+  local entry = self.data[self.pos]
+  return entry == nil or entry.is_hidden
 end

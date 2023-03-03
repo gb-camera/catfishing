@@ -96,11 +96,7 @@ function reset()
   )
   for i, area in pairs(global_data_table.areas) do 
     for j, fish in pairs(area.fishes) do 
-      Inventory.update_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {
-        weight = 0,
-        size = 0,
-        units = fish.units
-      })
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
     end
   end
 

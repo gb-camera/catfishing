@@ -127,11 +127,7 @@ function reset()
   )
   for i, area in pairs(global_data_table.areas) do 
     for j, fish in pairs(area.fishes) do 
-      Inventory.update_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {
-        weight = 0,
-        size = 0,
-        units = fish.units
-      })
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
     end
   end
   cash = 0
@@ -355,6 +351,15 @@ function FishingArea:update()
       FishingArea.reset(self)
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
+      local entry = Inventory.get_entry(fishpedia, self.fish.name)
+      entry.data = {
+        description=self.fish.description,
+        weight=max(entry.data.weight, self.fish.lb),
+        size=max(entry.data.weight, self.fish.size),
+        units=self.fish.units,
+        rarity = max(entry.data.rarity, self.fish.rarity)
+      }
+      entry.is_hidden = false
       FishingArea.reset(self)
     end
   end
@@ -651,7 +656,7 @@ function Inventory:draw()
       local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) - Vec:new(4, 4)
       local index = self.min_pos + (x-1) + (y-1)*self.size.x
       local sprite = self.data[index]
-      if sprite == nil then 
+      if sprite == nil or sprite.is_hidden then 
         sprite = self.unknown_id
       else
         sprite = sprite.sprite_id
@@ -690,8 +695,17 @@ function Inventory:update()
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
 end
-function Inventory:update_entry(index, sprite, name_, extra_data)
-  self.data[index] = {sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data)
+  self.data[index] = {is_hidden=true, sprite_id = sprite, name = name_, data = extra_data}
+end
+function Inventory:get_entry(name)
+  for data in all(self.data) do 
+    if (data.name == name) return data
+  end
+end
+function Inventory:check_if_hidden()
+  local entry = self.data[self.pos]
+  return entry == nil or entry.is_hidden
 end
 function _init()
   reset()
@@ -913,7 +927,7 @@ function compendium_loop()
     return
   end
   if not show_fish_details then
-    if btnp(❎) and fishpedia.data[fishpedia.pos] and fish_detail_flag then
+    if btnp(❎) and not Inventory.check_if_hidden(fishpedia) and fish_detail_flag then
       show_fish_details = true
       return
     end
@@ -979,11 +993,21 @@ function draw_fish_compendium_entry(fish_entry)
     detail_pos, compendium_sprite_rect.position.y + 19,
     7, 0
   )
+  local stars = ""
+  for i=1, fish_entry.data.rarity do 
+    stars ..= "★"
+  end
   local lines = split(pretty_print(
     fish_entry.data.description,
     compendium_rect.size.x - 8 
   ), "\n")
   local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
+  print_with_outline(
+    stars,
+    compendium_rect.position.x + 4,
+    y_offset-8,
+    10, 7
+  )
   for i, line in pairs(lines) do 
     print_with_outline(
       line, 

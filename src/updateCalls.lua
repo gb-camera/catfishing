@@ -34,7 +34,7 @@ function compendium_loop()
     return
   end
   if not show_fish_details then
-    if btnp(❎) and fishpedia.data[fishpedia.pos] and fish_detail_flag then
+    if btnp(❎) and not Inventory.check_if_hidden(fishpedia) and fish_detail_flag then
       show_fish_details = true
       return
     end

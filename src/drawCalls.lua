@@ -60,11 +60,21 @@ function draw_fish_compendium_entry(fish_entry)
     detail_pos, compendium_sprite_rect.position.y + 19,
     7, 0
   )
+  local stars = ""
+  for i=1, fish_entry.data.rarity do 
+    stars ..= "★"
+  end
   local lines = split(pretty_print(
     fish_entry.data.description,
     compendium_rect.size.x - 8 
   ), "\n")
   local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
+  print_with_outline(
+    stars,
+    compendium_rect.position.x + 4,
+    y_offset-8,
+    10, 7
+  )
   for i, line in pairs(lines) do 
     print_with_outline(
       line, 
