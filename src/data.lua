@@ -22,26 +22,13 @@ function reset()
       5, 70,
       {
         {
-          text="shop", color={7, 0},
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 0
-          end
+          text="shop", color={7, 0}, callback=load_area, args={0}
         },
         { 
-          text="fishing", color={7, 0}, 
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 1 --temp
-            FishingArea.reset(global_data_table.areas[loaded_area])
-          end
+          text="fishing", color={7, 0}, callback=load_area, args={1}
         },
         {
-          text="fishapedia", color={7, 0},
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = -2
-          end
+          text="fishapedia", color={7, 0}, callback=load_area, args={-2}
         }
       },
       nil,

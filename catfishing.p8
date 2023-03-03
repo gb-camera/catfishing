@@ -23,6 +23,11 @@ function longest_menu_str(data)
   end
   return len
 end
+function load_area(area_id)
+  get_active_menu().enable = false
+  loaded_area = area_id 
+  if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
+end
 function sell_all_fish()
   for fish in all(inventory) do 
     local weight, size, rarity = unpack(fish)
@@ -53,26 +58,13 @@ function reset()
       5, 70,
       {
         {
-          text="shop", color={7, 0},
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 0
-          end
+          text="shop", color={7, 0}, callback=load_area, args={0}
         },
         { 
-          text="fishing", color={7, 0}, 
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 1 --temp
-            FishingArea.reset(global_data_table.areas[loaded_area])
-          end
+          text="fishing", color={7, 0}, callback=load_area, args={1}
         },
         {
-          text="fishapedia", color={7, 0},
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = -2
-          end
+          text="fishapedia", color={7, 0}, callback=load_area, args={-2}
         }
       },
       nil,

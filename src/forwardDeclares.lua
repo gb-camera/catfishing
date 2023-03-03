@@ -25,6 +25,12 @@ function longest_menu_str(data)
   return len
 end
 
+function load_area(area_id)
+  get_active_menu().enable = false
+  loaded_area = area_id 
+  if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
+end
+
 -- fishing
 function sell_all_fish()
   for fish in all(inventory) do 
