@@ -37,7 +37,7 @@ function reset()
           end
         },
         {
-          text="compendium", color={7, 0},
+          text="fishapedia", color={7, 0},
           callback=function()
             get_active_menu().enable = false
             loaded_area = -2
