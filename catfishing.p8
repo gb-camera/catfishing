@@ -120,7 +120,7 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
   
-  show_fish_details, pressed, new_pressed = false
+  show_fish_details, fish_detail_flag = false
   fishpedia = Inventory:new(34, 36, 
     Vec:new(5, 5), 30, 
     { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
@@ -905,15 +905,19 @@ end
 function compendium_loop()
   if btnp(🅾️) then
     if show_fish_details then 
-      show_fish_details = false
-      return 
-    elseif loaded_area == -2 then 
+      show_fish_details, fish_detail_flag = false
+    else 
       loaded_area = -1
-      get_menu("main").enable = true
-      return
+      get_menu("main").enable, fish_detail_flag = true
     end
+    return
   end
   if not show_fish_details then
+    if btnp(❎) and fishpedia.data[fishpedia.pos] and fish_detail_flag then
+      show_fish_details = true
+      return
+    end
+    fish_detail_flag = true
     Inventory.update(fishpedia)
   end
 end

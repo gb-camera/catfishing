@@ -89,7 +89,7 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
   
-  show_fish_details = false
+  show_fish_details, fish_detail_flag = false
   fishpedia = Inventory:new(34, 36, 
     Vec:new(5, 5), 30, 
     { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
