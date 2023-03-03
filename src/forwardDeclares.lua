@@ -35,18 +35,3 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-
-function display_all_fish()
-  local fishes = {}
-  for fish in all(compendium) do 
-    add(fishes, {
-      text=fish.name, color={7, 0},
-      callback=function()
-        get_active_menu().enable = false
-        loaded_area = -2
-        opened_fish_page = fish.name
-      end
-    }) 
-  end
-  return fishes
-end

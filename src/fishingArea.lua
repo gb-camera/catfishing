@@ -55,19 +55,19 @@ function FishingArea:update()
       FishingArea.reset(self)
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
-      local entry = get_array_entry(compendium, self.fish.name)
-      if entry == nil then 
-        add(compendium, {
-          name=self.fish.name,
-          description=self.fish.description,
-          sprite=self.fish.sprite,
-          weight=self.fish.lb,
-          size=self.fish.size,
-          units=self.fish.units
-        })
-      else 
-        update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
-      end
+      -- local entry = get_array_entry(compendium, self.fish.name)
+      -- if entry == nil then 
+      --   add(compendium, {
+      --     name=self.fish.name,
+      --     description=self.fish.description,
+      --     sprite=self.fish.sprite,
+      --     weight=self.fish.lb,
+      --     size=self.fish.size,
+      --     units=self.fish.units
+      --   })
+      -- else 
+      --   update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
+      -- end
       FishingArea.reset(self)
     end
   end

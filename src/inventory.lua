@@ -23,18 +23,18 @@ function Inventory:draw()
   for y=1, self.size.y do
     for x=1, self.size.x do
       local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) - Vec:new(4, 4)
-      local index = self.min_pos + x + y*self.size.x
+      local index = self.min_pos + (x-1) + (y-1)*self.size.x
       local sprite = self.data[index]
       if sprite == nil then 
         sprite = self.unknown_id
       else
         sprite = sprite.sprite_id
       end
-      rectfill(position.x, position.y, position.x + 16, position.y + 16, 0)
+      rectfill(position.x, position.y, position.x + 15, position.y + 15, 0)
       spr(sprite, position.x, position.y, 2, 2)
     end
   end
-  local pos_offset = self.pos - self.min_pos 
+  local pos_offset = self.pos - self.min_pos
   local x = pos_offset%self.size.x
   local y = pos_offset\self.size.x
   local pos = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y)+Vec:new(16, 16)
@@ -63,7 +63,8 @@ function Inventory:update()
     self.max_pos = mid(self.max_pos, self.grid_size, self.entry_amount)
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
+  -- printh("Pos: "..self.pos.." | min: "..self.min_pos.." | max: "..self.max_pos)
 end
-function Inventory:update_entry(index, sprite, extra_data)
-  self.data[index] = {sprite_id = sprite, data = extra_data}
+function Inventory:update_entry(index, sprite, name_, extra_data)
+  self.data[index] = {sprite_id = sprite, name = name_, data = extra_data}
 end

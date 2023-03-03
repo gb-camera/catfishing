@@ -24,10 +24,21 @@ function fish_loop()
 end
 
 function compendium_loop()
-  -- if btnp(🅾️) then
-  --   get_menu("compendium").enable = true
-  --   loaded_area = -1
-  --   opened_fish_page = nil
-  -- end
-  Inventory.update(fishpedia)
+  if btnp(🅾️) then
+    if show_fish_details then 
+      show_fish_details = false
+      return 
+    elseif loaded_area == -2 then 
+      loaded_area = -1
+      get_menu("main").enable = true
+      return
+    end
+  end
+  if not show_fish_details then
+    if btnp(❎) and fishpedia.data[fishpedia.pos] then
+      show_fish_details = true
+      return
+    end
+    Inventory.update(fishpedia)
+  end
 end
