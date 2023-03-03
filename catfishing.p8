@@ -32,24 +32,10 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-function display_all_fish()
-  local fishes = {}
-  for fish in all(compendium) do 
-    add(fishes, {
-      text=fish.name, color={7, 0},
-      callback=function()
-        get_active_menu().enable = false
-        loaded_area = -2
-        opened_fish_page = fish.name
-      end
-    }) 
-  end
-  return fishes
-end
 global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  inventory, compendium = {}, {}
+  inventory = {}
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
@@ -82,21 +68,15 @@ function reset()
           end
         },
         {
-          text="compendium", color={7, 0},
+          text="fishapedia", color={7, 0},
           callback=function()
-            if #compendium > 0 then
-              Menu.update_content(get_menu("compendium"), display_all_fish())
-              swap_menu_context("compendium")
-            end
+            get_active_menu().enable = false
+            loaded_area = -2
           end
         }
       },
       nil,
       unpack(menu_palette)
-    },
-    {
-      "compendium", "main",
-      5, 70, {}, nil, unpack(menu_palette)
     },
     {
       "fishing", nil,
@@ -140,6 +120,16 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
   
+  show_fish_details, fish_detail_flag = false
+  fishpedia = Inventory:new(34, 36, 
+    Vec:new(5, 5), 30, 
+    { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
+  )
+  for i, area in pairs(global_data_table.areas) do 
+    for j, fish in pairs(area.fishes) do 
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
+    end
+  end
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true
@@ -361,19 +351,15 @@ function FishingArea:update()
       FishingArea.reset(self)
     elseif self.state == "detail" then 
       add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
-      local entry = get_array_entry(compendium, self.fish.name)
-      if entry == nil then 
-        add(compendium, {
-          name=self.fish.name,
-          description=self.fish.description,
-          sprite=self.fish.sprite,
-          weight=self.fish.lb,
-          size=self.fish.size,
-          units=self.fish.units
-        })
-      else 
-        update_compendium_entry(self.fish.name, self.fish.lb, self.fish.size)
-      end
+      local entry = Inventory.get_entry(fishpedia, self.fish.name)
+      entry.data = {
+        description=self.fish.description,
+        weight=max(entry.data.weight, self.fish.lb),
+        size=max(entry.data.weight, self.fish.size),
+        units=self.fish.units,
+        rarity = max(entry.data.rarity, self.fish.rarity)
+      }
+      entry.is_hidden = false
       FishingArea.reset(self)
     end
   end
@@ -644,13 +630,90 @@ end
 function Animator:reset()
   self.animation_frame = 1
 end
+Inventory = {}
+function Inventory:new(selector_spr_id, unknown_spr_id, size_, max_entries, border_rect_data)
+  obj = {
+    selector_id = selector_spr_id,
+    unknown_id = unknown_spr_id,
+    size = size_,
+    entry_amount = max_entries,
+    rect = BorderRect:new(unpack(border_rect_data)),
+    data = {},
+    spacing = 4,
+    pos = 0,
+    min_pos = 0,
+    max_pos = size_.x*size_.y,
+    grid_size = size_.x*size_.y
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+function Inventory:draw()
+  BorderRect.draw(self.rect)
+  for y=1, self.size.y do
+    for x=1, self.size.x do
+      local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) - Vec:new(4, 4)
+      local index = self.min_pos + (x-1) + (y-1)*self.size.x
+      local sprite = self.data[index]
+      if sprite == nil or sprite.is_hidden then 
+        sprite = self.unknown_id
+      else
+        sprite = sprite.sprite_id
+      end
+      rectfill(position.x, position.y, position.x + 15, position.y + 15, 0)
+      spr(sprite, position.x, position.y, 2, 2)
+    end
+  end
+  local pos_offset = self.pos - self.min_pos
+  local x = pos_offset%self.size.x
+  local y = pos_offset\self.size.x
+  local pos = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y)+Vec:new(16, 16)
+  spr(self.selector_id, pos.x, pos.y, 2, 2)
+end
+function Inventory:update()
+  local dx, dy = controls()
+  self.pos += dx
+  self.pos += dy*self.size.x
+  if self.pos >= self.entry_amount then
+    self.pos -= self.entry_amount
+    self.min_pos = 0
+    self.max_pos = self.grid_size
+  elseif self.pos < 0 then 
+    self.pos += self.entry_amount
+    self.min_pos = self.entry_amount-self.grid_size
+    self.max_pos = self.entry_amount
+  else
+    if self.pos >= self.max_pos then 
+      self.min_pos += self.size.x
+      self.max_pos += self.size.x
+    elseif self.pos <= self.min_pos then
+      self.min_pos -= self.size.x
+      self.max_pos -= self.size.x
+    end
+    self.max_pos = mid(self.max_pos, self.grid_size, self.entry_amount)
+    self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
+  end
+end
+function Inventory:add_entry(index, sprite, name_, extra_data)
+  self.data[index] = {is_hidden=true, sprite_id = sprite, name = name_, data = extra_data}
+end
+function Inventory:get_entry(name)
+  for data in all(self.data) do 
+    if (data.name == name) return data
+  end
+end
+function Inventory:check_if_hidden()
+  local entry = self.data[self.pos]
+  return entry == nil or entry.is_hidden
+end
 function _init()
   reset()
 end
 function _draw()
   cls()
   if loaded_area == -2 then 
-    draw_compendium(opened_fish_page)
+    draw_compendium()
   elseif loaded_area == -1 then 
     draw_map()
   elseif loaded_area == 0 then 
@@ -666,12 +729,6 @@ function _update()
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end
-  if btnp(🅾️) then
-    if get_active_menu() and get_active_menu().name == "compendium" then 
-      swap_menu_context(get_active_menu().prev)
-    end
-  end
-  
   if loaded_area == 0 then 
     shop_loop()
   elseif loaded_area == -2 then 
@@ -738,17 +795,6 @@ function get_array_entry(table, name)
   for entry in all(table) do 
     if (entry.name == name) return entry
   end
-end
-function update_compendium_entry(name, weight, size)
-  local index
-  for i, entry in pairs(compendium) do
-    if entry.name == name then 
-      index = i 
-      break
-    end
-  end
-  compendium[index].weight = max(compendium[index].weight, weight)
-  compendium[index].size = max(compendium[index].size, size)
 end
 function combine_and_unpack(data1, data2)
   local data = {}
@@ -872,9 +918,21 @@ function fish_loop()
 end
 function compendium_loop()
   if btnp(🅾️) then
-    get_menu("compendium").enable = true
-    loaded_area = -1
-    opened_fish_page = nil
+    if show_fish_details then 
+      show_fish_details, fish_detail_flag = false
+    else 
+      loaded_area = -1
+      get_menu("main").enable, fish_detail_flag = true
+    end
+    return
+  end
+  if not show_fish_details then
+    if btnp(❎) and not Inventory.check_if_hidden(fishpedia) and fish_detail_flag then
+      show_fish_details = true
+      return
+    end
+    fish_detail_flag = true
+    Inventory.update(fishpedia)
   end
 end
 function draw_map()
@@ -901,13 +959,19 @@ function draw_fishing()
   end
   FishingArea.draw(fishing_areas[loaded_area])
 end
-function draw_compendium(name)
+function draw_compendium()
+  if show_fish_details then 
+    draw_fish_compendium_entry(fishpedia.data[fishpedia.pos])
+  else
+    Inventory.draw(fishpedia)
+  end
+end
+function draw_fish_compendium_entry(fish_entry)
   BorderRect.draw(compendium_rect)
   BorderRect.draw(compendium_sprite_rect)
-  local fish_entry = get_array_entry(compendium, name)
   local sprite_pos = compendium_sprite_rect.position + Vec:new(4, 4)
   spr(
-    fish_entry.sprite, 
+    fish_entry.sprite_id, 
     combine_and_unpack(
       {Vec.unpack(sprite_pos)},
       {2, 2}
@@ -920,20 +984,30 @@ function draw_compendium(name)
     7, 0
   )
   print_with_outline(
-    "weight: "..fish_entry.weight..fish_entry.units[2], 
+    "weight: "..fish_entry.data.weight..fish_entry.data.units[2], 
     detail_pos, compendium_sprite_rect.position.y + 12,
     7, 0
   )
   print_with_outline(
-    "size: "..fish_entry.size..fish_entry.units[1], 
+    "size: "..fish_entry.data.size..fish_entry.data.units[1], 
     detail_pos, compendium_sprite_rect.position.y + 19,
     7, 0
   )
+  local stars = ""
+  for i=1, fish_entry.data.rarity do 
+    stars ..= "★"
+  end
   local lines = split(pretty_print(
-    fish_entry.description,
+    fish_entry.data.description,
     compendium_rect.size.x - 8 
   ), "\n")
   local y_offset = compendium_sprite_rect.position.y + compendium_sprite_rect.size.y
+  print_with_outline(
+    stars,
+    compendium_rect.position.x + 4,
+    y_offset-8,
+    10, 7
+  )
   for i, line in pairs(lines) do 
     print_with_outline(
       line, 
@@ -960,22 +1034,22 @@ __gfx__
 1122112211221122000000000000000000000000000000000000ffaf0a0000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 22112211221122110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-07770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-74447700000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-07444470007447000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00744447074444700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00744447744444470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-07444470744774470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-74447700077007700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-07770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000077007700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000744774470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07770000000000008880000000000888000007777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+74447700000770008000000000000008000076666667000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07444470007447008000000000000008000766666666700000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00744447074444700000000000000000000766666666670000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00744447744444470000000000000000000766667666670000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07444470744774470000000000000000000076677666670000000000000000000000000000000000000000000000000000000000000000000000000000000000
+74447700077007700000000000000000000007700766670000000000000000000000000000000000000000000000000000000000000000000000000000000000
+07770000000000000000000000000000000000007666700000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000076667000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000077007700000000000000000000000766670000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000744774470000000000000000000000077700000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000744444470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000074444700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000007447000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000074444700000000000000000000000077700000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000007447008000000000000008000000766670000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000770008000000000000008000000766670000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000008880000000000888000000077700000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000cccccccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

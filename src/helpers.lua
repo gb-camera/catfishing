@@ -66,18 +66,6 @@ function get_array_entry(table, name)
   end
 end
 
-function update_compendium_entry(name, weight, size)
-  local index
-  for i, entry in pairs(compendium) do
-    if entry.name == name then 
-      index = i 
-      break
-    end
-  end
-  compendium[index].weight = max(compendium[index].weight, weight)
-  compendium[index].size = max(compendium[index].size, size)
-end
-
 function combine_and_unpack(data1, data2)
   local data = {}
   for dat in all(data1) do
