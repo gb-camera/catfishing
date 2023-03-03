@@ -24,9 +24,10 @@ function fish_loop()
 end
 
 function compendium_loop()
-  if btnp(🅾️) then
-    get_menu("compendium").enable = true
-    loaded_area = -1
-    opened_fish_page = nil
-  end
+  -- if btnp(🅾️) then
+  --   get_menu("compendium").enable = true
+  --   loaded_area = -1
+  --   opened_fish_page = nil
+  -- end
+  Inventory.update(fishpedia)
 end

@@ -39,10 +39,12 @@ function reset()
         {
           text="compendium", color={7, 0},
           callback=function()
-            if #compendium > 0 then
-              Menu.update_content(get_menu("compendium"), display_all_fish())
-              swap_menu_context("compendium")
-            end
+            -- if #compendium > 0 then
+            --   Menu.update_content(get_menu("compendium"), display_all_fish())
+            --   swap_menu_context("compendium")
+            -- end
+            get_active_menu().enable = false
+            loaded_area = -2
           end
         }
       },
@@ -95,6 +97,16 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
   
+  fishpedia = Inventory:new(34, 36, 
+    Vec:new(5, 5), 30, 
+    { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
+  )
+  for i, area in pairs(global_data_table.areas) do 
+    for j, fish in pairs(area.fishes) do 
+      Inventory.update_entry(fishpedia, j + i * 5, fish.stats[2], nil)
+    end
+  end
+
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true

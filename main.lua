@@ -10,6 +10,7 @@
 #include src/vec.lua
 #include src/menu.lua
 #include src/animator.lua
+#include src/inventory.lua
 
 function _init()
   reset()
