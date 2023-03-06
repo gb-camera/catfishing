@@ -6,7 +6,7 @@
   "text": [60, 5, 7, 1],
   "gauge_data": {
     "position": [10, 10],
-    "size": [100, 5],
+    "size": [102, 5],
     "settings": [4, 7, 2, 3],
     "req_tension_ticks": 20,
     "tension_timer": 30

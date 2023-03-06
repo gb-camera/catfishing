@@ -15,7 +15,7 @@ function draw_shop()
 end
 
 function draw_fishing()
-  map(0, 0, 24, 24)
+  map(0, 0, 29, 24)
 
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
