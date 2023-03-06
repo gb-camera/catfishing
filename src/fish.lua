@@ -1,4 +1,5 @@
 Fish = {}
+-- stats: name, spriteID, weight, size, rarity
 function Fish:new(fish_name, description_, spriteID, weight, fish_size, fish_rarity, units_, gradient, successIDs)
   local star_string = fish_rarity .. "★"
   local string_len = longest_string({

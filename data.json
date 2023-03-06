@@ -64,7 +64,7 @@
           "max_gauge_requirement": 3,
           "stats": ["goldfish", 2, 2.7, 12.5, 1],
           "units": ["cm", "g"],
-          "description": "now what's a goldfish doing here"
+          "description": "now what's a goldfish doing here."
         },
         {
           "gradient": [8, 9, 10, 11, 10, 9, 8],
@@ -92,6 +92,114 @@
           "stats": ["triggerfish", 8, 0.04, 71, 2],
           "units": ["cm", "kg"],
           "description": "hol up is that a gun?!?!"
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": 3,
+          "stats": ["carp", 10, 0.12, 122, 1],
+          "units": ["cm", "kg"],
+          "description": "oh carp!"
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["salmon", 12, 14.6, 1.5, 2],
+          "units": ["m", "kg"],
+          "description": "not to be confused with salmonella."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["largemouth bass", 14, 0.01, 45, 2],
+          "units": ["cm", "kg"],
+          "description": "it climbs up all the rocks and trees and slides down on its hands and knees."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["rainbow trout", 38, 0.013, 110, 2],
+          "units": ["cm", "kg"],
+          "description": "it's so shiny!"
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["smallmouth bass", 40, 0.02, 45, 2],
+          "units": ["cm", "kg"],
+          "description": "always left in the shadow of the superior largemouth bass."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["crappie", 42, 0.02, 38, 2],
+          "units": ["cm", "kg"],
+          "description": "whoever named this one was mean."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["bluegill", 44, 0.04, 25, 2],
+          "units": ["cm", "kg"],
+          "description": "the gills aren't even blue, kinda lame."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["walleye", 46, 0.046, 80, 2],
+          "units": ["cm", "kg"],
+          "description": "aye aye walleye!"
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["alligator gar", 64, 9.8, 1.8, 2],
+          "units": ["m", "kg"],
+          "description": "lots of scary teeth."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["sunfish", 66, 2.2, 1, 2],
+          "units": ["m", "kg"],
+          "description": "the sun is a deadly laser."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["sturgeon", 68, 30.7, 4.8, 2],
+          "units": ["m", "kg"],
+          "description": "he had to go to medical school."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["koi", 70, 0.076, 60, 2],
+          "units": ["cm", "kg"],
+          "description": "they're so relaxing to watch swim. hopefully they're tasty too!"
         }
       ]
     }
