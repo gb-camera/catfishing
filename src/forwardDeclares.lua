@@ -25,6 +25,12 @@ function longest_menu_str(data)
   return len
 end
 
+function load_area(area_id)
+  get_active_menu().enable = false
+  loaded_area = area_id 
+  if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
+end
+
 -- fishing
 function sell_all_fish()
   for fish in all(inventory) do 
@@ -64,19 +70,4 @@ function rod_description(pos, menu_pos)
   BorderRect.draw(asdf)
   print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
   description_pos.x + 2, description_pos.y + 2, 7, 0)
-end
-
-function display_all_fish()
-  local fishes = {}
-  for fish in all(compendium) do 
-    add(fishes, {
-      text=fish.name, color={7, 0},
-      callback=function()
-        get_active_menu().enable = false
-        loaded_area = -2
-        opened_fish_page = fish.name
-      end
-    }) 
-  end
-  return fishes
 end

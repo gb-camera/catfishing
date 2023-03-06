@@ -4,7 +4,7 @@ local global_data_str --[[remove]]
 function reset()
   global_data_table = unpack_table(global_data_str)
   -- debug_printh_table(global_data_table, "")
-  inventory, compendium = {}, {}
+  inventory = {}
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
@@ -22,36 +22,17 @@ function reset()
       5, 70,
       {
         {
-          text="shop", color={7, 0},
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 0
-          end
+          text="shop", color={7, 0}, callback=load_area, args={0}
         },
         { 
-          text="fishing", color={7, 0}, 
-          callback=function()
-            get_active_menu().enable = false
-            loaded_area = 1 --temp
-            FishingArea.reset(global_data_table.areas[loaded_area])
-          end
+          text="fishing", color={7, 0}, callback=load_area, args={1}
         },
         {
-          text="compendium", color={7, 0},
-          callback=function()
-            if #compendium > 0 then
-              Menu.update_content(get_menu("compendium"), display_all_fish())
-              swap_menu_context("compendium")
-            end
-          end
+          text="fishapedia", color={7, 0}, callback=load_area, args={-2}
         }
       },
       nil,
       unpack(menu_palette)
-    },
-    {
-      "compendium", "main",
-      5, 70, {}, nil, unpack(menu_palette)
     },
     {
       "fishing", nil,
@@ -104,6 +85,17 @@ function reset()
     add(fishing_areas, FishingArea:new(area))
   end
   
+  show_fish_details, fish_detail_flag = false
+  fishpedia = Inventory:new(34, 36, 
+    Vec:new(5, 5), 30, 
+    { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
+  )
+  for i, area in pairs(global_data_table.areas) do 
+    for j, fish in pairs(area.fishes) do 
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
+    end
+  end
+
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true
