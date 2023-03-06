@@ -16,6 +16,7 @@ end
 
 function draw_fishing()
   map(0, 0, 29, 24)
+  Animator.draw(cat, 60, 55)
 
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)

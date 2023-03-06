@@ -35,7 +35,7 @@ function Animator:draw(dx, dy)
   if self.spin_enable then 
     draw_sprite_rotated(frame.sprite, position, self.sprite_size, self.theta)
   else
-    spr(Animator.get_sprite(self),Vec.unpack(position))
+    spr(Animator.get_sprite(self),combine_and_unpack({Vec.unpack(position)}, {self.sprite_size\8, self.sprite_size\8}))
   end
 end
 function Animator:get_sprite()

@@ -21,6 +21,11 @@
     "per_size_unit": 2
   },
   "animation_data": {
+    "cat": {
+      "data": [{ "sprite": 232 }, { "sprite": 234 }],
+      "size": 16,
+      "ticks_per_frame": 5
+    },
     "menu_selector": {
       "data": [
         { "sprite": 32, "offset": [0, 0] },

@@ -87,6 +87,8 @@ function reset()
     end
   end
 
+  cat = Animator:new(global_data_table.animation_data.cat, true)
+
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true
