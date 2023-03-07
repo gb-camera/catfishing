@@ -8,6 +8,13 @@ function draw_shop()
   print_with_outline("cash: "..cash, 1, 1, 7, 1)
   print_with_outline("not fully implemented :D", 5, 40, 7, 1)
   print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
+  if show_rod_shop then
+    printh("rod shop condition pass")
+    draw_rod_shop()
+    if get_active_menu() ~= nil then
+      get_active_menu().enable = false
+    end
+  end
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
   end
@@ -83,4 +90,23 @@ function draw_fish_compendium_entry(fish_entry)
       7, 0
     )
   end
+end
+
+function draw_rod_shop()
+  printh("draw rod shop function called")
+  Inventory.draw(rod_shop)
+  rod_description(rod_shop.pos + 1)
+end
+
+function rod_description(pos, draw_pos)
+  local rod = global_data_table.rods[pos]
+  if(rod == nil) return
+  description_pos = Vec:new(3, 75)
+  local border_rect = BorderRect:new(
+    description_pos,
+    Vec:new(122, 35),
+    7, 8, 2)
+  BorderRect.draw(border_rect)
+  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  description_pos.x + 2, description_pos.y + 2, 7, 0)
 end

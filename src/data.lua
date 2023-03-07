@@ -64,17 +64,14 @@ function reset()
         { text="sell all fish", color={7, 0}, callback=sell_all_fish },
         {
           text="buy rods", color={7, 0},
-          callback=swap_menu_context, 
-          args={"rods"}
+          callback=function()
+            show_rod_shop = true
+          end
         }
       },
       nil,
       unpack(menu_palette)
     },
-    {
-      "rods", "shop", 5, 70, buy_rods_menu(), rod_description,
-      unpack(menu_palette)
-    }
   }
   menus = {}
   for data in all(menu_data) do 
@@ -86,14 +83,23 @@ function reset()
   end
   
   show_fish_details, fish_detail_flag = false
+  show_rod_shop, show_rod_details, rod_detail_flag = false
   fishpedia = Inventory:new(34, 36, 
     Vec:new(5, 5), 30, 
     { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
   )
   for i, area in pairs(global_data_table.areas) do 
     for j, fish in pairs(area.fishes) do 
-      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {}, true)
     end
+  end
+
+  rod_shop = Inventory:new(34, 36,
+      Vec:new(5, 1), 5, 
+      { Vec:new(12, 12), Vec:new(102, 23), 7, 5, 3 }
+  )
+  for i, rod in pairs(global_data_table.rods) do
+    Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)
   end
 
   cash = 0

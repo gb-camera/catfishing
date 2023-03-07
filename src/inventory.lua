@@ -64,8 +64,8 @@ function Inventory:update()
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
 end
-function Inventory:add_entry(index, sprite, name_, extra_data)
-  self.data[index] = {is_hidden=true, sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
+  self.data[index] = {is_hidden=hidden, sprite_id = sprite, name = name_, data = extra_data}
 end
 function Inventory:get_entry(name)
   for data in all(self.data) do 

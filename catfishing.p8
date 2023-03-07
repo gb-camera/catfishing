@@ -37,33 +37,6 @@ function sell_all_fish()
     del(inventory, fish)
   end
 end
-function buy_rods_menu()
-  local menu_list = {}
-  for rod in all(global_data_table.rods) do
-    local name = rod.name
-    local power = rod.power
-    local description = rod.description
-    local cost = rod.cost
-    local spriteID = rod.spriteID
-    add(menu_list, {
-      text = name,
-      color = {7,0}
-    })
-  end
-  return menu_list
-end
-function rod_description(pos, menu_pos)
-  local rod = global_data_table.rods[pos]
-  local description_box_height = 9*5
-  local description_pos = menu_pos - Vec:new(0, description_box_height)
-  local asdf = BorderRect:new(
-    description_pos,
-    Vec:new(100, 38),
-    7, 8, 2)
-  BorderRect.draw(asdf)
-  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
-  description_pos.x + 2, description_pos.y + 2, 7, 0)
-end
 global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=flimsy rod,power=1,description=a stick with a string.the most basic of fishing rods,cost=10,spriteID=68},{name=amateur's rod,power=3,description=worth it's price,cost=50,spriteID=70},{name=stick of poseidon,power=8,description=even though it looks unappealin. for some reason fish are really attracted to it,cost=100,spriteID=72},{name=champion's rod,power=10,description=legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet,cost=500,spriteID=74}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
@@ -127,17 +100,14 @@ function reset()
         { text="sell all fish", color={7, 0}, callback=sell_all_fish },
         {
           text="buy rods", color={7, 0},
-          callback=swap_menu_context, 
-          args={"rods"}
+          callback=function()
+            show_rod_shop = true
+          end
         }
       },
       nil,
       unpack(menu_palette)
     },
-    {
-      "rods", "shop", 5, 70, buy_rods_menu(), rod_description,
-      unpack(menu_palette)
-    }
   }
   menus = {}
   for data in all(menu_data) do 
@@ -149,14 +119,22 @@ function reset()
   end
   
   show_fish_details, fish_detail_flag = false
+  show_rod_shop, show_rod_details, rod_detail_flag = false
   fishpedia = Inventory:new(34, 36, 
     Vec:new(5, 5), 30, 
     { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
   )
   for i, area in pairs(global_data_table.areas) do 
     for j, fish in pairs(area.fishes) do 
-      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {})
+      Inventory.add_entry(fishpedia, j-1 + (i-1) * 5, fish.stats[2], fish.stats[1], {}, true)
     end
+  end
+  rod_shop = Inventory:new(34, 36,
+      Vec:new(5, 1), 5, 
+      { Vec:new(12, 12), Vec:new(102, 23), 7, 5, 3 }
+  )
+  for i, rod in pairs(global_data_table.rods) do
+    Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)
   end
   cash = 0
   loaded_area = -1
@@ -723,8 +701,8 @@ function Inventory:update()
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
 end
-function Inventory:add_entry(index, sprite, name_, extra_data)
-  self.data[index] = {is_hidden=true, sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
+  self.data[index] = {is_hidden=hidden, sprite_id = sprite, name = name_, data = extra_data}
 end
 function Inventory:get_entry(name)
   for data in all(self.data) do 
@@ -922,6 +900,9 @@ function str_contains_char(str, char)
   end
 end
 function shop_loop()
+  if show_rod_shop then
+    rod_shop_loop()
+  end
   if btnp(🅾️) then
     if get_active_menu() == nil then 
       get_menu("shop").enable = true
@@ -963,6 +944,23 @@ function compendium_loop()
     Inventory.update(fishpedia)
   end
 end
+function rod_shop_loop()
+  printh("rod shop function called")
+  if btnp(🅾️) then
+    printh("recognized 🅾️ button press")
+    show_rod_shop = false
+    loaded_area = -1
+    get_menu("main").enable = true
+  end
+  if not show_rod_details then
+    printh("recognized ❎ button press")
+    if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
+      printh("bought rod")
+      return
+    end
+    Inventory.update(rod_shop)
+  end
+end
 function draw_map()
   print_with_outline("placeholder :D", 5, 40, 7, 1)
   print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
@@ -972,6 +970,13 @@ function draw_shop()
   print_with_outline("cash: "..cash, 1, 1, 7, 1)
   print_with_outline("not fully implemented :D", 5, 40, 7, 1)
   print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
+  if show_rod_shop then
+    printh("rod shop condition pass")
+    draw_rod_shop()
+    if get_active_menu() ~= nil then
+      get_active_menu().enable = false
+    end
+  end
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
   end
@@ -1044,6 +1049,23 @@ function draw_fish_compendium_entry(fish_entry)
       7, 0
     )
   end
+end
+function draw_rod_shop()
+  printh("draw rod shop function called")
+  Inventory.draw(rod_shop)
+  rod_description(rod_shop.pos + 1)
+end
+function rod_description(pos, draw_pos)
+  local rod = global_data_table.rods[pos]
+  if(rod == nil) return
+  description_pos = Vec:new(3, 75)
+  local border_rect = BorderRect:new(
+    description_pos,
+    Vec:new(122, 35),
+    7, 8, 2)
+  BorderRect.draw(border_rect)
+  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  description_pos.x + 2, description_pos.y + 2, 7, 0)
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -1174,7 +1196,3 @@ ccccccc777ffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000
 77777777ffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
 fff4fffffffffffffffffffffffff4ffffffffffffffffffffffffffffff4fff0000000000000000000000000000000000000000000000000000000000000000
-fffffffffffffff4ffffffffffffffffffffffffffffffffff4fffffffffffff0000000000000000000000000000000000000000000000000000000000000000
-ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
-ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
-ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000
