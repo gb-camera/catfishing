@@ -330,7 +330,7 @@
           "max_gauge_requirement": 5,
           "stats": ["trashcan", 230, 0.02, 68, 1],
           "units": ["cm", "g"],
-          "description": "ok i've heard another cat's trash is another cat's treasure but how did i reel in an whole trashcan"
+          "description": "ok i've heard another cat's trash is another cat's treasure but how did i reel in an whole trashcan?"
         }
       ]
     }
