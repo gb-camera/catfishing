@@ -30,7 +30,7 @@ function Inventory:draw()
       else
         sprite = sprite.sprite_id
       end
-      rectfill(position.x, position.y, position.x + 15, position.y + 15, 0)
+      rectfill(position.x-1, position.y-1, position.x + 16, position.y + 16, 0)
       spr(sprite, position.x, position.y, 2, 2)
     end
   end
@@ -68,8 +68,8 @@ function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
   self.data[index] = {is_hidden=hidden, sprite_id = sprite, name = name_, data = extra_data}
 end
 function Inventory:get_entry(name)
-  for data in all(self.data) do 
-    if (data.name == name) return data
+  for i=0, #self.data do 
+    if (self.data[i].name == name) return self.data[i]
   end
 end
 function Inventory:check_if_hidden()

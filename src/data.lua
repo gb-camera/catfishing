@@ -96,6 +96,8 @@ function reset()
     end
   end
 
+  cat = Animator:new(global_data_table.animation_data.cat, true)
+
   rod_shop = Inventory:new(34, 36,
       Vec:new(5, 1), 5, 
       { Vec:new(12, 12), Vec:new(102, 23), 7, 5, 3 }

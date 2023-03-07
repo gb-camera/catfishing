@@ -56,6 +56,7 @@ function FishingArea:update()
     elseif self.state == "detail" then 
       add(fish_inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
       local entry = Inventory.get_entry(fishpedia, self.fish.name)
+      printh(self.fish.name)
       entry.data = {
         description=self.fish.description,
         weight=max(entry.data.weight, self.fish.lb),
@@ -122,7 +123,7 @@ function generate_fish(area, stage)
   )
 end
 
--- formula in desmos [https://www.desmos.com/calculator/glmnwyjhkl]
+-- formula in desmos [https://www.desmos.com/calculator/inmghgh7xg]
 -- size influences weight but not the other way around
 function generate_weight_size_with_bias(weight, size)
   local bias = global_data_table.biases.size

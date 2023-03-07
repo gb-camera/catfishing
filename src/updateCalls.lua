@@ -12,6 +12,8 @@ function shop_loop()
 end
 
 function fish_loop()
+  Animator.update(cat)
+
   if btnp(🅾️) then
     if (fishing_areas[loaded_area].state == "detail") return
     if get_active_menu() == nil then 
