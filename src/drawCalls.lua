@@ -93,7 +93,6 @@ function draw_fish_compendium_entry(fish_entry)
 end
 
 function draw_rod_shop()
-  printh("draw rod shop function called")
   Inventory.draw(rod_shop)
   rod_description(rod_shop.pos + 1)
 end

@@ -33,12 +33,12 @@ end
 
 -- fishing
 function sell_all_fish()
-  for fish in all(inventory) do 
+  for fish in all(fish_inventory) do 
     local weight, size, rarity = unpack(fish)
     cash += 
       flr((weight * global_data_table.sell_weights.per_weight_unit + 
       size * global_data_table.sell_weights.per_size_unit) * rarity)
-    del(inventory, fish)
+    del(fish_inventory, fish)
   end
 end
 

@@ -47,17 +47,27 @@ function compendium_loop()
 end
 
 function rod_shop_loop()
-  printh("rod shop function called")
   if btnp(🅾️) then
-    printh("recognized 🅾️ button press")
     show_rod_shop = false
     loaded_area = -1
     get_menu("main").enable = true
   end
   if not show_rod_details then
-    printh("recognized ❎ button press")
     if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
-      printh("bought rod")
+      local rod = global_data_table.rods[rod_shop.pos + 1]
+      if rod.cost > cash then
+        -- don't have enough cash
+        printh("You don't have enough cash to buy this rod")
+        return
+      end
+      for rodd in all(rod_inventory) do
+        -- check if you already have the rod
+        printh("You already have the rod")
+        if (rodd.name == rod.name) return
+      end
+
+      add(rod_inventory, rod)
+      cash -= rod.cost
       return
     end
     Inventory.update(rod_shop)

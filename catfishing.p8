@@ -29,18 +29,20 @@ function load_area(area_id)
   if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
 end
 function sell_all_fish()
-  for fish in all(inventory) do 
+  for fish in all(fish_inventory) do 
     local weight, size, rarity = unpack(fish)
     cash += 
       flr((weight * global_data_table.sell_weights.per_weight_unit + 
       size * global_data_table.sell_weights.per_size_unit) * rarity)
-    del(inventory, fish)
+    del(fish_inventory, fish)
   end
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=flimsy rod,power=1,description=a stick with a string.the most basic of fishing rods,cost=10,spriteID=68},{name=amateur's rod,power=3,description=worth it's price,cost=50,spriteID=70},{name=stick of poseidon,power=8,description=even though it looks unappealin. for some reason fish are really attracted to it,cost=100,spriteID=72},{name=champion's rod,power=10,description=legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet,cost=500,spriteID=74}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={100,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=flimsy rod,power=1,description=a stick with a string.the most basic of fishing rods,cost=10,spriteID=68},{name=amateur's rod,power=3,description=worth it's price,cost=50,spriteID=70},{name=stick of poseidon,power=8,description=even though it looks unappealing. for some reason fish are really attracted to it,cost=100,spriteID=72},{name=champion's rod,power=10,description=legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet,cost=500,spriteID=74}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
-  inventory = {}
+  fish_inventory = {}
+  rod_inventory = {}
+  current_rod = global_data_table.rods[1]
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
@@ -356,7 +358,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
+      add(fish_inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
       local entry = Inventory.get_entry(fishpedia, self.fish.name)
       entry.data = {
         description=self.fish.description,
@@ -945,17 +947,24 @@ function compendium_loop()
   end
 end
 function rod_shop_loop()
-  printh("rod shop function called")
   if btnp(🅾️) then
-    printh("recognized 🅾️ button press")
     show_rod_shop = false
     loaded_area = -1
     get_menu("main").enable = true
   end
   if not show_rod_details then
-    printh("recognized ❎ button press")
     if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
-      printh("bought rod")
+      local rod = global_data_table.rods[rod_shop.pos + 1]
+      if rod.cost > cash then
+        printh("You don't have enough cash to buy this rod")
+        return
+      end
+      for rodd in all(rod_inventory) do
+        printh("You already have the rod")
+        if (rodd.name == rod.name) return
+      end
+      add(rod_inventory, rod)
+      cash -= rod.cost
       return
     end
     Inventory.update(rod_shop)
@@ -1051,7 +1060,6 @@ function draw_fish_compendium_entry(fish_entry)
   end
 end
 function draw_rod_shop()
-  printh("draw rod shop function called")
   Inventory.draw(rod_shop)
   rod_description(rod_shop.pos + 1)
 end

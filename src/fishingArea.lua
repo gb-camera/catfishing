@@ -54,7 +54,7 @@ function FishingArea:update()
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
-      add(inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
+      add(fish_inventory, {self.fish.lb, self.fish.size, self.fish.rarity})
       local entry = Inventory.get_entry(fishpedia, self.fish.name)
       entry.data = {
         description=self.fish.description,

@@ -4,7 +4,9 @@ local global_data_str --[[remove]]
 function reset()
   global_data_table = unpack_table(global_data_str)
   -- debug_printh_table(global_data_table, "")
-  inventory = {}
+  fish_inventory = {}
+  rod_inventory = {}
+  current_rod = global_data_table.rods[1]
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
