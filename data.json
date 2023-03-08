@@ -78,7 +78,7 @@
           "max_gauge_requirement": "inf",
           "stats": ["yellowfin tuna", 4, 32, 2.25, 4],
           "units": ["m", "kg"],
-          "description": "named such because it's got yellow fins. people like to eat it, but not as much as albacore, for-tuna-tely."
+          "description": "named such because it's got yellow fins. people like to eat it but not as much as albacore for-tuna-tely."
         },
         {
           "gradient": [8, 9, 10, 10, 10, 10, 11, 11, 10, 9, 8],
@@ -87,7 +87,7 @@
           "max_gauge_requirement": 5,
           "stats": ["pufferfish", 6, 0.08, 60, 3],
           "units": ["cm", "kg"],
-          "description": "in a pinch, it'll inflate and get prickly; makes it great for particularly vindictive matches of any inflatable variety of sportsball."
+          "description": "in a pinch it'll inflate and get prickly; makes it great for particularly vindictive matches of any inflatable variety of sportsball."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 11, 11, 11, 10, 9, 8],
@@ -96,7 +96,7 @@
           "max_gauge_requirement": 4,
           "stats": ["triggerfish", 8, 0.04, 71, 2],
           "units": ["cm", "kg"],
-          "description": "watch out, it's got a gun! fortunately, fish do not have thumbs, and thus are forced to always practice trigger discipline. don't drop this guy though."
+          "description": "watch out it's got a gun! fortunately fish do not have thumbs and thus are forced to always practice trigger discipline. don't drop this guy though."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
@@ -105,7 +105,7 @@
           "max_gauge_requirement": 3,
           "stats": ["carp", 10, 0.12, 122, 1],
           "units": ["cm", "kg"],
-          "description": "oh, carp? one of the pillars of fishing, cuisine, and societies at large. that, and it's skilled at carpentry."
+          "description": "oh, carp? one of the pillars of fishing cuisine and societies at large. that and it's skilled at carpentry."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
@@ -114,7 +114,7 @@
           "max_gauge_requirement": 4,
           "stats": ["salmon", 12, 14.6, 1.5, 2],
           "units": ["m", "kg"],
-          "description": "not to be confused with salmonella; this guy won't kill you if you eat it, cooked or raw! particularly violent around squids for some reason."
+          "description": "not to be confused with salmonella; this guy won't kill you if you eat it cooked or raw! particularly violent around squids for some reason."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -123,7 +123,7 @@
           "max_gauge_requirement": 4,
           "stats": ["largemouth bass", 14, 0.01, 45, 2],
           "units": ["cm", "kg"],
-          "description": "talks a big game, but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers."
+          "description": "talks a big game but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -132,7 +132,7 @@
           "max_gauge_requirement": 4,
           "stats": ["rainbow trout", 38, 0.013, 110, 2],
           "units": ["cm", "kg"],
-          "description": "typically bright, reflective colors like this are meant to ward off predators, but since you're a cat, the shiny lights are purr-dy."
+          "description": "typically bright reflective colors like this are meant to ward off predators but since you're a cat the shiny lights are purr-dy."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -141,7 +141,7 @@
           "max_gauge_requirement": 4,
           "stats": ["smallmouth bass", 40, 0.02, 45, 2],
           "units": ["cm", "kg"],
-          "description": "always left in the shadow of the superior largemouth bass. this one's part of a small rock outfit! no, they do not play the bass."
+          "description": "always left in the shadow of the superior largemouth bass. this one's part of a small rock outfit! no they do not play the bass."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -150,7 +150,7 @@
           "max_gauge_requirement": 4,
           "stats": ["crappie", 42, 0.02, 38, 2],
           "units": ["cm", "kg"],
-          "description": "also known as the calico bass, so whoever gave it this particular name was probably having a really bad day."
+          "description": "also known as the calico bass so whoever gave it this particular name was probably having a really bad day."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -159,7 +159,7 @@
           "max_gauge_requirement": 4,
           "stats": ["bluegill", 44, 0.04, 25, 2],
           "units": ["cm", "kg"],
-          "description": "more green than anything else. its gills aren't even blue, dude. that's kinda lame."
+          "description": "more green than anything else. its gills aren't even blue dude. that's kinda lame."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -168,7 +168,7 @@
           "max_gauge_requirement": 4,
           "stats": ["yellow pike", 46, 0.046, 80, 2],
           "units": ["cm", "kg"],
-          "description": "ride this thing around your local college campus. also known as the walleye, which has no relation to the movie you're thinking of."
+          "description": "ride this thing around your local college campus. also known as the walleye which has no relation to the movie you're thinking of."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -177,7 +177,7 @@
           "max_gauge_requirement": 4,
           "stats": ["alligator gar", 64, 9.8, 1.8, 2],
           "units": ["m", "kg"],
-          "description": "won't ever need dentures, because this guy's got some gnarly chompers. god forbid it bites you. don't let it bite you."
+          "description": "won't ever need dentures because this guy's got some gnarly chompers. god forbid it bites you. don't let it bite you."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -186,7 +186,7 @@
           "max_gauge_requirement": 4,
           "stats": ["ocean sunfish", 66, 2.2, 1, 2],
           "units": ["m", "kg"],
-          "description": "named after the sun, a deadly laser. large and in charge, just like the actual sun of our solar system."
+          "description": "named after the sun which is a deadly laser. large and in charge just like the actual sun of our solar system."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -195,7 +195,7 @@
           "max_gauge_requirement": 4,
           "stats": ["sturgeon", 68, 30.7, 4.8, 2],
           "units": ["m", "kg"],
-          "description": "went to medical school and was making six figures as part of an experienced surgical team. that is, until you showed up."
+          "description": "went to medical school and was making six figures as part of an experienced surgical team. until you showed up that is."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -204,7 +204,7 @@
           "max_gauge_requirement": 4,
           "stats": ["koi", 70, 0.076, 60, 2],
           "units": ["cm", "kg"],
-          "description": "per japanese legend, this guy'll apparently turn into a dragon if it does a sick enough jump up a river. that won't happen now, unfortunately!"
+          "description": "per japanese legend this guy'll apparently turn into a dragon if it does a sick enough jump up a river. unfortunately that won't happen now."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -213,7 +213,7 @@
           "max_gauge_requirement": 4,
           "stats": ["clownfish", 72, 0.007, 15, 2],
           "units": ["cm", "kg"],
-          "description": "the practical aquatic jokester. two whole animated feature films got made about this guy! well, maybe not this guy in particular."
+          "description": "the practical aquatic jokester. two whole animated feature films got made about this guy! maybe not this guy in particular."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -231,7 +231,7 @@
           "max_gauge_requirement": 4,
           "stats": ["killifish", 76, 3, 7.6, 2],
           "units": ["cm", "g"],
-          "description": "killer fish. killer fish from san diego. doesn't know what they are, but they taste really good."
+          "description": "killer fish. killer fish from san diego. doesn't know what they are but they taste really good."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -240,7 +240,7 @@
           "max_gauge_requirement": 4,
           "stats": ["pond smelt", 78, 1.9, 11, 2],
           "units": ["cm", "g"],
-          "description": "they who smelt it, dealt it. or in this case, caught it. because you caught it. pee-ew."
+          "description": "they who smelt it dealt it. or in this case caught it. because you caught it. pee-ew."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -249,7 +249,7 @@
           "max_gauge_requirement": 4,
           "stats": ["angelfish", 96, 0.015, 25, 2],
           "units": ["cm", "kg"],
-          "description": "not biblically accurate, because it's just a normal fish. makes a mean angel food cake, though."
+          "description": "not biblically accurate because it's just a normal fish. makes a mean angel food cake though."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -267,7 +267,7 @@
           "max_gauge_requirement": 4,
           "stats": ["archangelfish", 100, 0.015, 25, 2],
           "units": ["cm", "kg"],
-          "description": "pretty biblically accurate for a fish. be not afraid, my child. will or will not pass judgment on how well you fish."
+          "description": "pretty biblically accurate for a fish. be not afraid my child. will or will not pass judgment on how well you fish."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -276,7 +276,7 @@
           "max_gauge_requirement": 4,
           "stats": ["arowana", 102, 2.18, 1.2, 2],
           "units": ["m", "kg"],
-          "description": "valuable and highly coveted in some regions, its name only really makes it sound like a brand of bottled water or something."
+          "description": "valuable and highly coveted in some regions. its name only really makes it sound like a brand of bottled water or something."
         },
         {
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
@@ -285,7 +285,7 @@
           "max_gauge_requirement": 5,
           "stats": ["plastic fish", 104, 2.7, 12.5, 1],
           "units": ["cm", "g"],
-          "description": "an assembled, PVC scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches."
+          "description": "an assembled PVC scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches."
         },
         {
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
@@ -312,7 +312,7 @@
           "max_gauge_requirement": 5,
           "stats": ["anchovy", 108, 1.02, 20, 1],
           "units": ["cm", "g"],
-          "description": "usually comes in tins, but this one's hot-n-ready. reeled in 30 minutes or less, or else your catch is free."
+          "description": "usually comes in tins but this one's hot-n-ready. reeled in 30 minutes or less or else your catch is free."
         },
         {
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
@@ -330,7 +330,7 @@
           "max_gauge_requirement": 5,
           "stats": ["trashcan", 230, 0.02, 68, 1],
           "units": ["cm", "g"],
-          "description": "i've heard one cat's trash is another cat's treasure, but this is ridiculous. at least it's not in the water anymore! do your part for the environment, kids."
+          "description": "i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids."
         }
       ]
     }
