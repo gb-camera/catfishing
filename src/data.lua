@@ -5,8 +5,8 @@ function reset()
   global_data_table = unpack_table(global_data_str)
   -- debug_printh_table(global_data_table, "")
   fish_inventory = {}
-  rod_inventory = {}
   current_rod = global_data_table.rods[1]
+  rod_inventory = {current_rod}
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
@@ -47,9 +47,18 @@ function reset()
             FishingArea.reset(global_data_table.areas[loaded_area])      
             loaded_area = -1
           end
+        },
+        {
+          text="switch rods", color={7, 0},
+          callback=swap_menu_context,
+          args={"switch_rods"}
         }
       },
       nil,
+      unpack(menu_palette)
+    },
+    {
+      "switch_rods", "fishing", 5, 70, switch_rods_menu(), nil,
       unpack(menu_palette)
     },
     {
@@ -98,9 +107,10 @@ function reset()
 
   cat = Animator:new(global_data_table.animation_data.cat, true)
 
+  shopkeeper = global_data_table.shopkeeper
   rod_shop = Inventory:new(34, 36,
-      Vec:new(5, 1), 5, 
-      { Vec:new(12, 12), Vec:new(102, 23), 7, 5, 3 }
+      Vec:new(2, 2), 4, 
+      { Vec:new(75, 11), Vec:new(45, 45), 5, 4, 3}, Vec:new(60,-4)
   )
   for i, rod in pairs(global_data_table.rods) do
     Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)

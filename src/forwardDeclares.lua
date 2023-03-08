@@ -42,3 +42,26 @@ function sell_all_fish()
   end
 end
 
+function switch_rods_menu()
+  local menu_list = {}
+  for index, rod in pairs(rod_inventory) do
+    local name = rod.name
+    local power = rod.power
+    local description = rod.description
+    local cost = rod.cost
+    local spriteID = rod.spriteID
+    add(menu_list, {
+      text=name.." (power "..rod.power..")",
+      color={7,0},
+      callback=select_rod,
+      args={index}
+    })
+  end
+  return menu_list
+end
+
+function select_rod(index)
+  current_rod = rod_inventory[index]
+  -- Add print statement / visual indicator that the rod was selected
+  printh(current_rod.name.." was selected")
+end

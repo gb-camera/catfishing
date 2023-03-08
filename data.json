@@ -20,6 +20,9 @@
     "per_weight_unit": 3,
     "per_size_unit": 2
   },
+  "shopkeeper": {
+    "sprite": 238
+  },
   "animation_data": {
     "cat": {
       "data": [{ "sprite": 232 }, { "sprite": 234 }],
@@ -59,31 +62,31 @@
   "rods": [
     {
       "name": "flimsy rod",
-      "power": 1,
-      "description": "a stick with a string.the most basic of fishing rods",
+      "power": 0,
+      "description": "a stick with a string. the most basic of fishing rods",
       "cost": 10,
-      "spriteID": 68
+      "spriteID": 200
     },
     {
       "name": "amateur's rod",
       "power": 3,
       "description": "worth it's price",
       "cost": 50,
-      "spriteID": 70
+      "spriteID": 202
     },
     {
       "name": "stick of poseidon",
       "power": 8,
       "description": "even though it looks unappealing. for some reason fish are really attracted to it",
       "cost": 100,
-      "spriteID": 72
+      "spriteID": 204
     },
     {
       "name": "champion's rod",
       "power": 10,
       "description": "legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet",
       "cost": 500,
-      "spriteID": 74
+      "spriteID": 206
     }
   ],
   "areas": [
@@ -329,8 +332,8 @@
         {
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
           "successIDs": [11],
-          "min_gauge_requirement": 1,
-          "max_gauge_requirement": 5,
+          "min_gauge_requirement": 8,
+          "max_gauge_requirement": 10,
           "stats": ["catfish", 106, 0.03, 72, 1],
           "units": ["cm", "kg"],
           "description": "he's got a funny looking mustache. not to be confused with a cat...fish..."

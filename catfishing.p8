@@ -37,12 +37,33 @@ function sell_all_fish()
     del(fish_inventory, fish)
   end
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={102,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},animation_data={cat={data={{sprite=232},{sprite=234}},size=16,ticks_per_frame=5},menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={carp,10,0.12,122,1},units={cm,kg},description=oh carp!},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={salmon,12,14.6,1.5,2},units={m,kg},description=not to be confused with salmonella.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={largemouth bass,14,0.01,45,2},units={cm,kg},description=it climbs up all the rocks and trees and slides down on its hands and knees.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={rainbow trout,38,0.013,110,2},units={cm,kg},description=it's so shiny!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={smallmouth bass,40,0.02,45,2},units={cm,kg},description=always left in the shadow of the superior largemouth bass.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={crappie,42,0.02,38,2},units={cm,kg},description=whoever named this one was mean.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bluegill,44,0.04,25,2},units={cm,kg},description=the gills aren't even blue, kinda lame.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={walleye,46,0.046,80,2},units={cm,kg},description=aye aye walleye!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={alligator gar,64,9.8,1.8,2},units={m,kg},description=lots of scary teeth.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sunfish,66,2.2,1,2},units={m,kg},description=the sun is a deadly laser.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sturgeon,68,30.7,4.8,2},units={m,kg},description=he had to go to medical school.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={koi,70,0.076,60,2},units={cm,kg},description=they're so relaxing to watch swim. hopefully they're tasty too!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={clownfish,72,0.007,15,2},units={cm,kg},description=there's a joke somewhere in here},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bonefish,74,2.7,12.5,1},units={cm,g},description=ok - i have a bone to pick with nature},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={killifish,76,3,7.6,2},units={cm,g},description=killer fish. killer fish from san diego.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={pond smelt,78,1.9,11,2},units={cm,g},description=he who smelt it dealt it.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angelfish,96,0.015,25,2},units={cm,kg},description=not the biblically accurate one.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angle fish,98,0.015,25,2},units={cm,kg},description=the math one.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={arcangelfish,100,0.015,25,2},units={cm,kg},description=be not afraid.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={arowana,102,2.18,1.2,2},units={m,kg},description=snoop dogg's favorite fish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={plastic fish,104,2.7,12.5,1},units={cm,g},description=hey! a different colored goldfis- wait! this is a plasic fish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={cat...fish,234,0.07,25,1},units={cm,g},description=one of your own kind. not to be confused with catfish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={catfish,106,0.03,72,1},units={cm,kg},description=he's got a funny looking mustache. not to be confused with a cat...fish...},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={anchovy,108,1.02,20,1},units={cm,g},description=oh look! an anchovy...but why is there a pizza here?},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={squid,110,2.76,30,1},units={cm,g},description=are there any other squidwards i should know about?},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={trashcan,230,0.02,68,1},units={cm,g},description=ok i've heard another cat's trash is another cat's treasure but how did i reel in an whole trashcan?}}}}"
+function switch_rods_menu()
+  local menu_list = {}
+  for index, rod in pairs(rod_inventory) do
+    local name = rod.name
+    local power = rod.power
+    local description = rod.description
+    local cost = rod.cost
+    local spriteID = rod.spriteID
+    add(menu_list, {
+      text=name.." (power "..rod.power..")",
+      color={7,0},
+      callback=select_rod,
+      args={index}
+    })
+  end
+  return menu_list
+end
+function select_rod(index)
+  current_rod = rod_inventory[index]
+  printh(current_rod.name.." was selected")
+end
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},text={60,5,7,1},gauge_data={position={10,10},size={102,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},shopkeeper={sprite=238},animation_data={cat={data={{sprite=232},{sprite=234}},size=16,ticks_per_frame=5},menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=flimsy rod,power=0,description=a stick with a string. the most basic of fishing rods,cost=10,spriteID=200},{name=amateur's rod,power=3,description=worth it's price,cost=50,spriteID=202},{name=stick of poseidon,power=8,description=even though it looks unappealing. for some reason fish are really attracted to it,cost=100,spriteID=204},{name=champion's rod,power=10,description=legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet,cost=500,spriteID=206}},areas={{name=home,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=now what's a goldfish doing here.},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=inf,stats={yellow fin tuna,4,32,2.25,4},units={m,kg},description=yummy},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=5,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=doesn't it look so cuddley? you should hug it!},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=hol up is that a gun?!?!},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={carp,10,0.12,122,1},units={cm,kg},description=oh carp!},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={salmon,12,14.6,1.5,2},units={m,kg},description=not to be confused with salmonella.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={largemouth bass,14,0.01,45,2},units={cm,kg},description=it climbs up all the rocks and trees and slides down on its hands and knees.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={rainbow trout,38,0.013,110,2},units={cm,kg},description=it's so shiny!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={smallmouth bass,40,0.02,45,2},units={cm,kg},description=always left in the shadow of the superior largemouth bass.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={crappie,42,0.02,38,2},units={cm,kg},description=whoever named this one was mean.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bluegill,44,0.04,25,2},units={cm,kg},description=the gills aren't even blue, kinda lame.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={walleye,46,0.046,80,2},units={cm,kg},description=aye aye walleye!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={alligator gar,64,9.8,1.8,2},units={m,kg},description=lots of scary teeth.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sunfish,66,2.2,1,2},units={m,kg},description=the sun is a deadly laser.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sturgeon,68,30.7,4.8,2},units={m,kg},description=he had to go to medical school.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={koi,70,0.076,60,2},units={cm,kg},description=they're so relaxing to watch swim. hopefully they're tasty too!},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={clownfish,72,0.007,15,2},units={cm,kg},description=there's a joke somewhere in here},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bonefish,74,2.7,12.5,1},units={cm,g},description=ok - i have a bone to pick with nature},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={killifish,76,3,7.6,2},units={cm,g},description=killer fish. killer fish from san diego.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={pond smelt,78,1.9,11,2},units={cm,g},description=he who smelt it dealt it.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angelfish,96,0.015,25,2},units={cm,kg},description=not the biblically accurate one.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angle fish,98,0.015,25,2},units={cm,kg},description=the math one.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={arcangelfish,100,0.015,25,2},units={cm,kg},description=be not afraid.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={arowana,102,2.18,1.2,2},units={m,kg},description=snoop dogg's favorite fish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={plastic fish,104,2.7,12.5,1},units={cm,g},description=hey! a different colored goldfis- wait! this is a plasic fish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={cat...fish,234,0.07,25,1},units={cm,g},description=one of your own kind. not to be confused with catfish.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=8,max_gauge_requirement=10,stats={catfish,106,0.03,72,1},units={cm,kg},description=he's got a funny looking mustache. not to be confused with a cat...fish...},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={anchovy,108,1.02,20,1},units={cm,g},description=oh look! an anchovy...but why is there a pizza here?},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={squid,110,2.76,30,1},units={cm,g},description=are there any other squidwards i should know about?},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={trashcan,230,0.02,68,1},units={cm,g},description=ok i've heard another cat's trash is another cat's treasure but how did i reel in an whole trashcan?}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   fish_inventory = {}
-  rod_inventory = {}
   current_rod = global_data_table.rods[1]
+  rod_inventory = {current_rod}
   compendium_rect = BorderRect:new(
     Vec:new(8, 8), Vec:new(111, 111),
     7, 5, 3
@@ -83,9 +104,18 @@ function reset()
             FishingArea.reset(global_data_table.areas[loaded_area])      
             loaded_area = -1
           end
+        },
+        {
+          text="switch rods", color={7, 0},
+          callback=swap_menu_context,
+          args={"switch_rods"}
         }
       },
       nil,
+      unpack(menu_palette)
+    },
+    {
+      "switch_rods", "fishing", 5, 70, switch_rods_menu(), nil,
       unpack(menu_palette)
     },
     {
@@ -132,6 +162,14 @@ function reset()
     end
   end
   cat = Animator:new(global_data_table.animation_data.cat, true)
+  shopkeeper = global_data_table.shopkeeper
+  rod_shop = Inventory:new(34, 36,
+      Vec:new(2, 2), 4, 
+      { Vec:new(75, 11), Vec:new(45, 45), 5, 4, 3}, Vec:new(60,-4)
+  )
+  for i, rod in pairs(global_data_table.rods) do
+    Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)
+  end
   cash = 0
   loaded_area = -1
   get_menu("main").enable = true
@@ -403,7 +441,7 @@ function FishingArea:reset()
 end
 function generate_fish(area, stage)
   local possible_fishes = {}
-  local stage_gauge = stage -- + rod bonus
+  local stage_gauge = stage + current_rod.power
   for fish in all(area.fishes) do
     if stage_gauge >= fish.min_gauge_requirement and stage_gauge < fish.max_gauge_requirement then 
       add(possible_fishes, fish)
@@ -634,7 +672,7 @@ function Animator:reset()
   self.animation_frame = 1
 end
 Inventory = {}
-function Inventory:new(selector_spr_id, unknown_spr_id, size_, max_entries, border_rect_data)
+function Inventory:new(selector_spr_id, unknown_spr_id, size_, max_entries, border_rect_data, offset_)
   obj = {
     selector_id = selector_spr_id,
     unknown_id = unknown_spr_id,
@@ -646,17 +684,18 @@ function Inventory:new(selector_spr_id, unknown_spr_id, size_, max_entries, bord
     pos = 0,
     min_pos = 0,
     max_pos = size_.x*size_.y,
-    grid_size = size_.x*size_.y
+    grid_size = size_.x*size_.y,
+    offset = offset_ or Vec:new(-4,-4)
   }
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
-function Inventory:draw()
+function Inventory:draw(asdf)
   BorderRect.draw(self.rect)
   for y=1, self.size.y do
     for x=1, self.size.x do
-      local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) - Vec:new(4, 4)
+      local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) + self.offset
       local index = self.min_pos + (x-1) + (y-1)*self.size.x
       local sprite = self.data[index]
       if sprite == nil or sprite.is_hidden then 
@@ -671,7 +710,7 @@ function Inventory:draw()
   local pos_offset = self.pos - self.min_pos
   local x = pos_offset%self.size.x
   local y = pos_offset\self.size.x
-  local pos = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y)+Vec:new(16, 16)
+  local pos = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y)+Vec:new(20, 20)+self.offset
   spr(self.selector_id, pos.x, pos.y, 2, 2)
 end
 function Inventory:update()
@@ -945,8 +984,8 @@ end
 function rod_shop_loop()
   if btnp(🅾️) then
     show_rod_shop = false
-    loaded_area = -1
-    get_menu("main").enable = true
+    loaded_area = 0
+    get_menu("shop").enable = true
   end
   if not show_rod_details then
     if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
@@ -960,6 +999,7 @@ function rod_shop_loop()
         if (rodd.name == rod.name) return
       end
       add(rod_inventory, rod)
+      Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
       cash -= rod.cost
       return
     end
@@ -973,10 +1013,8 @@ function draw_map()
 end
 function draw_shop()
   print_with_outline("cash: "..cash, 1, 1, 7, 1)
-  print_with_outline("not fully implemented :D", 5, 40, 7, 1)
-  print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
+  spr(shopkeeper.sprite, 15, 50, 2, 2)
   if show_rod_shop then
-    printh("rod shop condition pass")
     draw_rod_shop()
     if get_active_menu() ~= nil then
       get_active_menu().enable = false
@@ -1169,22 +1207,22 @@ e2e2aaaaaaaaaaaaaaaaaae2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e21111111111cccccc
 11cc77111111111111cccccc7111111111cccc77111cccc77ffffff4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ccc771111111111ccccccc7771111111cccc777111ccc77ff4ffffffff4ffffffff4fffffffffffffffffffffffff4ffffffffffffffffffffffffffffff4fff
 cc771111111111cccc7777711111111ccc77711111ccc7ffffff4ffffffffffffffffffffffffff4ffffffffffffffffffffffffffffffffff4fffffffffffff
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000d000000000000000b00000000000000090000
+000000000000000000000000000000000000000000000000000000000000000000000000004440000000000000d5d0000000000000b3b00000000000009a9000
+00000000000000000000000000000000000000000000000000000000000000000000000004944000000000000d55d000000000000b33b0000000000009aa9000
+0000000000000000000000000000000000000000000000000000000000000000000000004444600000000000d55d600000000000b33b3000000000009aa96000
+000000000000000000000000000000000000000000000000000000000000000000000004444060000000000d55d060000000000b33b0300000000009aa906000
+00000000000000000000000000000000000000000000000000000000000000000000004444006000000000d55d006000000000b33b0030000000009aa9006000
+0000000000000000000000000000000000000000000000000000000000000000000004454000600000000d55d000600000000b33b0003000000009aa90006000
+000000000000000000000000000000000000000000000000000000000000000000004444000006000000d55d000060000000b33b0000300000009aa900006000
+00000000000000000000000000000000000000000000000000000000000000000004494000000600000d55d000006000000b33b0000030000009aa9000006000
+0000000000000000000000000000000000000000000000000000000000000000004444000000060000d55d000000600000b33b0000003000009aa90000006000
+000000000000000000000000000000000000000000000000000000000000000004444000000006000d56d000000060000b31b0000000300009a2900000006000
+00000000000000000000000000000000000000000000000000000000000000004444000000000600d561600000006000b31c1000000030009a2e200000006000
+00000000000000000000000000000000000000000000000000000000000000004540000000000600d5d6000000006500b3b1000000003b009a92000000006d00
+000000000000000000000000000000000000000000000000000000000000000044000000000000600d000000000005000b00000000000b000900000000000d00
+000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000005500000000000000bb00000000000000dd00
+00000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000007700000000050000500000000005000050000000000000000000000000060000600000000
 00000000000000000000000000000000000000000000000000000776666000000565005650000000056500565000000000000000000000000676006760000000
 00000000000000000000000000000000000000000000000000066665555663300566556650000000056655665000000000000000000000000677667760000000

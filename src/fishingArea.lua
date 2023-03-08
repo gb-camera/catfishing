@@ -108,7 +108,7 @@ end
 
 function generate_fish(area, stage)
   local possible_fishes = {}
-  local stage_gauge = stage -- + rod bonus
+  local stage_gauge = stage + current_rod.power
   for fish in all(area.fishes) do
     if stage_gauge >= fish.min_gauge_requirement and stage_gauge < fish.max_gauge_requirement then 
       add(possible_fishes, fish)

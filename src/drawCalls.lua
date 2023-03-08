@@ -6,10 +6,8 @@ end
 
 function draw_shop()
   print_with_outline("cash: "..cash, 1, 1, 7, 1)
-  print_with_outline("not fully implemented :D", 5, 40, 7, 1)
-  print_with_outline("only: sell fish, profit?", 5, 50, 7, 1)
+  spr(shopkeeper.sprite, 15, 50, 2, 2)
   if show_rod_shop then
-    printh("rod shop condition pass")
     draw_rod_shop()
     if get_active_menu() ~= nil then
       get_active_menu().enable = false

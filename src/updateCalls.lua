@@ -51,8 +51,8 @@ end
 function rod_shop_loop()
   if btnp(🅾️) then
     show_rod_shop = false
-    loaded_area = -1
-    get_menu("main").enable = true
+    loaded_area = 0
+    get_menu("shop").enable = true
   end
   if not show_rod_details then
     if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
@@ -67,8 +67,9 @@ function rod_shop_loop()
         printh("You already have the rod")
         if (rodd.name == rod.name) return
       end
-
+      -- buy the rod
       add(rod_inventory, rod)
+      Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
       cash -= rod.cost
       return
     end
