@@ -1,0 +1,47 @@
+[000000] codo_init
+[000000]   platform: Max OS X
+[000000]   codo_system_init
+[000473]   Compiled against SDL version: 2.0.12
+[000473]   Linked against SDL version:   2.0.12
+[000473]   Current video driver: cocoa
+[000473]   codo_reset_timer
+[000473]   codo_gui_init
+[000473]   codo_keys_init
+[000473]   codo_text_init
+[000473]   codo_video_init
+[000473]   codo_mouse_init
+[000473]   codo_joystick_init
+[000473]   searching for joysticks
+[000473]     found 0 joysticks
+[000473]   ok
+[000474] ok
+[000482] codo_load_pod: /Applications/PICO-8.app/Contents/MacOS/pico8.dat ok 
+[000484] codo_set_screen 128 128 8 100
+[000484]  window size: 640 540
+[000517]   setting filter to nearest (screen_mode 0  back page width: 128)
+  renderer metal:
+   flags: 0x0000000E ( |  | )
+   texture formats (6): ARGB8888, ABGR8888, YV12, IYUV, 0x3231564e, 0x3132564e
+   max texture size: 16384x16384
+[000519]  desktop size: 1728 1117
+[000519] ok
+[000525] codo_sound_init mix_buffer_size: 1024
+[000525] codo_sound_init
+[000525] SDL_INIT_AUDIO ok
+[000622] SDL_OpenAudio ok
+[000622]  freq:22050
+ channels:1
+[000622] Built-in audio drivers: 0 coreaudio 1 disk 2 dummy
+[000622] Current audio driver: coreaudio
+[000622] splore_init
+[000622] could not load favourites file: /Users/KaoushikMurugan_1/Library/Application Support/pico-8/carts/catfishing/favourites.txt
+[002222] codo_exit
+[002222]   cmusic_stop
+[002222]   codo_main_exit
+[002223]   codo_config_save
+[002223]   codo_sound_exit
+[002223]   codo_video_exit
+[002228]   codo_joystick_exit
+[002228]   codo_system_exit
+[002229]   codo_items_created: 1288
+[002229] ok
