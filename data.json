@@ -61,30 +61,30 @@
   },
   "rods": [
     {
-      "name": "flimsy rod",
+      "name": "sticky the rod",
       "power": 0,
-      "description": "a stick with a string. the most basic of fishing rods",
+      "description": "a stick with a string on it. the most basic of basic fishing rods.",
       "cost": 10,
       "spriteID": 200
     },
     {
-      "name": "amateur's rod",
+      "name": "good rod",
       "power": 3,
-      "description": "worth it's price",
+      "description": "a pretty good rod per the name. you've seen some kids with pocket-sized monsters use this thing before.",
       "cost": 50,
       "spriteID": 202
     },
     {
-      "name": "stick of poseidon",
+      "name": "fisherman classic mk. rod",
       "power": 8,
-      "description": "even though it looks unappealing. for some reason fish are really attracted to it",
+      "description": "a classic rod chosen by professionals of the industry and your uncle joey.",
       "cost": 100,
       "spriteID": 204
     },
     {
-      "name": "champion's rod",
+      "name": "peerless pole",
       "power": 10,
-      "description": "legend says that this is the only rod that can catch magikarp. no wonder no-one's bought this yet",
+      "description": "a legendary rod passed down by the most skilled of fishing artisans and fearless warriors.",
       "cost": 500,
       "spriteID": 206
     }
