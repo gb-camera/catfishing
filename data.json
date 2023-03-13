@@ -13,7 +13,7 @@
           "callback": "load_area_state",
           "args": ["main", -1]
         },
-        { "text": "load game" },
+        { "text": "load game", "callback": "load" },
         { "text": "credits" }
       ]
     },
@@ -48,7 +48,7 @@
       "prev": "main",
       "position": [5, 70],
       "content": [
-        { "text": "save" },
+        { "text": "save", "callback": "save" },
         { "text": "save and quit" },
         {
           "text": "quit without saving",
@@ -60,7 +60,7 @@
     {
       "name": "switch_rods",
       "prev": "fishing",
-      "position": [5, 70],
+      "position": [3, 70],
       "content": "switch_rods_menu"
     },
     {

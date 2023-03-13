@@ -32,9 +32,13 @@ function load_area(area_id)
 end
 
 function load_area_state(name, id)
-  swap_menu_context(name)
-  if (loaded_area > 0) FishingArea.reset(global_data_table.areas[loaded_area])   
-  loaded_area = id
+  if id == -3 then 
+    reset()
+  else
+    swap_menu_context(name)
+    if (loaded_area > 0) FishingArea.reset(global_data_table.areas[loaded_area])   
+    loaded_area = id
+  end
 end
 
 function parse_menu_content(data)
@@ -68,13 +72,9 @@ end
 function switch_rods_menu()
   local menu_list = {}
   for index, rod in pairs(rod_inventory) do
-    local name = rod.name
-    local power = rod.power
-    local description = rod.description
-    local cost = rod.cost
-    local spriteID = rod.spriteID
+    printh("MENU::"..rod.name)
     add(menu_list, {
-      text=name.." (power "..rod.power..")",
+      text=rod.name.." (power "..rod.power..")",
       color={7,0},
       callback=select_rod,
       args={index}
@@ -91,4 +91,33 @@ end
 
 function enable_rod_shop()
   show_rod_shop = true
+end
+
+-- save/load
+function save()
+  -- start
+  local address = 0x5e00
+  -- cash
+  address = save_byte2(address, cash)
+  -- rod inventory
+  address = save_byte(address, encode_rod_inventory())
+end
+
+function load()
+  -- start
+  local address = 0x5e00
+  local cash, rods = 0, {}
+  -- cash
+  cash = %address
+  address += 2
+  -- rod inventory
+  rods = decode_rod_inventory(@address)
+  address += 1
+
+  for rod in all(rods) do 
+    add(rod_inventory, rod)
+  end
+  Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
+
+  load_area_state("main", -1)
 end

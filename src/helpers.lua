@@ -94,3 +94,49 @@ function pretty_print(text_data, width)
   end
   return buffer
 end
+
+function save_byte(address, value)
+  poke(address, value)
+  return address + 1
+end
+
+function save_byte2(address, value)
+  poke2(address, value)
+  return address + 2
+end
+
+function save_byte4(address, value)
+  poke4(address, value)
+  return address + 4
+end
+
+function encode_rod_inventory()
+  local bits = 0
+  for i, rod in pairs(global_data_table.rods) do 
+    if table_contains(rod_inventory, rod) then 
+      bits |= (1 << (i-1))
+    end
+  end
+  printh("ENCODED::"..bits)
+  return bits
+end
+
+function decode_rod_inventory(bits)
+  printh("DECODING::"..bits)
+  local rods = {}
+  for i, rod in pairs(global_data_table.rods) do 
+    if (bits & (1 << (i-1))) > 0 then 
+      printh(rod.name)
+      add(rods, rod)
+    end
+  end
+  return rods
+end
+
+function encode(a, b, a_w)
+  return (a << a_w) | b
+end
+
+function decode(data, a_w, b_mask)
+  return flr(data >>> a_w), data & b_mask
+end

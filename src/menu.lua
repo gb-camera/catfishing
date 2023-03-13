@@ -109,7 +109,7 @@ function Menu:update_content(content)
   BorderRect.resize(
     self.rect,
     self.rect.position, 
-    Vec:new(10+5*longest_menu_str(content), 38)
+    Vec:new(5*longest_menu_str(content), 38)
   )
 end
 

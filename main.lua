@@ -20,6 +20,7 @@ function _draw()
   cls()
 
   if loaded_area == -3 then 
+    draw_title()
   elseif loaded_area == -2 then 
     draw_compendium()
   elseif loaded_area == -1 then 
@@ -41,6 +42,7 @@ function _update()
   end
 
   if loaded_area == -3 then 
+    title_loop()
   elseif loaded_area == -2 then 
     compendium_loop()
   elseif load_area == -1 then

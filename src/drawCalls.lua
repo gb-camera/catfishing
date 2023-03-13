@@ -1,3 +1,7 @@
+function draw_title()
+
+end
+
 function draw_map()
   print_with_outline("placeholder :D", 5, 40, 7, 1)
   print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)

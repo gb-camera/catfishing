@@ -1,3 +1,7 @@
+function title_loop()
+
+end
+
 function map_loop()
   if btnp(🅾️) then
     local menu = get_active_menu()
