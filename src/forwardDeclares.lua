@@ -12,8 +12,8 @@ function get_menu(name)
 end
 
 function swap_menu_context(name)
-  if (name == nil) return
   get_active_menu().enable = false
+  if (name == nil) return
   get_menu(name).enable = true
 end
 

@@ -2,4 +2,6 @@
 
 pico8_file="catfishing.p8"
 
-python3 main.py .. $pico8_file main.lua
+args="main.py .. $pico8_file main.lua"
+
+python3 $args || python $args

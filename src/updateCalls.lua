@@ -3,9 +3,7 @@ function shop_loop()
     rod_shop_loop()
   end
   if btnp(🅾️) then
-    if get_active_menu() == nil then 
-      get_menu("shop").enable = true
-    else
+    if get_active_menu() then 
       swap_menu_context(get_active_menu().prev)
     end
   end

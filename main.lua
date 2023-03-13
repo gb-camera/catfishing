@@ -40,6 +40,7 @@ function _update()
   end
 
   if loaded_area == 0 then 
+    get_menu("shop").enable = true
     shop_loop()
   elseif loaded_area == -2 then 
     compendium_loop()
