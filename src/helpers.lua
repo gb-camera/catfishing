@@ -47,11 +47,9 @@ function longest_string(strings)
   return len
 end
 
-function round_to(value, places)
-  local places = 10 * places
-  local val = value * places
-  val = flr(val)
-  return val / places
+function round_to(value, place)
+  local mult = 10^(place or 0)
+  return flr(value * mult + 0.5) / mult
 end
 
 function table_contains(table, val)
@@ -105,11 +103,6 @@ function save_byte2(address, value)
   return address + 2
 end
 
-function save_byte4(address, value)
-  poke4(address, value)
-  return address + 4
-end
-
 function encode_rod_inventory()
   local bits = 0
   for i, rod in pairs(global_data_table.rods) do 
@@ -124,7 +117,6 @@ function decode_rod_inventory(bits)
   local rods = {}
   for i, rod in pairs(global_data_table.rods) do 
     if (bits & (1 << (i-1))) > 0 then 
-      printh(rod.name)
       add(rods, rod)
     end
   end

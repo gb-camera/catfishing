@@ -49,7 +49,7 @@
       "position": [5, 70],
       "content": [
         { "text": "save", "callback": "save" },
-        { "text": "save and quit" },
+        { "text": "save and quit", "callback": "save_and_quit" },
         {
           "text": "quit without saving",
           "callback": "load_area_state",

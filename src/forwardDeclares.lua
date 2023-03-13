@@ -72,7 +72,6 @@ end
 function switch_rods_menu()
   local menu_list = {}
   for index, rod in pairs(rod_inventory) do
-    printh("MENU::"..rod.name)
     add(menu_list, {
       text=rod.name.." (power "..rod.power..")",
       color={7,0},
@@ -85,8 +84,6 @@ end
 
 function select_rod(index)
   current_rod = rod_inventory[index]
-  -- Add print statement / visual indicator that the rod was selected
-  printh(current_rod.name.." was selected")
 end
 
 function enable_rod_shop()
@@ -94,6 +91,11 @@ function enable_rod_shop()
 end
 
 -- save/load
+function save_and_quit()
+  save()
+  load_area_state("title", -3)
+end
+
 function save()
   -- start
   local address = 0x5e00
@@ -108,9 +110,9 @@ function save()
     -- id
     address = save_byte(address, fish_data.id)
     -- weight
-    address = save_byte2(address, flr(fish_data.data.weight * 100))
+    address = save_byte2(address, round_to(fish_data.data.weight * 100))
     -- size
-    address = save_byte2(address, flr(fish_data.data.size * 100))
+    address = save_byte2(address, round_to(fish_data.data.size * 100))
   end
 end
 
