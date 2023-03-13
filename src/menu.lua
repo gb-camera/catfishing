@@ -1,19 +1,19 @@
 Menu = {}
 function Menu:new(
-  menu_name, previous_menu, dx, dy, 
+  menu_name, previous_menu, position_, 
   menu_content, menu_info_draw_call, 
   base_color, border_color, text_color, menu_thickness)
   obj = {
     name = menu_name,
     prev = previous_menu,
-    position = Vec:new(dx, dy),
+    position = position_,
     selector = Animator:new(global_data_table.animation_data.menu_selector, true),
     up_arrow = Animator:new(global_data_table.animation_data.up_arrow, true),
     down_arrow = Animator:new(global_data_table.animation_data.down_arrow, true),
     content = menu_content,
     content_draw = menu_info_draw_call,
     rect = BorderRect:new(
-      Vec:new(dx, dy), 
+      position_, 
       Vec:new(10 + 5*longest_menu_str(menu_content), 38),
       border_color,
       base_color,

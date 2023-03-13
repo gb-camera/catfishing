@@ -3,6 +3,68 @@
     "transparent_color_id": 0,
     "menu": [4, 7, 7, 3]
   },
+  "menu_data": [
+    {
+      "name": "main",
+      "position": [5, 70],
+      "content": [
+        {
+          "text": "shop",
+          "callback": "load_area",
+          "args": [0]
+        },
+        {
+          "text": "fishing",
+          "callback": "load_area",
+          "args": [1]
+        },
+        {
+          "text": "fishapedia",
+          "callback": "load_area",
+          "args": [-2]
+        }
+      ]
+    },
+    {
+      "name": "switch_rods",
+      "prev": "fishing",
+      "position": [5, 70],
+      "content": "switch_rods_menu"
+    },
+    {
+      "name": "shop",
+      "position": [5, 70],
+      "content": [
+        {
+          "text": "return to map",
+          "callback": "load_main"
+        },
+        {
+          "text": "sell all fish",
+          "callback": "sell_all_fish"
+        },
+        {
+          "text": "buy rods",
+          "callback": "enable_rod_shop"
+        }
+      ]
+    },
+    {
+      "name": "fishing",
+      "position": [5, 70],
+      "content": [
+        {
+          "text": "return to map",
+          "callback": "load_main"
+        },
+        {
+          "text": "switch rods",
+          "callback": "swap_menu_context",
+          "args": ["switch_rods"]
+        }
+      ]
+    }
+  ],
   "text": [60, 5, 7, 1],
   "gauge_data": {
     "position": [10, 10],

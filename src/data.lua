@@ -17,76 +17,16 @@ function reset()
     7, 0, 2
   )
   opened_fish_page = nil
-  local menu_palette = global_data_table.palettes.menu
-  menu_data = {
-    {
-      "main", nil,
-      5, 70,
-      {
-        {
-          text="shop", color={7, 0}, callback=load_area, args={0}
-        },
-        { 
-          text="fishing", color={7, 0}, callback=load_area, args={1}
-        },
-        {
-          text="fishapedia", color={7, 0}, callback=load_area, args={-2}
-        }
-      },
-      nil,
-      unpack(menu_palette)
-    },
-    {
-      "fishing", nil,
-      5, 70,
-      {
-        {
-          text="return to map", color={7, 0},
-          callback=function()
-            swap_menu_context("main")
-            FishingArea.reset(global_data_table.areas[loaded_area])      
-            loaded_area = -1
-          end
-        },
-        {
-          text="switch rods", color={7, 0},
-          callback=swap_menu_context,
-          args={"switch_rods"}
-        }
-      },
-      nil,
-      unpack(menu_palette)
-    },
-    {
-      "switch_rods", "fishing", 5, 70, switch_rods_menu(), nil,
-      unpack(menu_palette)
-    },
-    {
-      "shop", nil,
-      5, 70,
-      {
-        {
-          text="return to map", color={7, 0},
-          callback=function()
-            swap_menu_context("main")
-            loaded_area = -1
-          end
-        },
-        { text="sell all fish", color={7, 0}, callback=sell_all_fish },
-        {
-          text="buy rods", color={7, 0},
-          callback=function()
-            show_rod_shop = true
-          end
-        }
-      },
-      nil,
-      unpack(menu_palette)
-    },
-  }
   menus = {}
-  for data in all(menu_data) do 
-    add(menus, Menu:new(unpack(data)))
+  for data in all(global_data_table.menu_data) do 
+    add(menus, Menu:new(
+      data.name,
+      data.prev,
+      Vec:new(data.position),
+      parse_menu_content(data.content),
+      data.hint,
+      unpack(global_data_table.palettes.menu)
+    ))
   end
   fishing_areas = {}
   for area in all(global_data_table.areas) do

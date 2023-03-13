@@ -31,6 +31,29 @@ function load_area(area_id)
   if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
 end
 
+function load_main()
+  swap_menu_context("main")
+  if (loaded_area > 0) FishingArea.reset(global_data_table.areas[loaded_area])   
+  loaded_area = -1
+end
+
+function parse_menu_content(data)
+  if type(data) == "string" then
+    return _ENV[data]()
+  else
+    local content = {}
+    for dat in all(data) do 
+      add(content, {
+        text = dat.text,
+        color = dat.color or {7, 0},
+        callback = _ENV[dat.callback],
+        args = dat.args
+      })
+    end
+    return content
+  end
+end
+
 -- fishing
 function sell_all_fish()
   for fish in all(fish_inventory) do 
@@ -64,4 +87,8 @@ function select_rod(index)
   current_rod = rod_inventory[index]
   -- Add print statement / visual indicator that the rod was selected
   printh(current_rod.name.." was selected")
+end
+
+function enable_rod_shop()
+  show_rod_shop = true
 end
