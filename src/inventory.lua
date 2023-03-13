@@ -69,9 +69,26 @@ function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
   self.data[index] = {is_hidden=hidden, sprite_id = sprite, name = name_, data = extra_data}
 end
 function Inventory:get_entry(name)
-  for i=0, #self.data do 
-    if (self.data[i].name == name) return self.data[i]
+  if type(name) == "string" then 
+    for i=0, #self.data do 
+      if (self.data[i].name == name) return self.data[i]
+    end
+  else
+    return self.data[name]
   end
+end
+function Inventory:get_data()
+  local data = {}
+  for i=0, #self.data do 
+    local entry = self.data[i]
+    if entry and not entry.is_hidden then 
+      add(data, {
+        id = i,
+        data = entry.data
+      })
+    end
+  end
+  return data
 end
 function Inventory:check_if_hidden()
   local entry = self.data[self.pos]

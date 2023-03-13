@@ -101,6 +101,17 @@ function save()
   address = save_byte2(address, cash)
   -- rod inventory
   address = save_byte(address, encode_rod_inventory())
+  -- caught fishes
+  local fishes = Inventory.get_data(fishpedia)
+  address = save_byte(address, #fishes)
+  for fish_data in all(fishes) do 
+    -- id
+    address = save_byte(address, fish_data.id)
+    -- weight
+    address = save_byte2(address, flr(fish_data.data.weight * 100))
+    -- size
+    address = save_byte2(address, flr(fish_data.data.size * 100))
+  end
 end
 
 function load()
@@ -113,11 +124,36 @@ function load()
   -- rod inventory
   rods = decode_rod_inventory(@address)
   address += 1
+  -- caught fishes
+  local fish_count = @address
+  address += 1
+  for i=1, fish_count do 
+    -- id
+    local id = @address 
+    address += 1
+    -- weight
+    local weight_ = %address
+    address += 2
+    -- size 
+    local size_ = %address
+    address += 2
 
+    -- update game states
+    local entry = Inventory.get_entry(fishpedia, id)
+    entry.data = {
+      description=entry.data.description,
+      weight=weight_ / 100,
+      size=size_ / 100,
+      units=entry.data.units,
+      rarity = entry.data.rarity
+    }
+    entry.is_hidden = false
+  end
+
+  -- update game states
   for rod in all(rods) do 
     add(rod_inventory, rod)
   end
   Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
-
   load_area_state("main", -1)
 end

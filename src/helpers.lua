@@ -117,12 +117,10 @@ function encode_rod_inventory()
       bits |= (1 << (i-1))
     end
   end
-  printh("ENCODED::"..bits)
   return bits
 end
 
 function decode_rod_inventory(bits)
-  printh("DECODING::"..bits)
   local rods = {}
   for i, rod in pairs(global_data_table.rods) do 
     if (bits & (1 << (i-1))) > 0 then 
