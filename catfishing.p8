@@ -92,7 +92,6 @@ function save()
   address = save_byte(address, #fishes)
   for fish_data in all(fishes) do 
     address = save_byte(address, fish_data.id)
-    printh("WEIGHT::SAVE::"..round_to(fish_data.data.weight * 100))
     address = save_byte2(address, round_to(fish_data.data.weight * 100))
     address = save_byte2(address, round_to(fish_data.data.size * 100))
   end
@@ -110,7 +109,6 @@ function load()
     local id = @address 
     address += 1
     local weight_ = %address
-    printh("WEIGHT::LOAD::"..(weight_ / 100))
     address += 2
     local size_ = %address
     address += 2
@@ -935,12 +933,6 @@ function decode_rod_inventory(bits)
     end
   end
   return rods
-end
-function encode(a, b, a_w)
-  return (a << a_w) | b
-end
-function decode(data, a_w, b_mask)
-  return flr(data >>> a_w), data & b_mask
 end
 function unpack_table(str)
   local table,start,stack,i={},1,0,1

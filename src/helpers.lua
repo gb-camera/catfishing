@@ -122,11 +122,3 @@ function decode_rod_inventory(bits)
   end
   return rods
 end
-
-function encode(a, b, a_w)
-  return (a << a_w) | b
-end
-
-function decode(data, a_w, b_mask)
-  return flr(data >>> a_w), data & b_mask
-end
