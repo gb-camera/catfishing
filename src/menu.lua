@@ -43,8 +43,9 @@ function Menu:draw()
   BorderRect.draw(self.rect)
 
   Animator.draw(self.selector, Vec.unpack(self.position + Vec:new(2, 15)))
-  Animator.draw(self.up_arrow, self.rect.size.x/2, self.position.y-self.rect.thickness)
-  Animator.draw(self.down_arrow, self.rect.size.x/2, self.rect.size.y-self.rect.thickness)
+  local arrow_offset = (self.rect.size.x + self.rect.position.x)\2-self.up_arrow.sprite_size\2
+  Animator.draw(self.up_arrow, arrow_offset, self.position.y-self.rect.thickness)
+  Animator.draw(self.down_arrow, arrow_offset, self.rect.size.y-self.rect.thickness)
 
   local base_pos_x = self.position.x+10
   local menu_scroll_data = {self.dir, self.ticks / self.max_ticks, self.position}

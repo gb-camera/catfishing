@@ -5,6 +5,19 @@
   },
   "menu_data": [
     {
+      "name": "title",
+      "position": [34, 70],
+      "content": [
+        {
+          "text": "new game",
+          "callback": "load_area_state",
+          "args": ["main", -1]
+        },
+        { "text": "load game" },
+        { "text": "credits" }
+      ]
+    },
+    {
       "name": "main",
       "position": [5, 70],
       "content": [
@@ -22,6 +35,25 @@
           "text": "fishapedia",
           "callback": "load_area",
           "args": [-2]
+        },
+        {
+          "text": "save menu",
+          "callback": "swap_menu_context",
+          "args": ["saving menu"]
+        }
+      ]
+    },
+    {
+      "name": "saving menu",
+      "prev": "main",
+      "position": [5, 70],
+      "content": [
+        { "text": "save" },
+        { "text": "save and quit" },
+        {
+          "text": "quit without saving",
+          "callback": "load_area_state",
+          "args": ["title", -3]
         }
       ]
     },
@@ -37,7 +69,8 @@
       "content": [
         {
           "text": "return to map",
-          "callback": "load_main"
+          "callback": "load_area_state",
+          "args": ["main", -1]
         },
         {
           "text": "sell all fish",
@@ -55,7 +88,8 @@
       "content": [
         {
           "text": "return to map",
-          "callback": "load_main"
+          "callback": "load_area_state",
+          "args": ["main", -1]
         },
         {
           "text": "switch rods",

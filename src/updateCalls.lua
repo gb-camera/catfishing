@@ -1,3 +1,12 @@
+function map_loop()
+  if btnp(🅾️) then
+    local menu = get_active_menu()
+    if menu and menu.prev then 
+      swap_menu_context(menu.prev)
+    end
+  end
+end
+
 function shop_loop()
   if show_rod_shop then
     rod_shop_loop()

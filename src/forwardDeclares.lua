@@ -31,10 +31,10 @@ function load_area(area_id)
   if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
 end
 
-function load_main()
-  swap_menu_context("main")
+function load_area_state(name, id)
+  swap_menu_context(name)
   if (loaded_area > 0) FishingArea.reset(global_data_table.areas[loaded_area])   
-  loaded_area = -1
+  loaded_area = id
 end
 
 function parse_menu_content(data)

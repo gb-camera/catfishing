@@ -19,7 +19,8 @@ end
 function _draw()
   cls()
 
-  if loaded_area == -2 then 
+  if loaded_area == -3 then 
+  elseif loaded_area == -2 then 
     draw_compendium()
   elseif loaded_area == -1 then 
     draw_map()
@@ -39,11 +40,14 @@ function _update()
     Menu.invoke(get_active_menu())
   end
 
-  if loaded_area == 0 then 
-    get_menu("shop").enable = true
-    shop_loop()
+  if loaded_area == -3 then 
   elseif loaded_area == -2 then 
     compendium_loop()
+  elseif load_area == -1 then
+    map_loop()
+  elseif loaded_area == 0 then 
+    get_menu("shop").enable = true
+    shop_loop()
   elseif loaded_area > 0 then
     fish_loop()
   end

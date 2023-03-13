@@ -57,6 +57,6 @@ function reset()
   end
 
   cash = 0
-  loaded_area = -1
-  get_menu("main").enable = true
+  loaded_area = -3
+  get_menu("title").enable = true
 end
