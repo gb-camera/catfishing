@@ -2,6 +2,19 @@ function title_loop()
 
 end
 
+function credits_loop()
+  if btnp(🅾️) then
+    load_area_state("title", -3)
+  end
+
+  for i=1, #credit_y_offsets do 
+    credit_y_offsets[i] -= 1
+    if credit_y_offsets[i] <= -15 then 
+      credit_y_offsets[i] = 320
+    end
+  end
+end
+
 function map_loop()
   if btnp(🅾️) then
     local menu = get_active_menu()

@@ -2,6 +2,20 @@ function draw_title()
 
 end
 
+function draw_credits()
+  print_with_outline("credits", 47, credit_y_offsets[1], 7, 1)
+  print_with_outline("project developers", 25, credit_y_offsets[2], 7, 1)
+  print_with_outline("micheal:\n  • game director\n  • game designer", 10, credit_y_offsets[3], 7, 1)
+  print_with_outline("jeren:\n  • programmer\n  • fish artist", 10, credit_y_offsets[4], 7, 1)
+  print_with_outline("kaoushik:\n  • programmer\n  • rod artist", 10, credit_y_offsets[5], 7, 1)
+  print_with_outline("nick:\n  • background artist", 10, credit_y_offsets[6], 7, 1)
+  print_with_outline("siyuan:\n  • fish art designer", 10, credit_y_offsets[7], 7, 1)
+  print_with_outline("alex:\n  • sound engineer", 10, credit_y_offsets[8], 7, 1)
+  print_with_outline("katie:\n  • music engineer", 10, credit_y_offsets[9], 7, 1)
+  print_with_outline("external developers", 25, credit_y_offsets[10], 7, 1)
+  print_with_outline("jihem:\n  • created the rotation\n    sprite draw function", 10, credit_y_offsets[11], 7, 1)
+end
+
 function draw_map()
   print_with_outline("placeholder :D", 5, 40, 7, 1)
   print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)

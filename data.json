@@ -3,6 +3,7 @@
     "transparent_color_id": 0,
     "menu": [4, 7, 7, 3]
   },
+  "credit_offsets": [30, 45, 70, 95, 120, 145, 170, 195, 220, 250, 270],
   "menu_data": [
     {
       "name": "title",
@@ -14,7 +15,11 @@
           "args": ["main", -1]
         },
         { "text": "load game", "callback": "load" },
-        { "text": "credits" }
+        {
+          "text": "credits",
+          "callback": "load_area",
+          "args": [-4]
+        }
       ]
     },
     {

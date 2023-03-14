@@ -67,6 +67,11 @@ function reset()
     Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)
   end
 
+  credit_y_offsets = {}
+  for y in all(global_data_table.credit_offsets) do 
+    add(credit_y_offsets, y)
+  end
+
   cash = 5000
   loaded_area = -3
   get_menu("title").enable = true

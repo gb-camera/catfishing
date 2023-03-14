@@ -19,7 +19,9 @@ end
 function _draw()
   cls()
 
-  if loaded_area == -3 then 
+  if loaded_area == -4 then 
+    draw_credits()
+  elseif loaded_area == -3 then 
     draw_title()
   elseif loaded_area == -2 then 
     draw_compendium()
@@ -41,7 +43,9 @@ function _update()
     Menu.invoke(get_active_menu())
   end
 
-  if loaded_area == -3 then 
+  if loaded_area == -4 then 
+    credits_loop()
+  elseif loaded_area == -3 then 
     title_loop()
   elseif loaded_area == -2 then 
     compendium_loop()
