@@ -88,6 +88,12 @@ function save()
   local address = 0x5e00
   address = save_byte2(address, cash)
   address = save_byte(address, encode_rod_inventory())
+  for i, rod in pairs(rod_inventory) do 
+    if rod.name == current_rod.name then 
+      address = save_byte(address, i)
+      break
+    end
+  end
   local fishes = Inventory.get_data(fishpedia)
   address = save_byte(address, #fishes)
   for fish_data in all(fishes) do 
@@ -102,6 +108,8 @@ function load()
   cash = %address
   address += 2
   rods = decode_rod_inventory(@address)
+  address += 1
+  local selected_rod_id = @address
   address += 1
   local fish_count = @address
   address += 1
@@ -125,6 +133,7 @@ function load()
   for rod in all(rods) do 
     add(rod_inventory, rod)
   end
+  select_rod(selected_rod_id)
   Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
   load_area_state("main", -1)
 end
