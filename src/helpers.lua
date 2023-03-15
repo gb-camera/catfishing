@@ -29,7 +29,7 @@ function draw_sprite_rotated(sprite_id, position, size, theta, is_opaque)
       local dx, dy = mx-shift, my-shift
       local xx = flr(dx*cosine-dy*sine+shift)
       local yy = flr(dx*sine+dy*cosine+shift)
-      if xx >= 0 and xx < size and yy >= 0 and yy <= size then
+      if xx >= 0 and xx < size and yy >= 0 and yy < size then
         local id = sget(sx+xx, sy+yy)
         if id ~= global_data_table.palettes.transparent_color_id or is_opaque then 
           pset(position.x+mx, position.y+my, id)
