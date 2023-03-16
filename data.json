@@ -65,8 +65,9 @@
     {
       "name": "switch_rods",
       "prev": "fishing",
-      "position": [3, 70],
-      "content": "switch_rods_menu"
+      "position": [5, 70],
+      "content": "switch_rods_menu",
+      "hint": "display_rod_selection_icon"
     },
     {
       "name": "shop",

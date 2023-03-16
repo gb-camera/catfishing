@@ -82,6 +82,16 @@ function switch_rods_menu()
   return menu_list
 end
 
+function display_rod_selection_icon(pos)
+  local border_rect = BorderRect:new(
+    Vec:new(4, 44),
+    Vec:new(18,18),
+    7, (current_rod == rod_inventory[pos]) and 15 or 0, 2)
+  BorderRect.draw(border_rect)
+    
+  spr(rod_inventory[pos].spriteID, 7, 46, 2, 2)
+end
+
 function select_rod(index)
   current_rod = rod_inventory[index]
 end

@@ -24,7 +24,7 @@ function reset()
       data.prev,
       Vec:new(data.position),
       parse_menu_content(data.content),
-      data.hint,
+      _ENV[data.hint],
       unpack(global_data_table.palettes.menu)
     ))
   end

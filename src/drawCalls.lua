@@ -41,12 +41,12 @@ function draw_fishing()
   Animator.draw(cat, 60, 55)
   
   local border_rect = BorderRect:new(
-    Vec:new(3, 48),
+    Vec:new(4, 44),
     Vec:new(18,18),
     7, 14, 2)
   BorderRect.draw(border_rect)
     
-  spr(current_rod.spriteID, 5, 50, 2, 2)
+  spr(current_rod.spriteID, 7, 46, 2, 2)
 
   if get_active_menu() ~= nil then 
     print_with_outline("press ❎ to select", 1, 114, 7, 1)
