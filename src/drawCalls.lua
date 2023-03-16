@@ -44,7 +44,7 @@ function draw_fishing()
     Vec:new(3, 48),
     Vec:new(18,18),
     7, 14, 2)
-    BorderRect.draw(border_rect)
+  BorderRect.draw(border_rect)
     
   spr(current_rod.spriteID, 5, 50, 2, 2)
 

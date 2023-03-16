@@ -73,7 +73,7 @@ function switch_rods_menu()
   local menu_list = {}
   for index, rod in pairs(rod_inventory) do
     add(menu_list, {
-      text=rod.name.." (power "..rod.power..")",
+      text=rod.name.." (p "..rod.power..")",
       color={7,0},
       callback=select_rod,
       args={index}

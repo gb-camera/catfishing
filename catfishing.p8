@@ -66,7 +66,7 @@ function switch_rods_menu()
   local menu_list = {}
   for index, rod in pairs(rod_inventory) do
     add(menu_list, {
-      text=rod.name.." (power "..rod.power..")",
+      text=rod.name.." (p "..rod.power..")",
       color={7,0},
       callback=select_rod,
       args={index}
@@ -559,7 +559,7 @@ function Menu:new(
     content_draw = menu_info_draw_call,
     rect = BorderRect:new(
       position_, 
-      Vec:new(10 + 5*longest_menu_str(menu_content), 38),
+      Vec:new(min(10 + 5*longest_menu_str(menu_content), 128-position_.x-menu_thickness*2), 38),
       border_color,
       base_color,
       menu_thickness
@@ -1152,7 +1152,7 @@ function draw_fishing()
     Vec:new(3, 48),
     Vec:new(18,18),
     7, 14, 2)
-    BorderRect.draw(border_rect)
+  BorderRect.draw(border_rect)
     
   spr(current_rod.spriteID, 5, 50, 2, 2)
   if get_active_menu() ~= nil then 

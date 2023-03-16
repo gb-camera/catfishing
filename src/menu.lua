@@ -14,7 +14,7 @@ function Menu:new(
     content_draw = menu_info_draw_call,
     rect = BorderRect:new(
       position_, 
-      Vec:new(10 + 5*longest_menu_str(menu_content), 38),
+      Vec:new(min(10 + 5*longest_menu_str(menu_content), 128-position_.x-menu_thickness*2), 38),
       border_color,
       base_color,
       menu_thickness
