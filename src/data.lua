@@ -66,6 +66,7 @@ function reset()
   for i, rod in pairs(global_data_table.rods) do
     Inventory.add_entry(rod_shop, i-1, rod.spriteID, rod.cost, {}, false)
   end
+  Inventory.get_entry(rod_shop, 0).is_disabled = true
 
   credit_y_offsets = {}
   for y in all(global_data_table.credit_offsets) do 

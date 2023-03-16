@@ -1,5 +1,7 @@
 function title_loop()
-
+  if btnp(❎) then
+    Menu.invoke(get_active_menu())
+  end
 end
 
 function credits_loop()
@@ -22,16 +24,30 @@ function map_loop()
       swap_menu_context(menu.prev)
     end
   end
+
+  if btnp(❎) then
+    Menu.invoke(get_active_menu())
+  end
 end
 
 function shop_loop()
+  local menu = get_active_menu()
+
   if show_rod_shop then
     rod_shop_loop()
   end
+
   if btnp(🅾️) then
-    if get_active_menu() then 
-      swap_menu_context(get_active_menu().prev)
+    if show_rod_shop then
+      show_rod_shop = false
+      get_menu("shop").enable = true
+    else 
+      load_area_state("main", -1)
     end
+  end
+
+  if btnp(❎) and not show_rod_details then
+    Menu.invoke(menu)
   end
 end
 
@@ -49,6 +65,8 @@ function fish_loop()
   
   if get_active_menu() == nil then
     FishingArea.update(fishing_areas[loaded_area])
+  elseif btnp(❎) then
+    Menu.invoke(get_active_menu())
   end
 end
 
@@ -73,30 +91,22 @@ function compendium_loop()
 end
 
 function rod_shop_loop()
-  if btnp(🅾️) then
-    show_rod_shop = false
-    loaded_area = 0
-    get_menu("shop").enable = true
-  end
-  if not show_rod_details then
-    if btnp(❎) and not Inventory.check_if_hidden(rod_shop) then
-      local rod = global_data_table.rods[rod_shop.pos + 1]
-      if rod.cost > cash then
-        -- don't have enough cash
-        printh("You don't have enough cash to buy this rod")
-        return
-      end
-      for rodd in all(rod_inventory) do
-        -- check if you already have the rod
-        printh("You already have the rod")
-        if (rodd.name == rod.name) return
-      end
-      -- buy the rod
-      add(rod_inventory, rod)
-      Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
-      cash -= rod.cost
+  if (show_rod_details) return
+
+  if btnp(❎) and not Inventory.check_if_disabled(rod_shop) then
+    local rod = global_data_table.rods[rod_shop.pos + 1]
+    if rod.cost > cash then
+      -- don't have enough cash
+      printh("You don't have enough cash to buy this rod")
       return
     end
-    Inventory.update(rod_shop)
+    -- buy the rod
+    add(rod_inventory, rod)
+    Inventory.get_entry(rod_shop, rod_shop.pos).is_disabled = true
+    Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
+    cash -= rod.cost
+    return
   end
+
+  Inventory.update(rod_shop)
 end

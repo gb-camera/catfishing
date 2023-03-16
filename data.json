@@ -73,11 +73,6 @@
       "position": [5, 70],
       "content": [
         {
-          "text": "return to map",
-          "callback": "load_area_state",
-          "args": ["main", -1]
-        },
-        {
           "text": "sell all fish",
           "callback": "sell_all_fish"
         },

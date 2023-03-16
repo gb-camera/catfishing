@@ -131,6 +131,6 @@ function rod_description(pos, draw_pos)
     Vec:new(122, 50),
     7, 8, 2)
   BorderRect.draw(border_rect)
-  print_with_outline(rod.name..":\n\n"..pretty_print(rod.description, 140).."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  print_with_outline(rod.name..": "..(Inventory.check_if_disabled(rod_shop) and "(owned)" or "").."\n\n"..pretty_print(rod.description, 140).."\n\ncost: "..rod.cost.."        power: "..rod.power,
   description_pos.x + 2, description_pos.y + 2, 7, 0)
 end

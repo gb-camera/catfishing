@@ -39,17 +39,13 @@ function _update()
   foreach(menus, Menu.update)
   foreach(menus, Menu.move)
 
-  if btnp(❎) then
-    Menu.invoke(get_active_menu())
-  end
-
   if loaded_area == -4 then 
     credits_loop()
   elseif loaded_area == -3 then 
     title_loop()
   elseif loaded_area == -2 then 
     compendium_loop()
-  elseif load_area == -1 then
+  elseif loaded_area == -1 then
     map_loop()
   elseif loaded_area == 0 then 
     get_menu("shop").enable = true

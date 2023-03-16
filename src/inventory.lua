@@ -13,7 +13,8 @@ function Inventory:new(selector_spr_id, unknown_spr_id, size_, max_entries, bord
     min_pos = 0,
     max_pos = size_.x*size_.y,
     grid_size = size_.x*size_.y,
-    offset = offset_ or Vec:new(-4,-4)
+    offset = offset_ or Vec:new(-4,-4),
+    disabled_icon = 198
   }
   setmetatable(obj, self)
   self.__index = self
@@ -25,14 +26,17 @@ function Inventory:draw(asdf)
     for x=1, self.size.x do
       local position = Vec:new(x*16+self.spacing*x, y*16+self.spacing*y) + self.offset
       local index = self.min_pos + (x-1) + (y-1)*self.size.x
-      local sprite = self.data[index]
-      if sprite == nil or sprite.is_hidden then 
-        sprite = self.unknown_id
+      local entry = self.data[index]
+      if entry == nil or entry.is_hidden then 
+        entry = self.unknown_id
       else
-        sprite = sprite.sprite_id
+        entry = entry.sprite_id
       end
       rectfill(position.x-1, position.y-1, position.x + 16, position.y + 16, 0)
-      spr(sprite, position.x, position.y, 2, 2)
+      spr(entry, position.x, position.y, 2, 2)
+      if self.data[index] and self.data[index].is_disabled then 
+        spr(self.disabled_icon, position.x, position.y, 2, 2)
+      end
     end
   end
   local pos_offset = self.pos - self.min_pos
@@ -66,7 +70,7 @@ function Inventory:update()
   end
 end
 function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
-  self.data[index] = {is_hidden=hidden, sprite_id = sprite, name = name_, data = extra_data}
+  self.data[index] = {is_hidden=hidden, is_disabled=false, sprite_id = sprite, name = name_, data = extra_data}
 end
 function Inventory:get_entry(name)
   if type(name) == "string" then 
@@ -89,6 +93,9 @@ function Inventory:get_data()
     end
   end
   return data
+end
+function Inventory:check_if_disabled()
+  return self.data[self.pos].is_disabled
 end
 function Inventory:check_if_hidden()
   local entry = self.data[self.pos]
