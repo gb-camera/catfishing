@@ -15,7 +15,7 @@ function credits_loop()
   for i=1, #credit_y_offsets do 
     credit_y_offsets[i] -= 1
     if credit_y_offsets[i] <= -15 then 
-      credit_y_offsets[i] = 320
+      credit_y_offsets[i] = 340
     end
   end
 end

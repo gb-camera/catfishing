@@ -15,6 +15,7 @@ function draw_credits()
   print_with_outline("katie:\n  • music engineer", 10, credit_y_offsets[9], 7, 1)
   print_with_outline("external developers", 25, credit_y_offsets[10], 7, 1)
   print_with_outline("jihem:\n  • created the rotation\n    sprite draw function", 10, credit_y_offsets[11], 7, 1)
+  print_with_outline("daniel shiffman:\n  • js boids implementation", 10, credit_y_offsets[12], 7, 1)
 end
 
 function draw_map()
