@@ -95,11 +95,8 @@ function rod_shop_loop()
 
   if btnp(❎) and not Inventory.check_if_disabled(rod_shop) then
     local rod = global_data_table.rods[rod_shop.pos + 1]
-    if rod.cost > cash then
-      -- don't have enough cash
-      printh("You don't have enough cash to buy this rod")
-      return
-    end
+    -- don't have enough cash
+    if (rod.cost > cash) return
     -- buy the rod
     add(rod_inventory, rod)
     Inventory.get_entry(rod_shop, rod_shop.pos).is_disabled = true

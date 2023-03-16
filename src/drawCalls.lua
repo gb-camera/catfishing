@@ -131,6 +131,14 @@ function rod_description(pos, draw_pos)
     Vec:new(122, 50),
     7, 8, 2)
   BorderRect.draw(border_rect)
-  print_with_outline(rod.name..": "..(Inventory.check_if_disabled(rod_shop) and "(owned)" or "").."\n\n"..pretty_print(rod.description, 140).."\n\ncost: "..rod.cost.."        power: "..rod.power,
-  description_pos.x + 2, description_pos.y + 2, 7, 0)
+  print_with_outline(rod.name..": "..(Inventory.check_if_disabled(rod_shop) and "(owned)" or ""), description_pos.x + 2, description_pos.y + 2, 7, 0)
+
+  local color = 3
+  if Inventory.check_if_disabled(rod_shop) or rod.cost > cash then 
+    color = 2
+  end
+  print_with_outline("cost: "..rod.cost, description_pos.x + 2, description_pos.y + 12, color, 0)
+  
+  print_with_outline("power: "..rod.power, description_pos.x + 80, description_pos.y + 12, 7, 0)
+  print_with_outline(pretty_print(rod.description, 140), description_pos.x + 2, description_pos.y + 22, 7, 0)
 end

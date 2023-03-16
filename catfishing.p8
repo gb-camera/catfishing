@@ -205,7 +205,7 @@ function reset()
   for y in all(global_data_table.credit_offsets) do 
     add(credit_y_offsets, y)
   end
-  cash = 5000
+  cash = 100
   loaded_area = -3
   get_menu("title").enable = true
 end
@@ -1110,10 +1110,7 @@ function rod_shop_loop()
   if (show_rod_details) return
   if btnp(❎) and not Inventory.check_if_disabled(rod_shop) then
     local rod = global_data_table.rods[rod_shop.pos + 1]
-    if rod.cost > cash then
-      printh("You don't have enough cash to buy this rod")
-      return
-    end
+    if (rod.cost > cash) return
     add(rod_inventory, rod)
     Inventory.get_entry(rod_shop, rod_shop.pos).is_disabled = true
     Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
@@ -1245,8 +1242,15 @@ function rod_description(pos, draw_pos)
     Vec:new(122, 50),
     7, 8, 2)
   BorderRect.draw(border_rect)
-  print_with_outline(rod.name..": "..(Inventory.check_if_disabled(rod_shop) and "(owned)" or "").."\n\n"..pretty_print(rod.description, 140).."\n\ncost: "..rod.cost.."        power: "..rod.power,
-  description_pos.x + 2, description_pos.y + 2, 7, 0)
+  print_with_outline(rod.name..": "..(Inventory.check_if_disabled(rod_shop) and "(owned)" or ""), description_pos.x + 2, description_pos.y + 2, 7, 0)
+  local color = 3
+  if Inventory.check_if_disabled(rod_shop) or rod.cost > cash then 
+    color = 2
+  end
+  print_with_outline("cost: "..rod.cost, description_pos.x + 2, description_pos.y + 12, color, 0)
+  
+  print_with_outline("power: "..rod.power, description_pos.x + 80, description_pos.y + 12, 7, 0)
+  print_with_outline(pretty_print(rod.description, 140), description_pos.x + 2, description_pos.y + 22, 7, 0)
 end
 __gfx__
 11221122112211220000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

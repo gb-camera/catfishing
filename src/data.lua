@@ -73,7 +73,7 @@ function reset()
     add(credit_y_offsets, y)
   end
 
-  cash = 5000
+  cash = 100
   loaded_area = -3
   get_menu("title").enable = true
 end
