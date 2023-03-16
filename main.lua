@@ -11,6 +11,7 @@
 #include src/menu.lua
 #include src/animator.lua
 #include src/inventory.lua
+#include src/boids.lua
 
 function _init()
   reset()

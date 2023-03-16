@@ -51,7 +51,8 @@ function reset()
           units = fish.units,
           rarity = fish.stats[5]
         }, 
-        true
+        true,
+        fish.disabled and false or true
       )
     end
   end
@@ -71,6 +72,11 @@ function reset()
   credit_y_offsets = {}
   for y in all(global_data_table.credit_offsets) do 
     add(credit_y_offsets, y)
+  end
+
+  boid_array = {}
+  for i=1, 15 do 
+    add(boid_array, Boid:new(Inventory.get_random_sprite(fishpedia), rnd(127), rnd(127)))
   end
 
   cash = 100

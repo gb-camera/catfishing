@@ -424,6 +424,7 @@
           "max_gauge_requirement": 15,
           "stats": ["cat...fish", 234, 0.07, 25, 5],
           "units": ["cm", "g"],
+          "disabled": true,
           "description": "not to be confused with an actual catfish; it's one of your own kind. what's this guy even doing? deep sea bare hands fishing? maybe that'll be you some other time."
         },
         {
@@ -460,6 +461,7 @@
           "max_gauge_requirement": "inf",
           "stats": ["trashcan", 230, 0.02, 68, 1],
           "units": ["cm", "g"],
+          "disabled": true,
           "description": "i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids."
         }
       ]

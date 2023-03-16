@@ -37,15 +37,29 @@ end
 function Vec:clamp(min, max)
   self.x, self.y = mid(self.x, min, max), mid(self.y, min, max)
 end
+function Vec:magnitude()
+  return sqrt(self.x^2 + self.y^2)
+end
+function Vec:normalize()
+  local length = Vec.magnitude(self)
+  return Vec:new(self.x / length, self.y / length)
+end
+function Vec:heading()
+  local theta = self.y/self.x
+  return sin(theta)/cos(theta)
+end
+function Vec:limit(value)
+  return Vec:new(min(self.x, value), min(self.y, value))
+end
+
+function distance(a, b)
+  return sqrt((a.x-b.x)^2 + (a.y-b.y)^2)
+end
 
 function normalize(val)
   return (type(val) == "table") and Vec:new(normalize(val.x), normalize(val.y)) or flr(mid(val, -1, 1))
 end
 
 function lerp(start, last, rate)
-  if type(start) == "table" then 
-    return Vec:new(lerp(start.x, last.x, rate), lerp(start.y, last.y, rate))
-  else
-    return start + (last - start) * rate
-  end
+  return start + (last - start) * rate
 end

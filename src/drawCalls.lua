@@ -1,5 +1,6 @@
 function draw_title()
-
+  foreach(boid_array, Boid.draw)
+  Animator.draw(cat, 64, 50)
 end
 
 function draw_credits()

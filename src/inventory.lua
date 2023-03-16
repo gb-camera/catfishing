@@ -69,8 +69,15 @@ function Inventory:update()
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
 end
-function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
-  self.data[index] = {is_hidden=hidden, is_disabled=false, sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data, hidden, pickable)
+  self.data[index] = {
+    is_hidden=hidden, 
+    is_disabled=false, 
+    is_pickable=pickable or false,
+    sprite_id = sprite, 
+    name = name_, 
+    data = extra_data
+  }
 end
 function Inventory:get_entry(name)
   if type(name) == "string" then 
@@ -93,6 +100,13 @@ function Inventory:get_data()
     end
   end
   return data
+end
+function Inventory:get_random_sprite()
+  local entry = self.data[flr(rnd(#self.data))]
+  while not entry.is_pickable do 
+    entry = self.data[flr(rnd(#self.data))]
+  end
+  return entry.sprite_id
 end
 function Inventory:check_if_disabled()
   return self.data[self.pos].is_disabled

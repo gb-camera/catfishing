@@ -1,4 +1,7 @@
 function title_loop()
+  run(boid_array)
+  Animator.update(cat)
+
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end

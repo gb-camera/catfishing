@@ -146,7 +146,7 @@ function load()
   Menu.update_content(get_menu("switch_rods"), switch_rods_menu())
   load_area_state("main", -1)
 end
-global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},credit_offsets={30,45,70,95,120,145,170,195,220,250,270},menu_data={{name=title,position={34,70},content={{text=new game,callback=load_area_state,args={main,-1}},{text=load game,callback=load},{text=credits,callback=load_area,args={-4}}}},{name=main,position={5,70},content={{text=shop,callback=load_area,args={0}},{text=fishing,callback=load_area,args={1}},{text=fishapedia,callback=load_area,args={-2}},{text=save menu,callback=swap_menu_context,args={saving menu}}}},{name=saving menu,prev=main,position={5,70},content={{text=save,callback=save},{text=save and quit,callback=save_and_quit},{text=quit without saving,callback=load_area_state,args={title,-3}}}},{name=switch_rods,prev=fishing,position={5,70},content=switch_rods_menu,hint=display_rod_selection_icon},{name=shop,position={5,70},content={{text=sell all fish,callback=sell_all_fish},{text=buy rods,callback=enable_rod_shop}}},{name=fishing,position={5,70},content={{text=return to map,callback=load_area_state,args={main,-1}},{text=switch rods,callback=swap_menu_context,args={switch_rods}}}}},text={60,5,7,1},gauge_data={position={10,10},size={102,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},shopkeeper={sprite=238},animation_data={cat={data={{sprite=232},{sprite=234}},size=16,ticks_per_frame=5},menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=sticky the rod,power=0,description=a stick with a string on it. the most basic of basic fishing rods.,cost=10,spriteID=200},{name=good rod,power=3,description=a pretty good rod per the name. you've seen some kids with pocket-sized monsters use this thing before.,cost=50,spriteID=202},{name=fisherman classic,power=7,description=a classic rod chosen by professionals of the industry and your uncle joey.,cost=100,spriteID=204},{name=peerless pole,power=10,description=a legendary rod passed down by the most skilled of fishing artisans and fearless warriors.,cost=500,spriteID=206}},areas={{name=beach,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=made with real cheese. not actual cheese; it's a fake cheese brand that's called real cheese. the more you know!},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=6,max_gauge_requirement=inf,stats={yellowfin tuna,4,32,2.25,4},units={m,kg},description=named such because it's got yellow fins. people like to eat it but not as much as albacore for-tuna-tely.},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=6,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=in a pinch it'll inflate and get prickly; makes it great for particularly vindictive matches of any inflatable variety of sportsball.},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=it's got a gun watch out! fortunately fish do not have thumbs and thus are forced to always practice trigger discipline. don't drop this guy though.},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={carp,10,0.12,122,1},units={cm,kg},description=oh carp? one of the pillars of fishing. major contributor to cuisine and societies at large. that and it's skilled at carpentry.},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={salmon,12,14.6,1.5,2},units={m,kg},description=not to be confused with salmonella; this guy won't kill you if you eat it cooked or raw! particularly violent around squids for some reason.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={largemouth bass,14,0.01,45,2},units={cm,kg},description=talks a big game but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=11,max_gauge_requirement=13,stats={rainbow trout,38,0.013,110,5},units={cm,kg},description=typically bright and reflective colors like this are meant to ward off predators but since you're a cat the shiny lights are purr-dy.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={smallmouth bass,40,0.02,45,2},units={cm,kg},description=always left in the shadow of the superior largemouth bass. this one's part of a small rock outfit! they do not play the bass contrary to what you may think.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={crappie,42,0.02,38,2},units={cm,kg},description=also known as the calico bass so whoever gave it this particular name was probably having a really bad day.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bluegill,44,0.04,25,2},units={cm,kg},description=more green than anything else. its gills aren't even blue dude. that's kinda lame.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={yellow pike,46,0.046,80,2},units={cm,kg},description=ride this thing around your local college campus. also known as the walleye which has no relation to the movie you're thinking of.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={alligator gar,64,9.8,1.8,2},units={m,kg},description=won't ever need dentures because this guy's got some gnarly chompers. god forbid it bites you. don't let it bite you.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={ocean sunfish,66,2.2,1,2},units={m,kg},description=named after the sun which is a deadly laser. large and in charge just like the actual sun of our solar system.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sturgeon,68,30.7,4.8,2},units={m,kg},description=went to medical school and was making six figures as part of an experienced surgical team. until you showed up that is.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=10,stats={koi,70,0.076,60,4},units={cm,kg},description=this guy'll apparently turn into a dragon if it does a sick enough jump up a river per japanese legend. unfortunately that won't happen now.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=8,stats={clownfish,72,0.007,15,3},units={cm,kg},description=the practical aquatic jokester. two whole animated feature films got made about this guy! maybe not this guy in particular.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bonefish,74,2.7,12.5,1},units={cm,g},description=it's got a bone to pick with you. you've also got a bone to pick with it for getting hooked on your line.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={killifish,76,3,7.6,2},units={cm,g},description=killer fish. killer fish from san diego. doesn't know what they are but they taste really good.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={pond smelt,78,1.9,11,2},units={cm,g},description=they who smelt it dealt it. or in this case caught it. because you caught it. pee-ew.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angelfish,96,0.015,25,2},units={cm,kg},description=not biblically accurate because it's just a normal fish. makes a mean angel food cake though.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=6,stats={angle fish,98,0.015,25,3},units={cm,kg},description=a particularly obtuse-looking fish. ask them about trigonometry and the unit circle; they got pretty good grades in high school pre-calc.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=5,max_gauge_requirement=8,stats={archangelfish,100,0.015,25,4},units={cm,kg},description=pretty biblically accurate for a fish. be not afraid my child. will or will not pass judgment on how well you fish.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=5,max_gauge_requirement=8,stats={arowana,102,2.18,1.2,3},units={m,kg},description=valuable and highly coveted in some regions. its name only really makes it sound like a brand of bottled water or something.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={plastic fish,104,2.7,12.5,1},units={cm,g},description=an assembled pvc scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=13,max_gauge_requirement=15,stats={cat...fish,234,0.07,25,5},units={cm,g},description=not to be confused with an actual catfish; it's one of your own kind. what's this guy even doing? deep sea bare hands fishing? maybe that'll be you some other time.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=8,max_gauge_requirement=14,stats={catfish,106,0.03,72,4},units={cm,kg},description=the owner of a particularly intricate and very funny set of facial hair. not to be confused with a fish that is actually a cat or something.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={anchovy,108,1.02,20,1},units={cm,g},description=usually comes in tins but this one's hot-n-ready. reeled in 30 minutes or less or else your catch is free.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=6,max_gauge_requirement=8,stats={squid,110,2.76,30,3},units={cm,g},description=can also turn into a kid in a not-so-distant future. either that or they become a very grumpy neighbor.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=inf,stats={trashcan,230,0.02,68,1},units={cm,g},description=i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids.}}}}"
+global_data_str="palettes={transparent_color_id=0,menu={4,7,7,3}},credit_offsets={30,45,70,95,120,145,170,195,220,250,270},menu_data={{name=title,position={34,70},content={{text=new game,callback=load_area_state,args={main,-1}},{text=load game,callback=load},{text=credits,callback=load_area,args={-4}}}},{name=main,position={5,70},content={{text=shop,callback=load_area,args={0}},{text=fishing,callback=load_area,args={1}},{text=fishapedia,callback=load_area,args={-2}},{text=save menu,callback=swap_menu_context,args={saving menu}}}},{name=saving menu,prev=main,position={5,70},content={{text=save,callback=save},{text=save and quit,callback=save_and_quit},{text=quit without saving,callback=load_area_state,args={title,-3}}}},{name=switch_rods,prev=fishing,position={5,70},content=switch_rods_menu,hint=display_rod_selection_icon},{name=shop,position={5,70},content={{text=sell all fish,callback=sell_all_fish},{text=buy rods,callback=enable_rod_shop}}},{name=fishing,position={5,70},content={{text=return to map,callback=load_area_state,args={main,-1}},{text=switch rods,callback=swap_menu_context,args={switch_rods}}}}},text={60,5,7,1},gauge_data={position={10,10},size={102,5},settings={4,7,2,3},req_tension_ticks=20,tension_timer=30},power_gauge_colors={8,9,10,11,3},biases={weight=8,size=3},sell_weights={per_weight_unit=3,per_size_unit=2},shopkeeper={sprite=238},animation_data={cat={data={{sprite=232},{sprite=234}},size=16,ticks_per_frame=5},menu_selector={data={{sprite=32,offset={0,0}},{sprite=32,offset={-1,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-3,0}},{sprite=32,offset={-2,0}},{sprite=32,offset={-1,0}}},ticks_per_frame=3},up_arrow={data={{sprite=33,offset={0,0}},{sprite=33,offset={0,-1}},{sprite=33,offset={0,-2}},{sprite=33,offset={0,-1}}},ticks_per_frame=3},down_arrow={data={{sprite=49,offset={0,0}},{sprite=49,offset={0,1}},{sprite=49,offset={0,2}},{sprite=49,offset={0,1}}},ticks_per_frame=3}},rods={{name=sticky the rod,power=0,description=a stick with a string on it. the most basic of basic fishing rods.,cost=10,spriteID=200},{name=good rod,power=3,description=a pretty good rod per the name. you've seen some kids with pocket-sized monsters use this thing before.,cost=50,spriteID=202},{name=fisherman classic,power=7,description=a classic rod chosen by professionals of the industry and your uncle joey.,cost=100,spriteID=204},{name=peerless pole,power=10,description=a legendary rod passed down by the most skilled of fishing artisans and fearless warriors.,cost=500,spriteID=206}},areas={{name=beach,mapID=0,music={},fishes={{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={goldfish,2,2.7,12.5,1},units={cm,g},description=made with real cheese. not actual cheese; it's a fake cheese brand that's called real cheese. the more you know!},{gradient={8,9,10,11,10,9,8},successIDs={11},min_gauge_requirement=6,max_gauge_requirement=inf,stats={yellowfin tuna,4,32,2.25,4},units={m,kg},description=named such because it's got yellow fins. people like to eat it but not as much as albacore for-tuna-tely.},{gradient={8,9,10,10,10,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=6,stats={pufferfish,6,0.08,60,3},units={cm,kg},description=in a pinch it'll inflate and get prickly; makes it great for particularly vindictive matches of any inflatable variety of sportsball.},{gradient={8,9,10,11,11,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={triggerfish,8,0.04,71,2},units={cm,kg},description=it's got a gun watch out! fortunately fish do not have thumbs and thus are forced to always practice trigger discipline. don't drop this guy though.},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={carp,10,0.12,122,1},units={cm,kg},description=oh carp? one of the pillars of fishing. major contributor to cuisine and societies at large. that and it's skilled at carpentry.},{gradient={8,9,10,11,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={salmon,12,14.6,1.5,2},units={m,kg},description=not to be confused with salmonella; this guy won't kill you if you eat it cooked or raw! particularly violent around squids for some reason.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={largemouth bass,14,0.01,45,2},units={cm,kg},description=talks a big game but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=11,max_gauge_requirement=13,stats={rainbow trout,38,0.013,110,5},units={cm,kg},description=typically bright and reflective colors like this are meant to ward off predators but since you're a cat the shiny lights are purr-dy.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={smallmouth bass,40,0.02,45,2},units={cm,kg},description=always left in the shadow of the superior largemouth bass. this one's part of a small rock outfit! they do not play the bass contrary to what you may think.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={crappie,42,0.02,38,2},units={cm,kg},description=also known as the calico bass so whoever gave it this particular name was probably having a really bad day.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bluegill,44,0.04,25,2},units={cm,kg},description=more green than anything else. its gills aren't even blue dude. that's kinda lame.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={yellow pike,46,0.046,80,2},units={cm,kg},description=ride this thing around your local college campus. also known as the walleye which has no relation to the movie you're thinking of.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={alligator gar,64,9.8,1.8,2},units={m,kg},description=won't ever need dentures because this guy's got some gnarly chompers. god forbid it bites you. don't let it bite you.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={ocean sunfish,66,2.2,1,2},units={m,kg},description=named after the sun which is a deadly laser. large and in charge just like the actual sun of our solar system.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={sturgeon,68,30.7,4.8,2},units={m,kg},description=went to medical school and was making six figures as part of an experienced surgical team. until you showed up that is.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=10,stats={koi,70,0.076,60,4},units={cm,kg},description=this guy'll apparently turn into a dragon if it does a sick enough jump up a river per japanese legend. unfortunately that won't happen now.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=4,max_gauge_requirement=8,stats={clownfish,72,0.007,15,3},units={cm,kg},description=the practical aquatic jokester. two whole animated feature films got made about this guy! maybe not this guy in particular.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={bonefish,74,2.7,12.5,1},units={cm,g},description=it's got a bone to pick with you. you've also got a bone to pick with it for getting hooked on your line.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={killifish,76,3,7.6,2},units={cm,g},description=killer fish. killer fish from san diego. doesn't know what they are but they taste really good.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={pond smelt,78,1.9,11,2},units={cm,g},description=they who smelt it dealt it. or in this case caught it. because you caught it. pee-ew.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=2,max_gauge_requirement=4,stats={angelfish,96,0.015,25,2},units={cm,kg},description=not biblically accurate because it's just a normal fish. makes a mean angel food cake though.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=3,max_gauge_requirement=6,stats={angle fish,98,0.015,25,3},units={cm,kg},description=a particularly obtuse-looking fish. ask them about trigonometry and the unit circle; they got pretty good grades in high school pre-calc.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=5,max_gauge_requirement=8,stats={archangelfish,100,0.015,25,4},units={cm,kg},description=pretty biblically accurate for a fish. be not afraid my child. will or will not pass judgment on how well you fish.},{gradient={8,9,10,11,11,10,11,11,10,9,8},successIDs={11},min_gauge_requirement=5,max_gauge_requirement=8,stats={arowana,102,2.18,1.2,3},units={m,kg},description=valuable and highly coveted in some regions. its name only really makes it sound like a brand of bottled water or something.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=5,stats={plastic fish,104,2.7,12.5,1},units={cm,g},description=an assembled pvc scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=13,max_gauge_requirement=15,stats={cat...fish,234,0.07,25,5},units={cm,g},disabled=True,description=not to be confused with an actual catfish; it's one of your own kind. what's this guy even doing? deep sea bare hands fishing? maybe that'll be you some other time.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=8,max_gauge_requirement=14,stats={catfish,106,0.03,72,4},units={cm,kg},description=the owner of a particularly intricate and very funny set of facial hair. not to be confused with a fish that is actually a cat or something.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=3,stats={anchovy,108,1.02,20,1},units={cm,g},description=usually comes in tins but this one's hot-n-ready. reeled in 30 minutes or less or else your catch is free.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=6,max_gauge_requirement=8,stats={squid,110,2.76,30,3},units={cm,g},description=can also turn into a kid in a not-so-distant future. either that or they become a very grumpy neighbor.},{gradient={8,9,11,11,11,11,11,11,11,9,8},successIDs={11},min_gauge_requirement=1,max_gauge_requirement=inf,stats={trashcan,230,0.02,68,1},units={cm,g},disabled=True,description=i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids.}}}}"
 function reset()
   global_data_table = unpack_table(global_data_str)
   fish_inventory = {}
@@ -196,7 +196,8 @@ function reset()
           units = fish.units,
           rarity = fish.stats[5]
         }, 
-        true
+        true,
+        fish.disabled and false or true
       )
     end
   end
@@ -213,6 +214,10 @@ function reset()
   credit_y_offsets = {}
   for y in all(global_data_table.credit_offsets) do 
     add(credit_y_offsets, y)
+  end
+  boid_array = {}
+  for i=1, 15 do 
+    add(boid_array, Boid:new(Inventory.get_random_sprite(fishpedia), rnd(127), rnd(127)))
   end
   cash = 100
   loaded_area = -3
@@ -543,15 +548,28 @@ end
 function Vec:clamp(min, max)
   self.x, self.y = mid(self.x, min, max), mid(self.y, min, max)
 end
+function Vec:magnitude()
+  return sqrt(self.x^2 + self.y^2)
+end
+function Vec:normalize()
+  local length = Vec.magnitude(self)
+  return Vec:new(self.x / length, self.y / length)
+end
+function Vec:heading()
+  local theta = self.y/self.x
+  return sin(theta)/cos(theta)
+end
+function Vec:limit(value)
+  return Vec:new(min(self.x, value), min(self.y, value))
+end
+function distance(a, b)
+  return sqrt((a.x-b.x)^2 + (a.y-b.y)^2)
+end
 function normalize(val)
   return (type(val) == "table") and Vec:new(normalize(val.x), normalize(val.y)) or flr(mid(val, -1, 1))
 end
 function lerp(start, last, rate)
-  if type(start) == "table" then 
-    return Vec:new(lerp(start.x, last.x, rate), lerp(start.y, last.y, rate))
-  else
-    return start + (last - start) * rate
-  end
+  return start + (last - start) * rate
 end
 Menu = {}
 function Menu:new(
@@ -785,8 +803,15 @@ function Inventory:update()
     self.min_pos = mid(self.min_pos, 0, self.entry_amount-self.grid_size)
   end
 end
-function Inventory:add_entry(index, sprite, name_, extra_data, hidden)
-  self.data[index] = {is_hidden=hidden, is_disabled=false, sprite_id = sprite, name = name_, data = extra_data}
+function Inventory:add_entry(index, sprite, name_, extra_data, hidden, pickable)
+  self.data[index] = {
+    is_hidden=hidden, 
+    is_disabled=false, 
+    is_pickable=pickable or false,
+    sprite_id = sprite, 
+    name = name_, 
+    data = extra_data
+  }
 end
 function Inventory:get_entry(name)
   if type(name) == "string" then 
@@ -810,12 +835,140 @@ function Inventory:get_data()
   end
   return data
 end
+function Inventory:get_random_sprite()
+  local entry = self.data[flr(rnd(#self.data))]
+  while not entry.is_pickable do 
+    entry = self.data[flr(rnd(#self.data))]
+  end
+  return entry.sprite_id
+end
 function Inventory:check_if_disabled()
   return self.data[self.pos].is_disabled
 end
 function Inventory:check_if_hidden()
   local entry = self.data[self.pos]
   return entry == nil or entry.is_hidden
+end
+Boid = {}
+function Boid:new(sprite, x, y)
+  local angle = flr(rnd()*360)
+  obj = {
+    sprite_id = sprite,
+    position = Vec:new(x, y),
+    velocity = Vec:new(cos(angle), sin(angle)),
+    acceleration = Vec:new(0, 0),
+    r = 2,
+    max_speed = 1,
+    max_force = 0.03,
+    desired_sep = 15,
+    neighbor_dist = 30,
+    tick = 0,
+    max_ticks = 10
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+function Boid:update()
+  self.velocity = Vec.limit(self.velocity + self.acceleration, self.max_speed)
+  self.position += self.velocity
+  self.acceleration *= 0
+end
+function Boid:seek(target)
+  local desired = target - self.position
+  local desired_norm = Vec.normalize(desired)
+  desired *= self.max_speed
+  return Vec.limit(desired - self.velocity, self.max_force)
+end
+function Boid:draw()
+  local pos = lerp(self.position, self.position + Vec.limit(self.velocity + self.acceleration, self.max_speed), self.tick/self.max_ticks)
+  spr(self.sprite_id, pos.x, pos.y, 2, 2)
+end
+function Boid:border()
+  if (self.position.x < 0) self.position.x = 127
+  if (self.position.y < 0) self.position.y = 127
+  if (self.position.x > 127) self.position.x = 0
+  if (self.position.y > 127) self.position.y = 0
+end
+function Boid:flock(boids)
+  local sep = Boid.separate(self, boids)
+  local ali = Boid.align(self, boids)
+  local coh = Boid.cohesion(self, boids)
+  sep *= 1.5
+  self.acceleration += sep
+  self.acceleration += ali
+  self.acceleration += coh
+end
+function Boid:separate(boids)
+  local steer = Vec:new(0, 0)
+  local count = 0
+  for other in all(boids) do 
+    local dist = distance(self.position, other.position)
+    if dist > 0 and dist < self.desired_sep then 
+      local diff = self.position - other.position
+      diff = Vec.normalize(diff)
+      diff /= dist 
+      steer += diff 
+      count += 1 
+    end
+  end
+  if count > 0 then 
+    steer /= count 
+  end
+  if Vec.magnitude(steer) > 0 then 
+    steer = Vec.normalize(steer)
+    steer *= self.max_speed
+    steer -= self.velocity
+    steer = Vec.limit(steer, self.max_force)
+  end
+  return steer
+end
+function Boid:align(boids)
+  local sum = Vec:new(0, 0)
+  local count = 0
+  for boid in all(boids) do
+    local dist = distance(self.position, boid.position)
+    if dist > 0 and dist < self.neighbor_dist then 
+      sum += boid.velocity
+      count += 1
+    end
+  end
+  if count > 0 then 
+    sum /= count 
+    sum = Vec.normalize(sum)
+    sum *= self.max_speed
+    return Vec.limit(sum - self.velocity, self.max_force)
+  else
+    return Vec:new(0, 0)
+  end
+end
+function Boid:cohesion(boids)
+  local sum = Vec:new(0, 0)
+  local count = 0
+  for boid in all(boids) do 
+    local dist = distance(self.position, boid.position)
+    if dist > 0 and dist < self.neighbor_dist then 
+      sum += boid.position
+      count += 1
+    end
+  end
+  if count > 0 then 
+    sum /= count 
+    return Boid.seek(self, sum)
+  else
+    return Vec:new(0, 0)
+  end
+end
+function run(boids)
+  for boid in all(boids) do 
+    boid.tick = (boid.tick + 1) % boid.max_ticks
+    if boid.tick == 0 then
+      Boid.flock(boid, boids)
+      Boid.update(boid)
+      Boid.border(boid)
+      Boid.draw(boid)
+    end
+  end
 end
 function _init()
   reset()
@@ -1036,6 +1189,8 @@ function str_contains_char(str, char)
   end
 end
 function title_loop()
+  run(boid_array)
+  Animator.update(cat)
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end
@@ -1129,6 +1284,8 @@ function rod_shop_loop()
   Inventory.update(rod_shop)
 end
 function draw_title()
+  foreach(boid_array, Boid.draw)
+  Animator.draw(cat, 64, 50)
 end
 function draw_credits()
   print_with_outline("credits", 47, credit_y_offsets[1], 7, 1)
