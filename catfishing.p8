@@ -1231,10 +1231,10 @@ function rod_description(pos, draw_pos)
   description_pos = Vec:new(3, 75)
   local border_rect = BorderRect:new(
     description_pos,
-    Vec:new(122, 35),
+    Vec:new(122, 50),
     7, 8, 2)
   BorderRect.draw(border_rect)
-  print_with_outline(rod.name..":\n\n"..rod.description.."\n\ncost: "..rod.cost.."        power: "..rod.power,
+  print_with_outline(rod.name..":\n\n"..pretty_print(rod.description, 140).."\n\ncost: "..rod.cost.."        power: "..rod.power,
   description_pos.x + 2, description_pos.y + 2, 7, 0)
 end
 __gfx__
