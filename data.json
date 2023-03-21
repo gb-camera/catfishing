@@ -253,6 +253,114 @@
           "description": "it's got a gun watch out! fortunately fish do not have thumbs and thus are forced to always practice trigger discipline. don't drop this guy though."
         },
         {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["ocean sunfish", 66, 2.2, 1, 2],
+          "units": ["m", "kg"],
+          "description": "named after the sun which is a deadly laser. large and in charge just like the actual sun of our solar system."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 4,
+          "max_gauge_requirement": 8,
+          "stats": ["clownfish", 72, 0.007, 15, 3],
+          "units": ["cm", "kg"],
+          "description": "the practical aquatic jokester. two whole animated feature films got made about this guy! maybe not this guy in particular."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["bonefish", 74, 2.7, 12.5, 1],
+          "units": ["cm", "g"],
+          "description": "it's got a bone to pick with you. you've also got a bone to pick with it for getting hooked on your line."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["angelfish", 96, 0.015, 25, 2],
+          "units": ["cm", "kg"],
+          "description": "not biblically accurate because it's just a normal fish. makes a mean angel food cake though."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 3,
+          "max_gauge_requirement": 6,
+          "stats": ["angle fish", 98, 0.015, 25, 3],
+          "units": ["cm", "kg"],
+          "description": "a particularly obtuse-looking fish. ask them about trigonometry and the unit circle; they got pretty good grades in high school pre-calc."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 5,
+          "max_gauge_requirement": 8,
+          "stats": ["archangelfish", 100, 0.015, 25, 4],
+          "units": ["cm", "kg"],
+          "description": "pretty biblically accurate for a fish. be not afraid my child. will or will not pass judgment on how well you fish."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": 5,
+          "stats": ["plastic fish", 104, 2.7, 12.5, 1],
+          "units": ["cm", "g"],
+          "description": "an assembled pvc scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 13,
+          "max_gauge_requirement": 15,
+          "stats": ["cat...fish", 234, 0.07, 25, 5],
+          "units": ["cm", "g"],
+          "disabled": true,
+          "description": "not to be confused with an actual catfish; it's one of your own kind. what's this guy even doing? deep sea bare hands fishing? maybe that'll be you some other time."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": 3,
+          "stats": ["anchovy", 108, 1.02, 20, 1],
+          "units": ["cm", "g"],
+          "description": "usually comes in tins but this one's hot-n-ready. reeled in 30 minutes or less or else your catch is free."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 6,
+          "max_gauge_requirement": 8,
+          "stats": ["squid", 110, 2.76, 30, 3],
+          "units": ["cm", "g"],
+          "description": "can also turn into a kid in a not-so-distant future. either that or they become a very grumpy neighbor."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": "inf",
+          "stats": ["trashcan", 230, 0.02, 68, 1],
+          "units": ["cm", "g"],
+          "disabled": true,
+          "description": "i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids."
+        }
+      ]
+    },
+    {
+      "name": "river",
+      "position": [46, 60],
+      "music": [],
+      "fishes": [
+        {
           "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
           "successIDs": [11],
           "min_gauge_requirement": 1,
@@ -273,15 +381,6 @@
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
           "successIDs": [11],
-          "min_gauge_requirement": 2,
-          "max_gauge_requirement": 4,
-          "stats": ["largemouth bass", 14, 0.01, 45, 2],
-          "units": ["cm", "kg"],
-          "description": "talks a big game but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
           "min_gauge_requirement": 11,
           "max_gauge_requirement": 13,
           "stats": ["rainbow trout", 38, 0.013, 110, 5],
@@ -296,15 +395,6 @@
           "stats": ["smallmouth bass", 40, 0.02, 45, 2],
           "units": ["cm", "kg"],
           "description": "always left in the shadow of the superior largemouth bass. this one's part of a small rock outfit! they do not play the bass contrary to what you may think."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 2,
-          "max_gauge_requirement": 4,
-          "stats": ["crappie", 42, 0.02, 38, 2],
-          "units": ["cm", "kg"],
-          "description": "also known as the calico bass so whoever gave it this particular name was probably having a really bad day."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -338,9 +428,80 @@
           "successIDs": [11],
           "min_gauge_requirement": 2,
           "max_gauge_requirement": 4,
-          "stats": ["ocean sunfish", 66, 2.2, 1, 2],
+          "stats": ["bonefish", 74, 2.7, 12.5, 1],
+          "units": ["cm", "g"],
+          "description": "it's got a bone to pick with you. you've also got a bone to pick with it for getting hooked on your line."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 5,
+          "max_gauge_requirement": 8,
+          "stats": ["arowana", 102, 2.18, 1.2, 3],
           "units": ["m", "kg"],
-          "description": "named after the sun which is a deadly laser. large and in charge just like the actual sun of our solar system."
+          "description": "valuable and highly coveted in some regions. its name only really makes it sound like a brand of bottled water or something."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 8,
+          "max_gauge_requirement": 14,
+          "stats": ["catfish", 106, 0.03, 72, 4],
+          "units": ["cm", "kg"],
+          "description": "the owner of a particularly intricate and very funny set of facial hair. not to be confused with a fish that is actually a cat or something."
+        },
+        {
+          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": "inf",
+          "stats": ["trashcan", 230, 0.02, 68, 1],
+          "units": ["cm", "g"],
+          "disabled": true,
+          "description": "i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids."
+        }
+      ]
+    },
+    {
+      "name": "lake",
+      "position": [54, 64],
+      "music": [],
+      "fishes": [
+        {
+          "gradient": [8, 9, 10, 11, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 1,
+          "max_gauge_requirement": 3,
+          "stats": ["carp", 10, 0.12, 122, 1],
+          "units": ["cm", "kg"],
+          "description": "oh carp? one of the pillars of fishing. major contributor to cuisine and societies at large. that and it's skilled at carpentry."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["largemouth bass", 14, 0.01, 45, 2],
+          "units": ["cm", "kg"],
+          "description": "talks a big game but is actually quite timid. it and most of its genetic relatives are hated by most anthropomorphic animal island dwellers."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 11,
+          "max_gauge_requirement": 13,
+          "stats": ["rainbow trout", 38, 0.013, 110, 5],
+          "units": ["cm", "kg"],
+          "description": "typically bright and reflective colors like this are meant to ward off predators but since you're a cat the shiny lights are purr-dy."
+        },
+        {
+          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
+          "successIDs": [11],
+          "min_gauge_requirement": 2,
+          "max_gauge_requirement": 4,
+          "stats": ["crappie", 42, 0.02, 38, 2],
+          "units": ["cm", "kg"],
+          "description": "also known as the calico bass so whoever gave it this particular name was probably having a really bad day."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -359,15 +520,6 @@
           "stats": ["koi", 70, 0.076, 60, 4],
           "units": ["cm", "kg"],
           "description": "this guy'll apparently turn into a dragon if it does a sick enough jump up a river per japanese legend. unfortunately that won't happen now."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 4,
-          "max_gauge_requirement": 8,
-          "stats": ["clownfish", 72, 0.007, 15, 3],
-          "units": ["cm", "kg"],
-          "description": "the practical aquatic jokester. two whole animated feature films got made about this guy! maybe not this guy in particular."
         },
         {
           "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
@@ -397,61 +549,6 @@
           "description": "they who smelt it dealt it. or in this case caught it. because you caught it. pee-ew."
         },
         {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 2,
-          "max_gauge_requirement": 4,
-          "stats": ["angelfish", 96, 0.015, 25, 2],
-          "units": ["cm", "kg"],
-          "description": "not biblically accurate because it's just a normal fish. makes a mean angel food cake though."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 3,
-          "max_gauge_requirement": 6,
-          "stats": ["angle fish", 98, 0.015, 25, 3],
-          "units": ["cm", "kg"],
-          "description": "a particularly obtuse-looking fish. ask them about trigonometry and the unit circle; they got pretty good grades in high school pre-calc."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 5,
-          "max_gauge_requirement": 8,
-          "stats": ["archangelfish", 100, 0.015, 25, 4],
-          "units": ["cm", "kg"],
-          "description": "pretty biblically accurate for a fish. be not afraid my child. will or will not pass judgment on how well you fish."
-        },
-        {
-          "gradient": [8, 9, 10, 11, 11, 10, 11, 11, 10, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 5,
-          "max_gauge_requirement": 8,
-          "stats": ["arowana", 102, 2.18, 1.2, 3],
-          "units": ["m", "kg"],
-          "description": "valuable and highly coveted in some regions. its name only really makes it sound like a brand of bottled water or something."
-        },
-        {
-          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 1,
-          "max_gauge_requirement": 5,
-          "stats": ["plastic fish", 104, 2.7, 12.5, 1],
-          "units": ["cm", "g"],
-          "description": "an assembled pvc scale model of a fish. the dominant contributor of microplastics in this body of water. maybe don't eat any of your catches."
-        },
-        {
-          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 13,
-          "max_gauge_requirement": 15,
-          "stats": ["cat...fish", 234, 0.07, 25, 5],
-          "units": ["cm", "g"],
-          "disabled": true,
-          "description": "not to be confused with an actual catfish; it's one of your own kind. what's this guy even doing? deep sea bare hands fishing? maybe that'll be you some other time."
-        },
-        {
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
           "successIDs": [11],
           "min_gauge_requirement": 8,
@@ -464,52 +561,11 @@
           "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
           "successIDs": [11],
           "min_gauge_requirement": 1,
-          "max_gauge_requirement": 3,
-          "stats": ["anchovy", 108, 1.02, 20, 1],
-          "units": ["cm", "g"],
-          "description": "usually comes in tins but this one's hot-n-ready. reeled in 30 minutes or less or else your catch is free."
-        },
-        {
-          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 1,
           "max_gauge_requirement": "inf",
           "stats": ["trashcan", 230, 0.02, 68, 1],
           "units": ["cm", "g"],
           "disabled": true,
           "description": "i've heard one cat's trash is another cat's treasure but this is ridiculous. at least it's not in the water anymore! do your part for the environment kids."
-        }
-      ]
-    },
-    {
-      "name": "river",
-      "position": [46, 60],
-      "music": [],
-      "fishes": [
-        {
-          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 6,
-          "max_gauge_requirement": 8,
-          "stats": ["squid", 110, 2.76, 30, 3],
-          "units": ["cm", "g"],
-          "description": "can also turn into a kid in a not-so-distant future. either that or they become a very grumpy neighbor."
-        }
-      ]
-    },
-    {
-      "name": "lake",
-      "position": [54, 64],
-      "music": [],
-      "fishes": [
-        {
-          "gradient": [8, 9, 11, 11, 11, 11, 11, 11, 11, 9, 8],
-          "successIDs": [11],
-          "min_gauge_requirement": 6,
-          "max_gauge_requirement": 8,
-          "stats": ["squid", 110, 2.76, 30, 3],
-          "units": ["cm", "g"],
-          "description": "can also turn into a kid in a not-so-distant future. either that or they become a very grumpy neighbor."
         }
       ]
     }

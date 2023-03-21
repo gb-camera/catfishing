@@ -44,13 +44,13 @@ function reset()
     Vec:new(5, 5), 30, 
     { Vec:new(8, 8), Vec:new(111, 111), 7, 5, 3 }
   )
-  local fish_names = {}
-  for i, area in pairs(global_data_table.areas) do 
-    for j, fish in pairs(area.fishes) do 
+  local fish_names, count = {}, 0
+  for area in all(global_data_table.areas) do 
+    for fish in all(area.fishes) do 
       if not table_contains(fish_names, fish.stats[1]) then 
         Inventory.add_entry(
           fishpedia, 
-          j-1 + (i-1) * 5, 
+          count, 
           fish.stats[2], 
           fish.stats[1], 
           {
@@ -62,6 +62,7 @@ function reset()
           fish.disabled and false or true
         )
         add(fish_names, fish.stats[1])
+        count += 1
       end
     end
   end
