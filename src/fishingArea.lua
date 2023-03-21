@@ -51,6 +51,7 @@ function FishingArea:update()
     if self.state == "none" then 
       self.started = true
       self.state = "casting"
+      sfx(49)
     elseif self.state == "lost" then 
       FishingArea.reset(self)
     elseif self.state == "detail" then 
@@ -72,6 +73,7 @@ function FishingArea:update()
     if self.state == "casting" and self.started then
       GradientSlider.update(self.power_gauge)
     elseif self.state == "fishing" then 
+      sfx(62)
       self.started = true
       Fish.update(self.fish)
       if self.fish.timer <= 0 then 
@@ -82,6 +84,7 @@ function FishingArea:update()
     if self.state == "fishing" and self.started then
       GradientSlider.reduce(self.fish.tension_slider)
     elseif self.state == "casting" then 
+      sfx(61)
       self.state = "fishing"
       self.started = false
       self.fish = generate_fish(
@@ -89,11 +92,30 @@ function FishingArea:update()
         GradientSlider.get_stage(self.power_gauge)
       )
       if (self.fish == nil) self.state = "lost" 
+      if self.fish then 
+        if self.fish.rarity <= 2 then 
+          music(0)
+        elseif self.fish.rarity == 3 then 
+          music(8)
+        elseif self.fish.rarity > 3 then 
+          music(19)
+        end
+      end
+
       GradientSlider.reset(self.power_gauge)
     end
   end
 
-  if self.state == "fishing" and self.fish.ticks >= global_data_table.gauge_data.req_tension_ticks then 
+  if self.state == "fishing" and self.fish.ticks >= global_data_table.gauge_data.req_tension_ticks then  
+    if self.fish then 
+      if self.fish.rarity <= 2 then 
+        sfx(33)
+      elseif self.fish.rarity == 3 then 
+        sfx(29)
+      elseif self.fish.rarity > 3 then 
+        sfx(27)
+      end
+    end
     self.state = "detail" 
     GradientSlider.reset(self.fish.tension_slider)
   end
@@ -103,6 +125,8 @@ function FishingArea:reset()
   self.fish = nil 
   self.state = "none"
   self.flag = false
+  music(-1)
+  sfx(-1)
 end
 
 function generate_fish(area, stage)

@@ -88,6 +88,7 @@ function Menu:move()
 
   local _, dy = controls()
   if (dy == 0) return
+  sfx(58)
   self.pos += dy 
   self.dir = dy
   if (self.pos < 1) self.pos = #self.content 
@@ -103,6 +104,7 @@ function Menu:invoke()
   else
     cont.callback()
   end
+  sfx(59)
 end
 function Menu:update_content(content)
   self.content = content 

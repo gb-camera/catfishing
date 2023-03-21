@@ -1,15 +1,25 @@
 function title_loop()
   run(boid_array)
   Animator.update(cat)
-
+  
   if btnp(❎) then
     Menu.invoke(get_active_menu())
   end
+
+  -- easter egg: press to purr
+  if (btnp(🅾️)) sfx(4)
 end
 
 function credits_loop()
   if btnp(🅾️) then
+    sfx(60)
     load_area_state("title", -3)
+  end
+
+  -- easter egg: press to meow
+  if btnp(❎) then
+    local meows = {1, 3, 5}
+    sfx(meows[flr(rnd(3))+1])
   end
 
   for i=1, #credit_y_offsets do 
@@ -25,6 +35,7 @@ function map_loop()
     local menu = get_active_menu()
     if menu and menu.prev then 
       swap_menu_context(menu.prev)
+      sfx(60)
     end
   end
 
@@ -47,6 +58,7 @@ function shop_loop()
     else 
       load_area_state("main", -1)
     end
+    sfx(60)
   end
 
   if btnp(❎) and not show_rod_details then
@@ -64,6 +76,7 @@ function fish_loop()
     else
       swap_menu_context(get_active_menu().prev)
     end
+    sfx(60)
   end
   
   if get_active_menu() == nil then
@@ -81,6 +94,7 @@ function compendium_loop()
       loaded_area = -1
       get_menu("main").enable, fish_detail_flag = true
     end
+    sfx(60)
     return
   end
   if not show_fish_details then
@@ -101,6 +115,7 @@ function rod_shop_loop()
     -- don't have enough cash
     if (rod.cost > cash) return
     -- buy the rod
+    sfx(7)
     add(rod_inventory, rod)
     Inventory.get_entry(rod_shop, rod_shop.pos).is_disabled = true
     Menu.update_content(get_menu("switch_rods"), switch_rods_menu())

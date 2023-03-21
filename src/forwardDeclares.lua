@@ -73,6 +73,7 @@ end
 
 -- fishing
 function sell_all_fish()
+  if (#fish_inventory > 0) sfx(6)
   for fish in all(fish_inventory) do 
     local weight, size, rarity = unpack(fish)
     cash += 
