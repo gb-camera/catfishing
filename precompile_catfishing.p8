@@ -853,7 +853,7 @@ function Inventory:update()
 end
 function Inventory:add_entry(index, sprite, name_, extra_data, hidden, pickable)
   self.data[index] = {
-    is_hidden=false, 
+    is_hidden=hidden, 
     is_disabled=false, 
     is_pickable=pickable or false,
     sprite_id = sprite, 
@@ -1377,9 +1377,10 @@ function draw_credits()
   print_with_outline("mhughson:\n  • additional sprite\n    memory loading", 10, credit_y_offsets[13], 7, 1)
 end
 function draw_map()
-  print_with_outline("placeholder :D", 5, 40, 7, 1)
-  print_with_outline("area select [shop | fishing]", 5, 50, 7, 1)
   print_with_outline("press ❎ to select", 1, 114, 7, 1)
+  if get_active_menu().prev then
+    print_with_outline("press 🅾️ to return", 1, 122, 7, 1)
+  end
 end
 function draw_shop()
   map(0, 0, 0, 0)
