@@ -28,10 +28,23 @@ end
 function load_area(area_id)
   get_active_menu().enable = false
   loaded_area = area_id 
-  if (area_id > 0) FishingArea.reset(global_data_table.areas[loaded_area])
+  if area_id > 0 then 
+    FishingArea.reset(global_data_table.areas[loaded_area])
+    if area_id == 1 then 
+      reload(0x0,0x0,0x2000)
+    else
+      load_stored_gfx(map_table[loaded_area-1])
+    end
+  elseif area_id == 0 then 
+    load_stored_gfx(shop_sprite_sheet)
+  else 
+    reload(0x0,0x0,0x2000)
+  end
 end
 
 function load_area_state(name, id)
+  if (id < 1) reload(0x0,0x0,0x2000)
+
   if id == -3 then 
     reset()
   else

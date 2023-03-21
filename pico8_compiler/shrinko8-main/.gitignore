@@ -1,0 +1,8 @@
+__pycache__
+tmp
+test_output
+test_temp
+private_*
+orig
+dist
+build

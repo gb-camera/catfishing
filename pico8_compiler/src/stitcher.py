@@ -7,7 +7,7 @@ class Stitcher():
         self.hazards = set({
             "function", "if", "for", "while", "return",
             "[[", "]]", "local", "pico-8 cartridge // http://www.pico-8.com", 
-            "version 39", '" "', "and", "or", '"', "goto"
+            "version 39", '" "', "and", "or", '"', "goto", "else", "not"
         })
         pass
 
@@ -44,6 +44,9 @@ class Stitcher():
             lines: list[str] = f.readlines()
             for i, line in enumerate(lines):
                 if line.count("--[[remove]]") > 0: continue
+                if line.count("--[[preserve]]") > 0:
+                    buffer.append(line)
+                    continue
                 if line.lstrip().startswith("--"):
                     # Stringify JSON File
                     if line.startswith("--[[json"):
@@ -84,7 +87,7 @@ class Stitcher():
             if not flag:
                 if line.count("#include") > 0: continue
                 if line == "\n": continue
-                if line.lstrip().startswith("--"): continue
+                # if line.lstrip().startswith("--") and not line.lstrip().startswith("--[[preserve]]"): continue
 
                 # line = self._Sanitize(line) # Basic mimifying
         

@@ -43,8 +43,11 @@ class Compiler():
                         compiledData[-1] += "\n"
                     buffer.append(compiledData)
                 elif line.lstrip().startswith("function"):
-                    functionName: str = self._GetFunctionName(line)
-                    if functionName in self.functions:
+                    functionName: str = self._GetFunctionName(line.strip())
+                    if functionName == "":
+                        buffer.append(line)
+                        continue
+                    elif functionName in self.functions:
                         raise Exception(f"Function {functionName} exist in {self.functions[functionName]} and in {FunctionData(file, i)}")
                     self.functions[functionName] = FunctionData(file, i)
                 elif line.lstrip().startswith("--"):
@@ -80,12 +83,12 @@ class Compiler():
 
     @staticmethod 
     def _GetFunctionName(line: str) -> str:
-        tokens: list[str] = line.split(" ")
+        index = line.find("function") + len("function")
         result = ""
-        for i, token in enumerate(tokens[1:]):
-            result += token
-            if i < len(tokens[1:]):
-                result += " "
+        for c in line[index:]:
+            if c == "(":
+                break
+            result += c
         return result
 
     @staticmethod

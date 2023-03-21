@@ -16,6 +16,7 @@ function draw_credits()
   print_with_outline("external developers", 25, credit_y_offsets[10], 7, 1)
   print_with_outline("jihem:\n  • created the rotation\n    sprite draw function", 10, credit_y_offsets[11], 7, 1)
   print_with_outline("daniel shiffman:\n  • js boids implementation", 10, credit_y_offsets[12], 7, 1)
+  print_with_outline("mhughson:\n  • additional sprite\n    memory loading", 10, credit_y_offsets[13], 7, 1)
 end
 
 function draw_map()
@@ -25,8 +26,9 @@ function draw_map()
 end
 
 function draw_shop()
+  map(0, 0, 0, 0)
   print_with_outline("cash: "..cash, 1, 1, 7, 1)
-  spr(shopkeeper.sprite, 15, 50, 2, 2)
+  spr(shopkeeper.sprite, 48, 40, 2, 2)
   if show_rod_shop then
     draw_rod_shop()
     if get_active_menu() ~= nil then
@@ -40,7 +42,8 @@ end
 
 function draw_fishing()
   map(0, 0, 29, 24)
-  Animator.draw(cat, 60, 55)
+  local pos = global_data_table.areas[loaded_area].position
+  Animator.draw(cat, pos[1], pos[2])
   
   local border_rect = BorderRect:new(
     Vec:new(4, 44),

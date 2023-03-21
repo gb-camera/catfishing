@@ -72,3 +72,21 @@ function str_contains_char(str, char)
     if (str[i] == char) return true
   end
 end
+
+-- https://www.lexaloffle.com/bbs/?tid=33758 by mhughson [[modified to work with project]]
+function hex2num(str)
+  return ("0x"..str)+0
+end
+
+-- https://www.lexaloffle.com/bbs/?tid=33758 by mhughson [[modified to work with project]]
+function load_stored_gfx(gfx)
+  local index=8192
+  for i=1,#gfx,2 do
+    local count=hex2num(sub(gfx,i,i))
+    local col=hex2num(sub(gfx,i+1,i+1))
+    for j=1,count do
+      sset(index%128,index\128,col)
+      index+=1
+    end
+  end
+end

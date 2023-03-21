@@ -1,0 +1,77 @@
+pico-8 cartridge // http://www.pico-8.com
+version 39
+__lua__
+-- converts a number to a hex
+-- string.
+-- source: https://www.lexaloffle.com/bbs/?tid=30910
+-- by: felice
+function num2hex(v) 
+    local s,l,r=tostr(v,true),3,11
+    while sub(s,l,l)=="0" do l+=1 end
+    while sub(s,r,r)=="0" do r-=1 end
+    return sub(s,min(l,6),flr(v)==v and 6 or max(r,8))
+end
+ 
+cls()
+
+print("processing sprite sheet...\n\n")
+
+local cur_color=sget(0,0)
+local cur_count=0
+local result=""
+
+for y=0,32 do
+    for x=0,127 do
+        local next_color=sget(x,y)
+        if next_color==cur_color 
+            and cur_count<15 then
+            -- same color
+            cur_count+=1
+        else
+            --write to buffer
+            result=result..num2hex(cur_count)
+            --todo: hex
+            result=result..num2hex(cur_color)
+            --reset
+            cur_color=next_color
+            cur_count=1
+        end
+    end
+end
+
+printh("\""..result.."\"", '@clip')
+
+print("done!\n\nresult copied to clipboard.\npaste into game cart.")
+__gfx__
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc3ccccccccc333cccccccccc333cccccccccccccccc333
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc333ccccccc33333cccccccc33333cccccc3ccccccc3333
+ccccccccccccccccccccccccccccccccc0cc0cc0cccccccccccccccccccccccccccccccccccccccccc333cccccc3333333ccccccc333333ccccc3cccccc33333
+cccccccccccccccccccccccccccccccccc00c00cccccccccccccccccccccccccccccccccccccccccc33333cccc333333333ccccc333333ccccc333ccccc33333
+ccccccccaaaaaaccccccccccccccccccccccccccccccccccccc0cc0cc0cccccc1111111111111111133333fffff3333333ff4ff33333333ffff333fff3333333
+ccccccaaaaaaaaaaccccccccccc0c0c0cccccccccccccccccccc00c00ccccccc111111111111111ffff4ffffff333333333fffff33333333ff33333f33333333
+cccccaaaaaaaaaaaaccccccccccc0c0ccccccccccccccccccccccccccccccccc11111111111111ff4ffffffff33333333333ff33333333333f33333fff333333
+ccccaaaaaaaaaaaaaaccccccccccccccccccc0c0c0cccccccccccccccccccccc1111111111111ffffffffffffff3333333ffffff33333333ffff4ffff3333333
+cccaaaaaaaaaaaaaaaaccccccccccccccccccc0c0ccccccccccccccccccccccc1111411111111fffffff33ffff333333333ff4f333333333ffffffff33333333
+cccaaaaaaaaaaaaaaaaccccccccccccccccccccccccccccccccccccccccccccc1144111111111fffffff339ff33333333333f333333333333fffff3333333333
+ccaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccc1441111111111cfff6600fffffffff4fffffff3333333333ff33333333333333
+ccaaaaaaaaaaaaaaaaaacccccccccccccccccccccc0cc0cc0ccccccccccccccc11111111111111cc66660fffff4fff4ffffff333333333333ffff33333333333
+ccaaaaaaaaaaaaaaaaaaccccccccccccccccccccccc00c00cccccccccccccccc111111111111111cc6666fffffffff4fffff33333333333333fffffff3333333
+ccaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccc1111111111111111cc9cffffffffffffffffffffff44ffffff4ffff333333333
+ccaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccc111111111111c11111ccffffffffffffffffff00ff44fffffff3333333333333
+ccaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccc1111111111111c1111ccfffff55ffffffffff0000044fffff333333333333333
+cccaaaaaaaaaaaaaaaaccccccccccccc0c0c0ccccccccccccccccccccccccccc1111111111111c1111ccfffffffffffffff4ff00000fffffffffffff33333333
+cccaaaaaaaaaaaaaaaacccccccccccccc0c0cccccccccccccccccccccccccccc111111111111c11111ccffffffffff4ffffffff00000fffffffffff333333333
+ccccaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccccc11111111111c11111cccf44444444ffffffffff505ffffffffff333333333333
+cccccaaaaaaaaaaaaccccccccccccccccccccccccccccccccccc0c0c0ccccccc1111111111111111ccc449999999944fffffff55555fff333333333333333333
+ccccccaaaaaaaaaaccccccccccccccccccccccccccccccccccccc0c0cccccccc111111c1111111cccc49999999999994ffff5555555fffffff33333333333333
+ccccccccaaaaaacccccccccccccccccccccccccccccccccccccccccccccccccc1111111c1111cccccc49999999999994ff5555555555fff4ffffff3333333333
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc1111111c111ccccccf44499999999444ff5555555555ffffffff333333333333
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc111111c1111ccccfff44444444444444fff55555555fffffff33333333333333
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc111111c111cccfffff44444444444444fffffffffffffffff333333333333333
+cccccccc0cc0cc0ccccccccccccccccccccccccccccccccccccccccccccccccc11111c1111ccf4fff4444444444444444fffffffffffff333333333333333333
+ccccccccc00c00cccccccccccccccccccccccccccccccccccccccccccccccccc111111111cccffff444444444444444444fffffffff333333333333333333333
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc311111111cccfff4444444444444444444444fffff4fffffffffffffff4444444
+ccccccccccccccccccccccccccccccc3ccccccccccccccccccccccccccccccc311111111ccff444444f44444f444444444444ffffffffffffffffffff4444444
+ccccccccccccccccccccccccccccccc3ccccccccccc3ccccccccccccccccccc31111111ccc4444fffff444fffff4444fffff44ffffffffff4ffffffff4444444
+cccccccccccccccccccccccccccccc333cccccccccc3cccccccccccccccccc331111111ccffffffffff444fffffff444ffffffffffffffffffffff4ff4444444
+cccccccccccccccccccccccccccccc333ccccccccc333cccccccccccccccc3331111111cffffffffff444fff4fffff444ff4fffffffffffffffffffff4444444

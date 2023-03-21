@@ -33,7 +33,7 @@ class JSONSerializer():
             elif type(data[item]) is list:
                 result += self.ConvertList(data[item])
             else:
-                result += str(data[item])
+                result += str(data[item]).lower()
             if i < len(data) - 1:
                 result += ","
                 self.tokenCount += 1
@@ -50,7 +50,7 @@ class JSONSerializer():
             elif type(item) is list:
                 result += self.ConvertList(item)
             else:
-                result += str(item)
+                result += str(item).lower()
             if i < len(listData) - 1:
                 result +=","
                 self.tokenCount += 1
