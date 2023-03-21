@@ -1,6 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
+-- catfishing
+-- authors in credits
 function get_active_menu()for e in all(menus)do
 if(e.enable)return e
 end end function get_menu(n)for e in all(menus)do
